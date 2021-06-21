@@ -1,21 +1,34 @@
 import React from 'react';
 import { StyleSheet, View, Text, Button, TextInput, Keyboard, Alert, TouchableWithoutFeedback } from 'react-native';
 import { Formik } from 'formik';
-import { globalStyles } from '../assets/styles/global';
+import * as yup from 'yup';
+import { globalStyles, globalColors } from '../assets/styles/global_styles';
+
+
+const LoginSchema = yup.object({
+    id : yup.string()
+        .required()
+        .min(1),
+    password : yup.string()
+        .required()
+        .min(1)
+})
 
 export default function Login({ navigation }){
-const pressHandler = () => {
-    navigation.goBack()
-}
+    const pressHandler = () => {
+        navigation.goBack()
+    }
 
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View style={globalStyles.container}>
                 <Formik
                     initialValues={{ id : '', password : ''}}
+                    validationSchema={LoginSchema}
                     onSubmit={(values) => {
                         Alert.alert("coucou Cadu", "Tchoupi visite Paris")
                         console.log(values);
+                        navigation.push('Request')
                         /*Keyboard.dismiss();
                         // send data trought fetch
                         fetch('http://192.168.0.10:19002/DoneWithIt/login.php',{
@@ -43,12 +56,14 @@ const pressHandler = () => {
                     >
                     {(props) => (
                         <View>
+                            <Text style={globalStyles.titleText}> Login </Text>
                             <TextInput
                                 style={globalStyles.input}
                                 placeholder='Identifiant'
                                 onChangeText={props.handleChange('id')}
                                 value={props.values.id} 
                             />
+                            <Text style={globalStyles.errorText}>{ props.touched.id && props.errors.id}</Text>
 
                             <TextInput
                                 style={globalStyles.input}
@@ -56,19 +71,18 @@ const pressHandler = () => {
                                 onChangeText={props.handleChange('password')}
                                 value={props.values.password} 
                             />
-                            <Button title='submit' color='red' onPress = {props.handleSubmit}/>
+                            <Text style={globalStyles.errorText}>{ props.touched.password && props.errors.password }</Text>
+                            <View>
+                                <Button title='submit' color={globalColors.primary} onPress = {props.handleSubmit}/>
+                            </View>
                         
                         </View>
                     )}
                 </Formik>
-                <Button title='GO back to main screen' onPress = {pressHandler}/>
+                <View style={globalStyles.backButton}>
+                    <Button color={globalColors.secondary} title='GO back to main screen' onPress = {pressHandler}/>
+                </View>
             </View>
         </TouchableWithoutFeedback>
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        padding : 24
-    }
-});
