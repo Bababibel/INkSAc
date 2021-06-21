@@ -1,21 +1,35 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, {useState} from 'react';
+import { StyleSheet, Platform, StatusBar, View, Text, Alert } from 'react-native';
+import AppLoading from 'expo-app-loading';
+import * as Font from 'expo-font';
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+
+import { AppNavigator } from "./app/assets/routes/AppNavigator"
+
+
+const getFonts = () => Font.loadAsync({
+  'ubuntu-regular': require('./app/assets/fonts/Ubuntu-Bold.ttf'),
+  'ubuntu-bold': require('./app/assets/fonts/Ubuntu-Regular.ttf'),
+  'ubuntu-light': require('./app/assets/fonts/Ubuntu-Light.ttf'),
+});
+
+
+export default function App() { 
+  const [fontsLoaded, setFontsLoaded] = useState(false);
+  
+  if (fontsLoaded) {
+    return (
+      <AppNavigator/>
+    )
+  }
+  else {
+    return (
+      <AppLoading
+        startAsync={getFonts} 
+        onError={(text) => Alert.alert('Éched du chargement :(', String(text), [{text: 'Ok'}])}
+        onFinish={() => {setFontsLoaded(true)}}
+      />
+    )
+  }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
