@@ -12,8 +12,8 @@ function WelcomeScreen({ navigation }) {
             </View>
 
             <Button
-                title="Go to Details"
-                onPress={() => navigation.push('About')}
+                title="Login"
+                onPress={() => navigation.push('Login')}
             />
 
 
