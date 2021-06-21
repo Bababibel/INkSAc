@@ -28,14 +28,10 @@ export default function Login({ navigation }){
                     onSubmit={(values) => {
                         Alert.alert("Inksac", "Authentification réussie");
                         if(values.id.toLowerCase() == 'prof') {
-                            console.log(values.id);
-                            console.log("###########################\n")
                             navigation.push('Request')
                         }
                         else {
-                            console.log(values.id);
                             console.log(values);
-                            console.log("###########################\n")
                             navigation.push('Consult')
                         }
                         /*Keyboard.dismiss();

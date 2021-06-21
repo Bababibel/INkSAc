@@ -8,7 +8,7 @@ function WelcomeScreen({ navigation }) {
             source={require('../assets/background.png')}>
             <View style={styles.logoContainer}>
                 <Image source={require('../assets/favicon.png')} style={styles.logo}/>
-                <Text style={styles.title}>Tous ensemble, tous ensemble OUAIS ! OUAIS !</Text>
+                <Text style={styles.title}>Un pas en avant pour réduire mon empreinte</Text>
             </View>
 
             <Button
