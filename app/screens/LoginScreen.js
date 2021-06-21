@@ -26,9 +26,18 @@ export default function Login({ navigation }){
                     initialValues={{ id : '', password : ''}}
                     validationSchema={LoginSchema}
                     onSubmit={(values) => {
-                        Alert.alert("coucou Cadu", "Tchoupi visite Paris")
-                        console.log(values);
-                        navigation.push('Request')
+                        Alert.alert("Inksac", "Authentification réussie");
+                        if(values.id.toLowerCase() == 'prof') {
+                            console.log(values.id);
+                            console.log("###########################\n")
+                            navigation.push('Request')
+                        }
+                        else {
+                            console.log(values.id);
+                            console.log(values);
+                            console.log("###########################\n")
+                            navigation.push('Consult')
+                        }
                         /*Keyboard.dismiss();
                         // send data trought fetch
                         fetch('http://192.168.0.10:19002/DoneWithIt/login.php',{
