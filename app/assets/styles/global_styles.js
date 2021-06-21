@@ -19,7 +19,8 @@ export const globalStyles = StyleSheet.create({
         flex: 1,
         padding : 24,
         backgroundColor: globalColors.bg_primary,
-        paddingTop : Platform.OS === "android" ? StatusBar.currentHeight : 0
+        paddingTop : Platform.OS === "android" ? StatusBar.currentHeight : 0,
+        justifyContent: 'center'
     },
     titleText: {
         fontSize: 18,
