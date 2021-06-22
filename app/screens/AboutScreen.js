@@ -1,7 +1,7 @@
 import React from 'react'
 import { View, Text, StyleSheet, Button } from 'react-native';
 
-export default function About({ navigation }) {
+export default function AboutScreen({ navigation }) {
     return (
         <View style={styles.container}>
             <Text>Page ABOUT</Text>

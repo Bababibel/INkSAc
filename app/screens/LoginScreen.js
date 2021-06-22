@@ -14,7 +14,7 @@ const LoginSchema = yup.object({
         .min(1)
 })
 
-export default function Login({ navigation }){
+export default function LoginScreen({ navigation }){
 
     const dismissKeyboard = () => {
         if (Platform.OS === "android" ||  Platform.OS === "ios"){
