@@ -37,24 +37,6 @@ export default function ChooseScreen({ navigation }){
 
     const [modalOpen, setModalOpen] = useState(false);
 
-    const dataLoad = () => {
-        fetch('https://bgauthier.fr/inksac/api/request/getAllRequests.php')
-        .then(reponse => reponse.json())
-        .then((list) => {
-            console.log('Liste de toutes les requetes : ');
-            let i = 0
-            for (let request of list.data) {
-                console.log('Requete numéro ' + i)
-                console.log(request)
-                console.log('\n')
-                i++
-            }
-        })
-        .catch(() => {
-            Alert.alert('erreur data');
-        })
-    }
-
     const [list, setList] = useState([
         {title: '', author: '', comment:'', expirationDate: '', key: '1'}
     ]);
