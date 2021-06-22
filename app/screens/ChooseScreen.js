@@ -41,9 +41,14 @@ export default function ChooseScreen({ navigation }){
         fetch('https://bgauthier.fr/inksac/api/request/getAllRequests.php')
         .then(reponse => reponse.json())
         .then((list) => {
-            console.log(list); 
-            /*const data = JSON.parse(liste[0]);
-            console.log(data);*/
+            console.log('Liste de toutes les requetes : ');
+            let i = 0
+            for (let request of list.data) {
+                console.log('Requete numéro ' + i)
+                console.log(request)
+                console.log('\n')
+                i++
+            }
         })
         .catch(() => {
             Alert.alert('erreur data');
