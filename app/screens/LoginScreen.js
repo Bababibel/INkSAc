@@ -20,7 +20,7 @@ export default function Login({ navigation }){
     }
 
     return (
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <TouchableWithoutFeedback>
             <View style={globalStyles.container}>
                 <Formik
                     initialValues={{ id : '', password : ''}}

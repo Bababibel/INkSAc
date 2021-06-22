@@ -13,6 +13,11 @@ export default function RequestForm(props) {
                 <Text>Nombre de fichiers</Text>
                 <TextInput keyboardType="numeric" placeholder='Entre 1 et 10'></TextInput>
             </View>
+
+            <View style={styles.formField}>
+                <Text>Matière</Text>
+                <TextInput placeholder='Mathématiques/Electro-technique'></TextInput>
+            </View>
             
             <View style={styles.formField}>
                 <Text>Nom du premier fichier</Text>
