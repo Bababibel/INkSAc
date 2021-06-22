@@ -37,7 +37,7 @@ export default function Login({ navigation }){
                         if(values.id.toLowerCase() == 'prof') {
                             navigation.push('Request')
                         }
-                        if(values.id.toLowerCase() == 'repro') {
+                        else if(values.id.toLowerCase() == 'repro') {
                             navigation.push('Print')
                         }
                         else {
