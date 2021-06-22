@@ -1,8 +1,34 @@
 import React, { useState } from 'react';
-import {View, Text,TouchableOpacity, FlatList, Modal, Button, Keyboard } from 'react-native';
+import {View, Text,TouchableOpacity, FlatList, Modal, Button, Keyboard, Alert } from 'react-native';
 import { globalStyles, globalColors } from '../assets/styles/global_styles';
+import AppLoading from 'expo-app-loading';
 import Card from '../assets/shared/RequestCard';
+import { string } from 'yup/lib/locale';
 
+
+class App extends React.Component {
+
+    state = {
+
+    };
+
+    componentDidMount = () => {
+        this.dataLoad();
+    };
+
+    dataLoad = () => {
+        fetch('https://bgauthier.fr/inksac/api/request/getAllRequests.php')
+        .then((reponse) => {
+            const data = reponse.data;
+            this.setState({posts: data});
+            console.log('Data received');
+            console.log(data);
+        })
+        .catch(() => {
+            Alert.alert('erreur data');
+        })
+    }
+}
 export default function ChooseScreen({ navigation }){
     const [dataLoaded, setDataLoaded] = useState(false);
 
@@ -12,22 +38,20 @@ export default function ChooseScreen({ navigation }){
     const [modalOpen, setModalOpen] = useState(false);
 
     const dataLoad = () => {
-        fetch('https://bgauthier.fr/inksac/api/userList/getAllLists.php')
+        fetch('https://bgauthier.fr/inksac/api/request/getAllRequests.php')
         .then(reponse => reponse.json())
-        .then(list => console.log(list))
+        .then((list) => {
+            console.log(list); 
+            /*const data = JSON.parse(liste[0]);
+            console.log(data);*/
+        })
+        .catch(() => {
+            Alert.alert('erreur data');
+        })
     }
 
     const [list, setList] = useState([
-        {title: 'Cours Maths', author: 'Mme Gauthier', comment:'Meilleur cours de l\'année', expirationDate: '10/06/21', key: '1'},
-        {title: 'Rapport SHS', author: 'Mme remerciment', comment:'Pas mal votre rapport', expirationDate: '30/08/21', key: '2'},
-        {title: 'Sujet philo', author: 'Académie Francaise', comment:'Sujet du bac', expirationDate: '18/06/21', key: '3'},
-        {title: 'Chapitre 4 Maths', author: 'fercqerc', comment:'rgsvges', expirationDate: '18/06/21', key: '4'},
-        {title: 'azesfr', author: 'EZQRGD', comment:'rgshsnh', expirationDate: '18/06/21', key: '5'},
-        {title: 'Cours Maths', author: 'Mme Gauthier', comment:'Meilleur cours de l\'année', expirationDate: '10/06/21', key: '6'},
-        {title: 'Rapport SHS', author: 'Mme remerciment', comment:'Pas mal votre rapport', expirationDate: '30/08/21', key: '7'},
-        {title: 'Sujet philo', author: 'Académie Francaise', comment:'Sujet du bac', expirationDate: '18/06/21', key: '8'},
-        {title: 'rskghj', author: 'fercqerc', comment:'rgsvges', expirationDate: '10/10/21', key: '9'},
-        {title: 'azesfr', author: 'EZQRGD', comment:'rgshsnh', expirationDate: '01/12/21', key: '10'}
+        {title: '', author: '', comment:'', expirationDate: '', key: '1'}
     ]);
 
     if (dataLoaded) {
