@@ -10,7 +10,7 @@ export default function ChooseScreen({ navigation }){
     const [modalOpen, setModalOpen] = useState(false);
 
 
-    Keyboard.dismiss();
+    /*Keyboard.dismiss();
     // send data trought fetch
     fetch('https://bgauthier.fr/inksac/api/file/getAllFiles.php',{
         method: 'POST',
@@ -31,7 +31,7 @@ export default function ChooseScreen({ navigation }){
     })
     .catch(function(error) {
         console.log('Erreur:' + error.message)
-    })
+    })*/
     const [list, setList] = useState([
         {title: 'Cours Maths', author: 'Mme Gauthier', comment:'Meilleur cours de l\'année', expirationDate: '10/06/21', key: '1'},
         {title: 'Rapport SHS', author: 'Mme remerciment', comment:'Pas mal votre rapport', expirationDate: '30/08/21', key: '2'},
@@ -44,7 +44,7 @@ export default function ChooseScreen({ navigation }){
         {title: 'rskghj', author: 'fercqerc', comment:'rgsvges', expirationDate: '10/10/21', key: '9'},
         {title: 'azesfr', author: 'EZQRGD', comment:'rgshsnh', expirationDate: '01/12/21', key: '10'}
     ]);
-    
+
     return (
         <View style={globalStyles.container}>
             <Modal visible={modalOpen} animationType='slide'>
