@@ -44,11 +44,10 @@ const styles = StyleSheet.create({
     width: "50%",
     justifyContent: "center",
     textAlign: "center",
-    borderWidth : 5,
+    borderWidth : 1,
     borderColor: 'black',
   },
   cardIconText: {
     textAlign: "center",
-    fontWeight: 'bold',
   },
 });

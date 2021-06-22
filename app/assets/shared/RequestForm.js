@@ -1,59 +1,102 @@
-import React from 'react';
-import { StyleSheet, View, TextInput, Text } from 'react-native';
-import { globalColors } from '../styles/global_styles';
+import React from "react";
+import { StyleSheet, View, TextInput, Text, Button } from "react-native";
+import DateTimePicker from "@react-native-community/datetimepicker";
+import { globalColors } from "../styles/global_styles";
+import { Formik } from "formik";
 
 export default function RequestForm(props) {
-    return (
-        <View style={styles.form}>
-            {/* <View style={styles.formField}>
+  const date = new Date();
+
+  function onFormSubmit(values) {
+    console.log(values);
+  }
+
+  return (
+    <View style={styles.form}>
+      {/* <View style={styles.formField}>
                 { props.children }
             </View> */}
 
+      <Formik
+        initialValues={{ file_number: "", subject: "", file1_name: "", file2_name: "", file3_name: "", print_date: date}}
+        onSubmit={(values) => console.log(values)}
+      >
+        {(props) => (
+          <View>
             <View style={styles.formField}>
-                <Text>Nombre de fichiers</Text>
-                <TextInput keyboardType="numeric" placeholder='Entre 1 et 10'></TextInput>
+              <Text>Nombre de fichiers</Text>
+              <TextInput
+              value={props.values.file_number}
+                keyboardType="numeric"
+                placeholder="Entre 1 et 10"
+                onChangeText={props.handleChange('file_number')}
+              ></TextInput>
             </View>
 
             <View style={styles.formField}>
-                <Text>Matière</Text>
-                <TextInput placeholder='Mathématiques/Electro-technique'></TextInput>
-            </View>
-            
-            <View style={styles.formField}>
-                <Text>Nom du premier fichier</Text>
-                <TextInput placeholder='Chapitre 2/TD 8&9/...'></TextInput>
-            </View>
-            
-            <View style={styles.formField}>
-                <Text>Nom du deuxième fichier</Text>
-                <TextInput placeholder='Chapitre 2/TD 8&9/...'></TextInput>
-            </View>
-            
-            <View style={styles.formField}>
-                <Text>Nom du troisième fichier</Text>
-                <TextInput placeholder='Chapitre 2/TD 8&9/...'></TextInput>
+              <Text>Matière</Text>
+              <TextInput 
+              value = {props.values.subject}
+              placeholder="Mathématiques/Electro-technique"
+              onChangeText={props.handleChange('subject')}></TextInput>
             </View>
 
-        </View>
-    )
+            <View style={styles.formField}>
+              <Text>Nom du premier fichier</Text>
+              <TextInput value={props.values.file1_name}
+              placeholder="Chapitre 2/TD 8&9/..."
+              onChangeText={props.handleChange('file1_name')}></TextInput>
+            </View>
+
+            <View style={styles.formField}>
+              <Text>Nom du deuxième fichier</Text>
+              <TextInput 
+              value={props.values.file2_name}
+              placeholder="Chapitre 2/TD 8&9/..."
+              onChangeText={props.handleChange('file2_name')}></TextInput>
+            </View>
+
+            <View style={styles.formField}>
+              <Text>Nom du troisième fichier</Text>
+              <TextInput 
+              value={props.values.file3_name}
+              placeholder="Chapitre 2/TD 8&9/..."
+              onChangeText={props.handleChange('file3_name')}></TextInput>
+            </View>
+
+            {/* <View style={styles.formField}>
+              <Text>Date d'impression souhaitée</Text>
+              <DateTimePicker value={props.values.print_date} mode="date" 
+              onChangeText={props.handleChange('print_date')}/>
+            </View> */}
+
+            <Button
+              title="Proposer ce.s fichier.s"
+              onPress = {()=> {props.handleSubmit}
+
+                }
+            />
+          </View>
+        )}
+      </Formik>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
-    form: {
-        borderRadius: 6,
-        elevation: 5,
-        backgroundColor: globalColors.bg_primary,
-        shadowOffset: { width: 1, height: 1},
-        shadowColor: globalColors.bg_secondary,
-        shadowOpacity: 0.3,
-        shadowRadius: 2,
-        marginHorizontal: 4,
-        marginVertical: 6
-    },
-    formField: {
-        marginHorizontal: 18,
-        marginVertical: 10
-    }
+  form: {
+    borderRadius: 6,
+    elevation: 5,
+    backgroundColor: globalColors.bg_primary,
+    shadowOffset: { width: 1, height: 1 },
+    shadowColor: globalColors.bg_secondary,
+    shadowOpacity: 0.3,
+    shadowRadius: 2,
+    marginHorizontal: 4,
+    marginVertical: 6,
+  },
+  formField: {
+    marginHorizontal: 18,
+    marginVertical: 10,
+  },
 });
-
-
