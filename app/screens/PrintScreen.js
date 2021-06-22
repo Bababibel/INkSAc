@@ -5,15 +5,26 @@ import AppLoading from 'expo-app-loading';
 import { globalStyles } from '../assets/styles/global_styles';
 
 
-const dataLoad = () => {
-    fetch('https://bgauthier.fr/inksac/api/file/getAllFiles.php')
-    .then(reponse => reponse.json())
-    .then(files => console.log(files))
-}
-
 export default function PrintScreen({ navigation }){
-    
     const [dataLoaded, setDataLoaded] = useState(false);
+
+    const dataLoad = () => {
+        fetch('https://bgauthier.fr/inksac/api/file/getAllFiles.php')
+        .then(reponse => reponse.json())
+        .then((list) => {
+            list.data.map((item) => {
+                setList((prevItem) => {
+                    return [
+                        {author: item.author, comment: item.comment, expiration_date: item.expiration_date, key: item.id, title: item.title}, 
+                        ...prevItem];
+                })
+            })
+        })
+        .catch(() => {
+            Alert.alert('erreur data');
+        })
+        .done()
+    }
 
     if (dataLoaded) {
         return(
