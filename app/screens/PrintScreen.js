@@ -18,6 +18,7 @@ export default function PrintScreen({ navigation }){
                         {author: item.author, comment: item.comment, expiration_date: item.expiration_date, key: item.id, title: item.title}, 
                         ...prevItem];
                 })
+                console.log(item);
             })
         })
         .catch(() => {
@@ -27,9 +28,31 @@ export default function PrintScreen({ navigation }){
     }
 
     if (dataLoaded) {
-        return(
+        return (
             <View style={globalStyles.container}>
-                <Text>Data laoded, reprographie page</Text>
+                <Modal visible={modalOpen} animationType='slide'>
+                    <TouchableOpacity onPress={() => setModalOpen(false)}>
+                        <Text style={globalStyles.closeText}>Close</Text>
+                    </TouchableOpacity>
+                    <View style={globalStyles.titleText}>
+                        <Text>Titre : {selected.title}</Text>
+                        <Text>Autheur : {selected.author}</Text>
+                        <Text>Commentaire : {selected.comment}</Text>
+                        <Text>Date de fin : {selected.expiration_date}</Text>
+                        <Button title='Accept'  onPress={ () => setModalOpen(false)}/>
+                        <Button title='Refuse'  onPress={ () => setModalOpen(false)}/>
+                    </View>
+                </Modal>
+                <FlatList
+                    data={info}
+                    renderItem={({item}) => (
+                        <TouchableOpacity onPress={ () => {setModalOpen(true), setSelected(item)}}>
+                            <Card>
+                                <Text style={globalStyles.titleText}>{ item.title }</Text>
+                            </Card>
+                        </TouchableOpacity>
+                    )}
+                />
             </View>
         )
     } else {
