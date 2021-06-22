@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import {View, Text,TouchableOpacity, FlatList, Modal, Button, Keyboard, Alert } from 'react-native';
+import {View, Text,TouchableOpacity, FlatList, Modal, Button, Alert } from 'react-native';
 import { globalStyles, globalColors } from '../assets/styles/global_styles';
 import AppLoading from 'expo-app-loading';
 import Card from '../assets/shared/RequestCard';
