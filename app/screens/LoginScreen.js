@@ -41,6 +41,7 @@ export default function LoginScreen({ navigation }){
                         }
                         else {
                             console.log(values);
+                            //console.log(values.id);
                             navigation.push('Choose')
                         }                            
                     }}

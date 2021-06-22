@@ -3,43 +3,39 @@ import {View, Text,TouchableOpacity, FlatList, Modal, Button, Keyboard, Alert } 
 import { globalStyles, globalColors } from '../assets/styles/global_styles';
 import AppLoading from 'expo-app-loading';
 import Card from '../assets/shared/RequestCard';
-import { string } from 'yup/lib/locale';
 
 
-class App extends React.Component {
 
-    state = {
 
-    };
-
-    componentDidMount = () => {
-        this.dataLoad();
-    };
-
-    dataLoad = () => {
-        fetch('https://bgauthier.fr/inksac/api/request/getAllRequests.php')
-        .then((reponse) => {
-            const data = reponse.data;
-            this.setState({posts: data});
-            console.log('Data received');
-            console.log(data);
-        })
-        .catch(() => {
-            Alert.alert('erreur data');
-        })
-    }
-}
 export default function ChooseScreen({ navigation }){
     const [dataLoaded, setDataLoaded] = useState(false);
 
     const [selected, setSelected] = useState(
-        {title: '', author: '', comment:'', expirationDate: '', key: ''});
+        {author: '', comment: '', expiration_date: '', key: '', state: '', title: ''});
+
+    const [info, setList] = useState([]);
 
     const [modalOpen, setModalOpen] = useState(false);
 
-    const [list, setList] = useState([
-        {title: '', author: '', comment:'', expirationDate: '', key: '1'}
-    ]);
+    const dataLoad = () => {
+        fetch('https://bgauthier.fr/inksac/api/request/getAllRequests.php')
+        .then(reponse => reponse.json())
+        .then((list) => {
+            list.data.map((item) => {
+                setList((prevItem) => {
+                    return [
+                        {author: item.author, comment: item.comment, expiration_date: item.expiration_date, key: item.id, title: item.title}, 
+                        ...prevItem];
+                })
+            })
+        })
+        .catch(() => {
+            Alert.alert('erreur data');
+        })
+        .done()
+    }
+
+    
 
     if (dataLoaded) {
         return (
@@ -52,13 +48,13 @@ export default function ChooseScreen({ navigation }){
                         <Text>Titre : {selected.title}</Text>
                         <Text>Autheur : {selected.author}</Text>
                         <Text>Commentaire : {selected.comment}</Text>
-                        <Text>Date de fin : {selected.expirationDate}</Text>
+                        <Text>Date de fin : {selected.expiration_date}</Text>
                         <Button title='Accept'  onPress={ () => setModalOpen(false)}/>
                         <Button title='Refuse'  onPress={ () => setModalOpen(false)}/>
                     </View>
                 </Modal>
                 <FlatList
-                    data={list}
+                    data={info}
                     renderItem={({item}) => (
                         <TouchableOpacity onPress={ () => {setModalOpen(true), setSelected(item)}}>
                             <Card>
