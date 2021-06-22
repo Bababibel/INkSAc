@@ -2,8 +2,11 @@ import React, { useState } from "react";
 import { View, Text, TouchableOpacity, FlatList, Modal } from "react-native";
 import { globalStyles, globalColors } from "../assets/styles/global_styles";
 import RequestForm from "../assets/shared/RequestForm";
+import Card from "../assets/shared/RequestCard";
 
 export default function RequestScreen({ navigation }) {
+  const [modalOpen, setModalOpen] = useState(false);
+
   return (
     <View style={globalStyles.container}>
       <TouchableOpacity>
