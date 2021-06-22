@@ -30,7 +30,7 @@ export const globalStyles = StyleSheet.create({
     },
     closeText: {
         fontSize: 14,
-        padding: 20,
+        padding: 10,
         fontWeight: 'bold',
         textAlign: 'center',
         color: globalColors.textDark,

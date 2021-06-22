@@ -35,7 +35,7 @@ export default function RequestScreen({ navigation }) {
           </Text>
         </Card>
       </TouchableOpacity>
-      <Modal visible={modalVisible}>
+      <Modal visible={modalVisible} animationType='slide'>
         <TouchableOpacity onPress={() => setModalVisible(!modalVisible)}>
           <Text style={globalStyles.closeText}>Close</Text>
         </TouchableOpacity>
