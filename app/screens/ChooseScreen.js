@@ -3,7 +3,7 @@ import {View, Text,TouchableOpacity, FlatList, Modal, Button } from 'react-nativ
 import { globalStyles, globalColors } from '../assets/styles/global_styles';
 import Card from '../assets/shared/RequestCard';
 
-export default function ConsultScreen({ navigation }){
+export default function ChooseScreen({ navigation }){
     const [selected, setSelected] = useState(
         {title: '', author: '', comment:'', expirationDate: '', key: ''});
 

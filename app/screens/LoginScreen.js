@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Text, Button, TextInput, Keyboard, Alert, TouchableWithoutFeedback } from 'react-native';
+import { StyleSheet, View, Text, Button, TextInput, Keyboard, Alert, TouchableWithoutFeedback, Platform } from 'react-native';
 import { Formik } from 'formik';
 import * as yup from 'yup';
 import { globalStyles, globalColors } from '../assets/styles/global_styles';
@@ -15,12 +15,19 @@ const LoginSchema = yup.object({
 })
 
 export default function Login({ navigation }){
+
+    const dismissKeyboard = () => {
+        if (Platform.OS === "android" ||  Platform.OS === "ios"){
+            Keyboard.dismiss()
+        }
+    }
+    
     const pressHandler = () => {
         navigation.goBack()
     }
 
     return (
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <TouchableWithoutFeedback onPress={dismissKeyboard}>
             <View style={globalStyles.container}>
                 <Formik
                     initialValues={{ id : '', password : ''}}
@@ -30,33 +37,13 @@ export default function Login({ navigation }){
                         if(values.id.toLowerCase() == 'prof') {
                             navigation.push('Request')
                         }
+                        if(values.id.toLowerCase() == 'repro') {
+                            navigation.push('Print')
+                        }
                         else {
                             console.log(values);
-                            navigation.push('Consult')
-                        }
-                        /*Keyboard.dismiss();
-                        // send data trought fetch
-                        fetch('http://192.168.0.10:19002/DoneWithIt/login.php',{
-                            method: 'POST',
-                            header: {
-                                'Accept' : 'application/json',
-                                'Content-type' : 'application/json'
-                            },
-                            body:JSON.stringify({
-                                // passing input to php
-                                //email: userEmail,
-                                //password: userPassword
-                                key: 'test',
-                            })
-                        })
-                        .then((reponse) => reponse.json())
-                        .then((reponseJson) => {
-                            alert(reponseJson);
-                        })
-                        .catch(function(error) {
-                            console.log('Erreur:' + error.message)
-                        })*/
-                            
+                            navigation.push('Choose')
+                        }                            
                     }}
                     >
                     {(props) => (

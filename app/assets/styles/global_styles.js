@@ -28,6 +28,14 @@ export const globalStyles = StyleSheet.create({
         textAlign: 'center',
         color: globalColors.textDark
     },
+    closeText: {
+        fontSize: 14,
+        padding: 20,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        color: globalColors.textDark,
+        backgroundColor: 'red',
+    },
     input: {
         borderWidth: 1,
         borderColor: '#ddd',
