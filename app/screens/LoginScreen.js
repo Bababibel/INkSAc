@@ -33,11 +33,10 @@ export default function Login({ navigation }){
                     initialValues={{ id : '', password : ''}}
                     validationSchema={LoginSchema}
                     onSubmit={(values) => {
-                        Alert.alert("Inksac", "Authentification réussie");
                         if(values.id.toLowerCase() == 'prof') {
                             navigation.push('Request')
                         }
-                        if(values.id.toLowerCase() == 'repro') {
+                        else if(values.id.toLowerCase() == 'repro') {
                             navigation.push('Print')
                         }
                         else {
@@ -60,8 +59,9 @@ export default function Login({ navigation }){
                             <TextInput
                                 style={globalStyles.input}
                                 placeholder='Mot de Passe'
+                                secureTextEntry={true}
                                 onChangeText={props.handleChange('password')}
-                                value={props.values.password} 
+                                value={props.values.password}
                             />
                             <Text style={globalStyles.errorText}>{ props.touched.password && props.errors.password }</Text>
                             <View>
