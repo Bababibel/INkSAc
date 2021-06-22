@@ -9,6 +9,29 @@ export default function ChooseScreen({ navigation }){
 
     const [modalOpen, setModalOpen] = useState(false);
 
+
+    Keyboard.dismiss();
+    // send data trought fetch
+    fetch('https://bgauthier.fr/inksac/api/file/getAllFiles.php',{
+        method: 'POST',
+        header: {
+            'Accept' : 'application/json',
+            'Content-type' : 'application/json'
+        },
+        body:JSON.stringify({
+            // passing input to php
+            //email: userEmail,
+            //password: userPassword
+            key: 'test',
+        })
+    })
+    .then((reponse) => reponse.json())
+    .then((reponseJson) => {
+        alert(reponseJson);
+    })
+    .catch(function(error) {
+        console.log('Erreur:' + error.message)
+    })
     const [list, setList] = useState([
         {title: 'Cours Maths', author: 'Mme Gauthier', comment:'Meilleur cours de l\'année', expirationDate: '10-6', key: '1'},
         {title: 'Rapport SHS', author: 'Mme remerciment', comment:'Pas mal votre rapport', expirationDate: '30-08', key: '2'},

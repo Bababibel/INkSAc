@@ -5,10 +5,8 @@ import RequestForm from "../assets/shared/RequestForm";
 import Card from "../assets/shared/RequestCard";
 
 export default function RequestScreen({ navigation }) {
-<<<<<<< HEAD
   const [modalOpen, setModalOpen] = useState(false);
 
-=======
   const [list, setList] = useState([
     {title: 'Cours Maths', author: 'Mme Gauthier', comment:'Meilleur cours de l\'année', expirationDate: '10-6', key: '1'},
     {title: 'Rapport SHS', author: 'Mme remerciment', comment:'Pas mal votre rapport', expirationDate: '30-08', key: '2'},
@@ -22,7 +20,6 @@ export default function RequestScreen({ navigation }) {
     {title: 'azesfr', author: 'EZQRGD', comment:'rgshsnh', expirationDate: 'ehtdfw', key: '10'}
   ]);
   const [modalVisible, setModalVisible] = useState(false);
->>>>>>> 7f064898cf18a99c027bfc03cf8f5fa2794cc18e
   return (
     <View style={globalStyles.container}>
       <TouchableOpacity>
