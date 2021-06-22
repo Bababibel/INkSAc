@@ -6,6 +6,8 @@ import EditCard from "../assets/shared/EditCard";
 import Card from "../assets/shared/RequestCard";
 
 export default function RequestScreen({ navigation }) {
+  const [modalOpen, setModalOpen] = useState(false);
+
   const [list, setList] = useState([
     {title: 'Cours Maths', author: 'Mme Gauthier', comment:'Meilleur cours de l\'année', expirationDate: '10/06', key: '1'},
     {title: 'Rapport SHS', author: 'Mme remerciment', comment:'Pas mal votre rapport', expirationDate: '30/08', key: '2'},
