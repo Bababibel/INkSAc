@@ -1,13 +1,34 @@
 import React from 'react';
-import { Platform, StatusBar, StyleSheet, View } from 'react-native';
+import { StyleSheet, View, TextInput, Text } from 'react-native';
 import { globalColors } from '../styles/global_styles';
 
 export default function RequestForm(props) {
     return (
         <View style={styles.form}>
-            <View style={styles.formField}>
+            {/* <View style={styles.formField}>
                 { props.children }
+            </View> */}
+
+            <View style={styles.formField}>
+                <Text>Nombre de fichiers</Text>
+                <TextInput keyboardType="numeric" placeholder='Entre 1 et 10'></TextInput>
             </View>
+            
+            <View style={styles.formField}>
+                <Text>Nom du premier fichier</Text>
+                <TextInput placeholder='Chapitre 2/TD 8&9/...'></TextInput>
+            </View>
+            
+            <View style={styles.formField}>
+                <Text>Nom du deuxième fichier</Text>
+                <TextInput placeholder='Chapitre 2/TD 8&9/...'></TextInput>
+            </View>
+            
+            <View style={styles.formField}>
+                <Text>Nom du troisième fichier</Text>
+                <TextInput placeholder='Chapitre 2/TD 8&9/...'></TextInput>
+            </View>
+
         </View>
     )
 }
