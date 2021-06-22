@@ -7,7 +7,7 @@ import { globalStyles } from '../assets/styles/global_styles';
 
 const dataLoad = () => {
     fetch('https://bgauthier.fr/inksac/api/file/getAllFiles.php')
-    .then(reponse => reponse.json)
+    .then(reponse => reponse.json())
     .then(files => console.log(files))
 }
 
@@ -25,7 +25,7 @@ export default function PrintScreen({ navigation }){
         return (
             <AppLoading
             startAsync={dataLoad} 
-            onError={(text) => Alert.alert('Éched du chargement :(', String(text), [{text: 'Ok'}])}
+            onError={(text) => Alert.alert('Échec du chargement :(', String(text), [{text: 'Ok'}])}
             onFinish={() => {setDataLoaded(true)}}
             />
         ) 
