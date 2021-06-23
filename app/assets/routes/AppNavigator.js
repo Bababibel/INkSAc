@@ -16,7 +16,7 @@ const Stack = createStackNavigator();
 
 export const AppNavigator = () => (
   <NavigationContainer>
-    <Stack.Navigator initialRouteName='RequestElement' headerMode='none'>
+    <Stack.Navigator initialRouteName='Home' headerMode='none'>
       <Stack.Screen name="Home" component={WelcomeScreen} />
       <Stack.Screen name="Login" component={LoginScreen} />
       <Stack.Screen name="Choose" component={ChooseScreen} />
