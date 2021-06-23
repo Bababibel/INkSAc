@@ -1,39 +1,19 @@
-import React from "react";
-import { View, Text, TouchableOpacity, FlatList, Modal, Alert, Button } from "react-native";
-import { globalStyles, globalColors } from "../assets/styles/global_styles";
-import AppLoading from 'expo-app-loading';
+import React, {useState} from "react";
+import axios from 'axios';
+import { View, Text, TouchableOpacity, FlatList, Modal, Alert, Button, StyleSheet } from "react-native";
+import UploadForm from "../assets/modules/UploadFormModule";
+import { globalStyles } from "../assets/styles/global_styles";
 import RequestForm from "../assets/shared/RequestForm";
 import EditCard from "../assets/shared/EditCard";
 import Card from "../assets/shared/RequestCard";
+import { FontDisplay } from "expo-font";
 
 export default function RequestScreen({ route, navigation }) {  
-  console.log('##############################')
-  console.log(route.params)
-  console.log('##############################')
+
+
   if (typeof route.params == 'undefined')
     return (
-      <View style={globalStyles.container}>
-          <Text style={globalStyles.titleText}>
-            Formulez une nouvelle demande
-          </Text>
-          <form action="/inksac/api/upload.php" method="post" encType="multipart/form-data">
-            <label>Titre du fichier
-              <input type="text" name="fileName"/> 
-            </label>
-            <label>Deadline souhaitée
-              <input type="date" name="deadline"/> 
-            </label>
-            <label>Date d'impression souhaitée
-              <input type="date" name="printDate"/> 
-            </label>
-            <label>Commentaire
-              <input type="text" name="comment"/> 
-            </label>
-            <input type="file" name="fileToUpload" id="fileToUpload"/> 
-            <input type="submit" value="Enregistrer les informations" name="submit"/>
-          </form>
-          <Button title='Fermer sans enregistrer'  onPress={ () => navigation.goBack()}/>
-      </View>
+      <UploadForm/>
     );
   else 
     return (
@@ -43,8 +23,10 @@ export default function RequestScreen({ route, navigation }) {
             Modifez une demande précédente
           </Text>
         </RequestForm>
-        <Button title='Fermer sans enregistrer'  onPress={ () => navigation.goBack()}/>
-        <Button title='Enregistrer les modifications'  onPress={ () => navigation.goBack()}/>
+        <Button style={styles.marginTop} title='Fermer sans enregistrer'  onPress={ () => navigation.goBack()}/>
+        <Button style={styles.marginTop} title='Enregistrer les modifications'  onPress={ () => navigation.goBack()}/>
       </View>
     )
 }
+
+
