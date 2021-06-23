@@ -1,7 +1,13 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, FlatList, Modal, Alert, Button } from "react-native";
+import { View, Text,
+  TouchableOpacity,
+  FlatList,
+  Modal,
+  Alert,
+  Button
+} from "react-native";
 import { globalStyles, globalColors } from "../assets/styles/global_styles";
-import AppLoading from 'expo-app-loading';
+import AppLoading from "expo-app-loading";
 import RequestForm from "../assets/shared/RequestForm";
 import EditCard from "../assets/shared/EditCard";
 import Card from "../assets/shared/RequestCard";
@@ -15,28 +21,31 @@ export default function RequestScreen({ navigation }) {
     {color: '', format: '', name: '', key: '', nb_per_page: '', recto_verso: '', stapple: ''}
   ]);
 
-  const [info, setList] = useState([]);
-
   const dataLoad = () => {
-    fetch('https://bgauthier.fr/inksac/api/file/getAllFiles.php')
-    .then(reponse => reponse.json())
-    .then((list) => {
-        console.log(list)
+    fetch("https://bgauthier.fr/inksac/api/request/getAllRequests.php")
+      .then((reponse) => reponse.json())
+      .then((list) => {
         list.data.map((item) => {
-            setList((prevItem) => {
-                return [
-                    {color: item.color, format: item.format, name: item.name, key: item.id, nb_per_page: item.nb_per_page, recto_verso: item.recto_verso, stapple: item.stapple}, 
-                    ...prevItem];
-            })
-        })
-    })
-    .catch(() => {
-        Alert.alert('erreur data');
-    })
-    .done()
-}
+          setList((prevItem) => {
+            return [
+              {
+                author: item.author,
+                comment: item.comment,
+                expiration_date: item.expiration_date,
+                key: item.id,
+                title: item.title,
+              },
+              ...prevItem,
+            ];
+          });
+        });
+      })
+      .catch(() => {
+        Alert.alert("erreur data");
+      });
+  };
 
- 
+  const [info, setList] = useState([]); 
 
   if (dataLoaded) {
     return (
@@ -57,7 +66,7 @@ export default function RequestScreen({ navigation }) {
           <TouchableOpacity onPress={() => setModalVisible(!modalVisible)}>
             <Text style={globalStyles.closeText}>Fermer sans enregistrer</Text>
           </TouchableOpacity>
-          <RequestForm>
+          <RequestForm >
             <Text style={globalStyles.titleText}>
               Formulez une nouvelle demande
             </Text>
@@ -82,10 +91,14 @@ export default function RequestScreen({ navigation }) {
   } else {
     return (
       <AppLoading
-      startAsync={dataLoad} 
-      onError={(text) => Alert.alert('Échec du chargement :(', String(text), [{text: 'Ok'}])}
-      onFinish={() => {setDataLoaded(true)}}
+        startAsync={dataLoad}
+        onError={(text) =>
+          Alert.alert("Échec du chargement :(", String(text), [{ text: "Ok" }])
+        }
+        onFinish={() => {
+          setDataLoaded(true);
+        }}
       />
-    ) 
+    );
   }
 }

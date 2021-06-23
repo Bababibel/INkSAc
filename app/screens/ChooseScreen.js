@@ -34,7 +34,7 @@ export default function ChooseScreen({ navigation }){
             Alert.alert('erreur data');
         })
         .done()
-
+        /*
         fetch('https://bgauthier.fr/inksac/api/request/getFile.php')
         .then(reponse => reponse.json())
         .then((list) => {
@@ -45,7 +45,7 @@ export default function ChooseScreen({ navigation }){
                         ...prevItem];
                 })
             })
-        })
+        })*/
     }
 
     

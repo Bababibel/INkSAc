@@ -62,6 +62,11 @@ export default function RequestScreen({ navigation }) {
               Formulez une nouvelle demande
             </Text>
           </RequestForm>
+          <form action="/inksac/api/upload.php" method="post" enctype="multipart/form-data">
+            Select image to upload:
+            <input type="file" name="fileToUpload" id="fileToUpload"/> 
+            <input type="submit" value="Upload Image" name="submit"/>
+          </form>
         </Modal>
         <FlatList
           data={info}
