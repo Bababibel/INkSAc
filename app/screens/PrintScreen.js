@@ -38,9 +38,9 @@ export default function PrintScreen({ navigation }){
     const handleModal = (item) => {
         if(Platform.OS === 'web'){
             navigation.push('PrintElement')
+            console.log("coucou")
         } else {
-            setModalOpen(true),
-            setSelected(item)
+            
         }
     }
 
@@ -51,7 +51,7 @@ export default function PrintScreen({ navigation }){
                     <FlatList
                         data={info}
                         renderItem={({item}) => (
-                            <TouchableOpacity onPress={ () => handleModal(item)}>
+                            <TouchableOpacity onPress={ () => navigation.navigate('PrintElement', item)}>
                                 <Card>
                                     <Text style={globalStyles.modalText}>{ item.name }</Text>
                                 </Card>
@@ -83,7 +83,7 @@ export default function PrintScreen({ navigation }){
                     <FlatList
                         data={info}
                         renderItem={({item}) => (
-                            <TouchableOpacity onPress={ () => handleModal(item)}>
+                            <TouchableOpacity onPress={ () => {setModalOpen(true), setSelected(item)}}>
                                 <Card>
                                     <Text style={globalStyles.modalText}>{ item.name }</Text>
                                 </Card>
