@@ -51,7 +51,14 @@ export default function PrintScreen({ navigation }){
                     <FlatList
                         data={info}
                         renderItem={({item}) => (
-                            <TouchableOpacity onPress={ () => navigation.navigate('PrintElement', item)}>
+                            <TouchableOpacity onPress={ () => navigation.navigate('PrintElement', {
+                                name : item.name,
+                                recto_verso : item.recto_verso,
+                                format : item.format,
+                                color : item.color,
+                                stapple : item.stapple,
+                                nb_per_page : item.nb_per_page,
+                                })}>
                                 <Card>
                                     <Text style={globalStyles.modalText}>{ item.name }</Text>
                                 </Card>
