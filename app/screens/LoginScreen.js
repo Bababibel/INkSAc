@@ -35,11 +35,7 @@ export default function LoginScreen({ navigation }){
                         validationSchema={LoginSchema}
                         onSubmit={(values) => {
                             if(values.id.toLowerCase() == 'prof') {
-                                if(Platform.OS === 'web'){  
-                                    console.log('Web version')
-                                    navigation.push('RequestWeb')
-                                }
-                                else {navigation.push('Request')}
+                                navigation.push('Request')
                             }
                             else if(values.id.toLowerCase() == 'repro') {
                                 navigation.push('Print')
