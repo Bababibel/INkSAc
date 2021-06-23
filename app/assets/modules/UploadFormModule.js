@@ -1,7 +1,6 @@
 import axios from 'axios';
 import React,{Component} from 'react';
-import { Button, View, Text, StyleSheet } from 'react-native';
-
+import { View, Text } from 'react-native';
 import { globalStyles } from "../styles/global_styles";
 import constants from '../globals/constants';
 
