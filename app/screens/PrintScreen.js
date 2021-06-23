@@ -17,7 +17,26 @@ export default function PrintScreen({ navigation }){
     const [info, setList] = useState([]);
 
     const dataLoad = () => {
-        fetch('https://bgauthier.fr/inksac/api/file/getAllFiles.php')
+        fetch('https://bgauthier.fr/inksac/api/request/getAllRequests.php')
+        .then(reponse => reponse.json())
+        .then((list) => {
+            console.log(list)
+            list.data.map((item) => {
+                setList((prevItem) => {
+                    return [
+                        {color: item.color, format: item.format, name: item.name, key: item.id, nb_per_page: item.nb_per_page, recto_verso: item.recto_verso, stapple: item.stapple}, 
+                        ...prevItem];
+                })
+            })
+        })
+        .catch(() => {
+            Alert.alert('erreur data');
+        })
+        .done()
+    }
+
+    const requestLoad = () => {
+        fetch('https://bgauthier.fr/inksac/api/file/getFile.php?id=' + item.id)
         .then(reponse => reponse.json())
         .then((list) => {
             console.log(list)
