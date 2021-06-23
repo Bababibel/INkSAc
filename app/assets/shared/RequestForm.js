@@ -10,7 +10,6 @@ export default function RequestForm(props) {
   function onFormSubmit(values) {
     console.log('close 2')
     console.log(values);
-    props.visible = false;
   }
 
   const [show, setShow] = useState(false);
@@ -22,9 +21,10 @@ export default function RequestForm(props) {
   return (
     <View style={styles.form}>
       
-      {/* <View style={styles.formField}>
-                            { props.children }
-                        </View> */}
+     <View style={styles.formTitle}>
+        { props.children }
+    </View>
+
       <Formik
         initialValues={{
           subject: "",
@@ -166,6 +166,9 @@ const styles = StyleSheet.create({
     shadowRadius: 2,
     marginHorizontal: 4,
     marginVertical: 6,
+  },
+  formTitle : {
+    fontSize: 50,
   },
   formField: {
     marginHorizontal: 18,

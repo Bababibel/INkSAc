@@ -4,7 +4,8 @@ import { View, Text,
   FlatList,
   Modal,
   Alert,
-  Button
+  Button,
+  Platform
 } from "react-native";
 import { globalStyles, globalColors } from "../assets/styles/global_styles";
 import AppLoading from "expo-app-loading";
@@ -48,6 +49,34 @@ export default function RequestScreen({ navigation }) {
   const [info, setList] = useState([]); 
 
   if (dataLoaded) {
+    if(Platform.OS === 'web'){
+      return (
+          <View style={globalStyles.container}>
+            <TouchableOpacity>
+              <Card>
+                <Text
+                  style={globalStyles.titleText}
+                  onPress={() => navigation.navigate('RequestElement')}
+                >
+                  Formulez une nouvelle demande
+                </Text>
+              </Card>
+            </TouchableOpacity>
+              <FlatList
+                  data={info}
+                  renderItem={({item}) => (
+                      <TouchableOpacity onPress={ () => navigation.navigate('RequestElement', { item : item })}>
+                          <Card>
+                              <Text style={globalStyles.modalText}>{ item.name }</Text>
+                          </Card>
+                      </TouchableOpacity>
+                  )}
+              />
+              <View style={globalStyles.backButton}>
+                  <Button title='Logout' onPress={navigation.goBack}/>
+              </View>
+          </View>
+      )} else {
     return (
       <View style={globalStyles.container}>
         <TouchableOpacity>
@@ -88,7 +117,7 @@ export default function RequestScreen({ navigation }) {
         </View>
       </View>
     );
-  } else {
+  }} else {
     return (
       <AppLoading
         startAsync={dataLoad}
