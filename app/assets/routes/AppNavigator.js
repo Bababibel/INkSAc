@@ -9,6 +9,7 @@ import ChooseScreen from "../../screens/ChooseScreen"
 import RequestScreen from "../../screens/RequestScreen"
 import RequestScreenWeb from "../../screens/RequestScreenWeb"
 import PrintScreen from "../../screens/PrintScreen";
+import PrintElementScreen from "../../screens/PrintElementScreen";
 
 const Stack = createStackNavigator();
 
@@ -22,6 +23,7 @@ export const AppNavigator = () => (
       <Stack.Screen name="Request" component={RequestScreen} />
       <Stack.Screen name="RequestWeb" component={RequestScreenWeb} />
       <Stack.Screen name="Print" component={PrintScreen} />
+      <Stack.Screen name="PrintElement" component={PrintElementScreen} />
 
     </Stack.Navigator>
   </NavigationContainer>

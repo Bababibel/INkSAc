@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, Alert, Modal, TouchableOpacity, Button, FlatList} from 'react-native';
+import {View, Text, Alert, Modal, TouchableOpacity, Button, FlatList, Platform} from 'react-native';
 import { useState } from 'react/cjs/react.development';
 import AppLoading from 'expo-app-loading';
 import Card from '../assets/shared/RequestCard';
@@ -35,39 +35,67 @@ export default function PrintScreen({ navigation }){
         .done()
     }
 
+    const handleModal = (item) => {
+        if(Platform.OS === 'web'){
+            navigation.push('PrintElement')
+        } else {
+            setModalOpen(true),
+            setSelected(item)
+        }
+    }
+
     if (dataLoaded) {
-        return (
-            <View style={globalStyles.container}>
-                <Modal visible={modalOpen} animationType='slide'>
-                    <TouchableOpacity onPress={() => setModalOpen(false)}>
-                        <Text style={globalStyles.closeText}>Close</Text>
-                    </TouchableOpacity>
-                    <View style={globalStyles.titleText}>
-                        <Text>name : {selected.name}</Text>
-                        <Text>recto_verso : {selected.recto_verso}</Text>
-                        <Text>format : {selected.format}</Text>
-                        <Text>couleur : {selected.color}</Text>
-                        <Text>agraphes : {selected.stapple}</Text>
-                        <Text>Diapo par page : {selected.nb_per_page}</Text>
-                        <Button title='Accept'  onPress={ () => setModalOpen(false)}/>
-                        <Button title='Refuse'  onPress={ () => setModalOpen(false)}/>
+        if(Platform.OS === 'web'){
+            return (
+                <View style={globalStyles.container}>
+                    <FlatList
+                        data={info}
+                        renderItem={({item}) => (
+                            <TouchableOpacity onPress={ () => handleModal(item)}>
+                                <Card>
+                                    <Text style={globalStyles.modalText}>{ item.name }</Text>
+                                </Card>
+                            </TouchableOpacity>
+                        )}
+                    />
+                    <View style={globalStyles.backButton}>
+                        <Button title='Logout' onPress={navigation.goBack}/>
                     </View>
-                </Modal>
-                <FlatList
-                    data={info}
-                    renderItem={({item}) => (
-                        <TouchableOpacity onPress={ () => {setModalOpen(true), setSelected(item)}}>
-                            <Card>
-                                <Text style={globalStyles.titleText}>{ item.name }</Text>
-                            </Card>
-                        </TouchableOpacity>
-                    )}
-                />
-                <View style={globalStyles.backButton}>
-                    <Button title='Logout' onPress={navigation.goBack}/>
                 </View>
-            </View>
-        )
+            )} else {
+            return (
+                <View style={globalStyles.container}>
+                    <Modal visible={modalOpen} animationType='slide'>
+                        <TouchableOpacity onPress={() => setModalOpen(false)}>
+                            <Text style={globalStyles.closeText}>Close</Text>
+                        </TouchableOpacity>
+                        <View style={globalStyles.modalText}>
+                            <Text>name : {selected.name}</Text>
+                            <Text>recto_verso : {selected.recto_verso}</Text>
+                            <Text>format : {selected.format}</Text>
+                            <Text>couleur : {selected.color}</Text>
+                            <Text>agraphes : {selected.stapple}</Text>
+                            <Text>Diapo par page : {selected.nb_per_page}</Text>
+                            <Button title='Accept'  onPress={ () => setModalOpen(false)}/>
+                            <Button title='Refuse'  onPress={ () => setModalOpen(false)}/>
+                        </View>
+                    </Modal>
+                    <FlatList
+                        data={info}
+                        renderItem={({item}) => (
+                            <TouchableOpacity onPress={ () => handleModal(item)}>
+                                <Card>
+                                    <Text style={globalStyles.modalText}>{ item.name }</Text>
+                                </Card>
+                            </TouchableOpacity>
+                        )}
+                    />
+                    <View style={globalStyles.backButton}>
+                        <Button title='Logout' onPress={navigation.goBack}/>
+                    </View>
+                </View>
+            )
+        }
     } else {
         return (
             <AppLoading
