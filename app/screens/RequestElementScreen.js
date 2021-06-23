@@ -1,12 +1,8 @@
-import React, {useState} from "react";
-import axios from 'axios';
-import { View, Text, TouchableOpacity, FlatList, Modal, Alert, Button, StyleSheet } from "react-native";
-import UploadForm from "../assets/modules/UploadFormModule";
-import { globalStyles } from "../assets/styles/global_styles";
-import RequestForm from "../assets/shared/RequestForm";
-import EditCard from "../assets/shared/EditCard";
-import Card from "../assets/shared/RequestCard";
-import { FontDisplay } from "expo-font";
+import React from 'react';
+import { View, Text, Button } from 'react-native';
+import UploadForm from '../assets/modules/UploadFormModule';
+import { globalStyles } from '../assets/styles/global_styles';
+import RequestForm from '../assets/shared/RequestForm';
 
 export default function RequestScreen({ route, navigation }) {  
 
