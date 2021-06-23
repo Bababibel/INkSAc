@@ -1,21 +1,64 @@
-import React from "react";
-import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
-import { globalColors } from "../styles/global_styles";
+import React, { useState } from "react";
+import {
+  StyleSheet,
+  View,
+  Text,
+  Alert,
+  Pressable,
+  Modal,
+} from "react-native";
+import { globalColors, globalStyles } from "../styles/global_styles";
+import RequestForm from "./RequestForm";
 
-export default function EditCard(props, { navigation }) {
+export default function EditCard (props) {
+  
+  const [modalVisible, setModalVisible] = useState(false);
+
   return (
     <View style={styles.card}>
+      <Modal visible={modalVisible} animationType="slide">
+        <Pressable onPress={() => setModalVisible(!modalVisible)}>
+          <Text style={globalStyles.closeText}>Fermer sans enregistrer</Text>
+        </Pressable>
+        <RequestForm modify={true} title={props.title} id={props.id} >
+          <Text style={globalStyles.titleText}>
+            Formulez une nouvelle demande
+          </Text>
+        </RequestForm>
+      </Modal>
       <View style={styles.cardIconContainer}>
-        <TouchableOpacity style={styles.cardIcon} onTouch={() => navigation.push("Login")}>
-            <Text style={styles.cardIconText}>Éditer</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.cardIcon} onTouch={() => navigation.push("Request")}>    
-            <Text style={styles.cardIconText}>Supprimer</Text>
-        </TouchableOpacity>
+        <Pressable
+          style={styles.cardIcon}
+          onPress={() => setModalVisible(true)
+          }
+        >
+          <Text style={styles.cardIconText}>Éditer</Text>
+        </Pressable>
+        <Pressable
+          style={styles.cardIcon}
+          onPress={() =>
+            Alert.alert(
+              "Attention !",
+              "Voulez-vous vraiment supprimer cette requête ?",
+              [
+                {
+                  text: "Annuler",
+                  style: "cancel",
+                },
+                {
+                  text: "Je suis sûr de moi",
+                  onPress: () => {
+                    console.log("Suppresion demandée de la requête d'id " + props.id)
+                  },
+                },
+              ]
+            )
+          }
+        >
+          <Text style={styles.cardIconText}>Supprimer</Text>
+        </Pressable>
       </View>
-      <View style={styles.cardContent}>
-          {props.children}
-        </View>
+      <View style={styles.cardContent}>{props.children}</View>
     </View>
   );
 }
@@ -44,8 +87,8 @@ const styles = StyleSheet.create({
     width: "50%",
     justifyContent: "center",
     textAlign: "center",
-    borderWidth : 1,
-    borderColor: 'black',
+    borderWidth: 1,
+    borderColor: "black",
   },
   cardIconText: {
     textAlign: "center",

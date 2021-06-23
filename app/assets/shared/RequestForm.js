@@ -1,80 +1,150 @@
-import React from "react";
+import React, { useState } from "react";
 import { StyleSheet, View, TextInput, Text, Button } from "react-native";
-import DateTimePicker from "@react-native-community/datetimepicker";
+import RNDateTimePicker from "@react-native-community/datetimepicker";
 import { globalColors } from "../styles/global_styles";
 import { Formik } from "formik";
+import FilePickerManager from 'react-native-file-picker';
 
 export default function RequestForm(props) {
-  const date = new Date();
+  const dateToday = new Date();
 
   function onFormSubmit(values) {
+    console.log('close 2')
     console.log(values);
+    props.visible = false;
   }
+
+  const [show, setShow] = useState(false);
+
+  const showDatepicker = () => {
+    setShow(true);
+  };
 
   return (
     <View style={styles.form}>
+      
       {/* <View style={styles.formField}>
-                { props.children }
-            </View> */}
-
+                            { props.children }
+                        </View> */}
       <Formik
-        initialValues={{ file_number: "", subject: "", file1_name: "", file2_name: "", file3_name: "", print_date: date}}
-        onSubmit={(values) => console.log(values)}
+        initialValues={{
+          subject: "",
+          author: "Colonel Moutarde",
+          title: "",
+          comment: "",
+          file_number: "",
+          file1_title: "",
+          file2_title: "",
+          file3_title: "",
+          creation_date: dateToday,
+          deadline: dateToday,
+          delivery_date: dateToday,
+          expiration_date: dateToday,
+          hidden: "",
+          state: "pending",
+          id: "",
+          file1: "",
+        }}
+        onSubmit={values => {
+          console.log('close 1.5')
+          onFormSubmit(values)
+        }}
       >
-        {(props) => (
+        {({handleChange, handleBlur, handleSubmit, values}) => (
           <View>
+
             <View style={styles.formField}>
-              <Text>Nombre de fichiers</Text>
+              <Text>Nombre de fichiers </Text>
               <TextInput
-              value={props.values.file_number}
+                value={values.file_number}
                 keyboardType="numeric"
                 placeholder="Entre 1 et 10"
-                onChangeText={props.handleChange('file_number')}
+                onChangeText={handleChange("file_number")}
               ></TextInput>
             </View>
-
+            
             <View style={styles.formField}>
-              <Text>Matière</Text>
-              <TextInput 
-              value = {props.values.subject}
-              placeholder="Mathématiques/Electro-technique"
-              onChangeText={props.handleChange('subject')}></TextInput>
+              <Text>Matière </Text>
+              <TextInput
+                value={values.subject}
+                placeholder="Mathématiques/Electro-technique/..."
+                onChangeText={handleChange("subject")}
+              >   
+              </TextInput>
+            </View>
+            
+            <View style={styles.formField}>
+              <Text>Commentaire</Text>
+              <TextInput
+                value={values.comment}
+                placeholder="Mathématiques/Electro-technique/..."
+                onChangeText={handleChange("comment")}
+              >   
+              </TextInput>
             </View>
 
             <View style={styles.formField}>
-              <Text>Nom du premier fichier</Text>
-              <TextInput value={props.values.file1_name}
-              placeholder="Chapitre 2/TD 8&9/..."
-              onChangeText={props.handleChange('file1_name')}></TextInput>
+              <Text>Nom du premier fichier </Text>
+              <TextInput
+                value={values.file1_title}
+                placeholder="Chapitre 2/TD 8&9/..."
+                onChangeText={handleChange("file1_title")}
+              >
+              </TextInput>
             </View>
 
             <View style={styles.formField}>
-              <Text>Nom du deuxième fichier</Text>
-              <TextInput 
-              value={props.values.file2_name}
-              placeholder="Chapitre 2/TD 8&9/..."
-              onChangeText={props.handleChange('file2_name')}></TextInput>
+              <Text>Nom du deuxième fichier </Text>
+              <TextInput
+                value={values.file2_title}
+                placeholder="Chapitre 2/TD 8&9/..."
+                onChangeText={handleChange("file2_title")}
+              >
+              </TextInput>
             </View>
 
             <View style={styles.formField}>
-              <Text>Nom du troisième fichier</Text>
-              <TextInput 
-              value={props.values.file3_name}
-              placeholder="Chapitre 2/TD 8&9/..."
-              onChangeText={props.handleChange('file3_name')}></TextInput>
+              <Text>Nom du troisième fichier </Text>
+              <TextInput
+                value={values.file3_title}
+                placeholder="Chapitre 2/TD 8&9/..."
+                onChangeText={handleChange("file3_title")}
+              >
+              </TextInput>
             </View>
 
             {/* <View style={styles.formField}>
-              <Text>Date d'impression souhaitée</Text>
-              <DateTimePicker value={props.values.print_date} mode="date" 
-              onChangeText={props.handleChange('print_date')}/>
+              <Text>Premier fichier </Text>
+              <FilePickerManager
+                value={values.file1}
+                onChangeText={handleChange("file1")}
+              >
+              </FilePickerManager>
             </View> */}
 
-            <Button
-              title="Proposer ce.s fichier.s"
-              onPress = {()=> {props.handleSubmit}
+            {/* <View>
+              <Button onPress={showDatepicker} title="Show date picker!" />
+            </View>
 
-                }
+            <View style={styles.formField}>
+              <Text>Date d'impression souhaitée</Text>
+              {show && (<RNDateTimePicker value={values.deadline} mode="date" 
+              minimumDate={dateToday}
+              onChange={(event, date)=>handleChange('deadline')}/>)}
+              <TextInput
+                value={values.deadline}
+                placeholder={dateToday.toDateString}
+                onChangeText={handleChange("deadline")}
+              ></TextInput>
+            </View> */}
+            
+            <Button
+              title="Proposer ces fichiers"
+              color={globalColors.primary} 
+              onPress={() => {
+                console.log('close 1')
+                handleSubmit;
+              }}
             />
           </View>
         )}

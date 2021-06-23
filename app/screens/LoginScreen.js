@@ -33,6 +33,7 @@ export default function LoginScreen({ navigation }){
                     initialValues={{ id : '', password : ''}}
                     validationSchema={LoginSchema}
                     onSubmit={(values) => {
+                        console.log(values);
                         if(values.id.toLowerCase() == 'prof') {
                             navigation.push('Request')
                         }
@@ -40,8 +41,6 @@ export default function LoginScreen({ navigation }){
                             navigation.push('Print')
                         }
                         else {
-                            console.log(values);
-                            //console.log(values.id);
                             navigation.push('Choose')
                         }                            
                     }}
@@ -52,6 +51,7 @@ export default function LoginScreen({ navigation }){
                             <TextInput
                                 style={globalStyles.input}
                                 placeholder='Identifiant'
+                                autoCapitalize='none'
                                 onChangeText={props.handleChange('id')}
                                 value={props.values.id} 
                             />
@@ -66,14 +66,14 @@ export default function LoginScreen({ navigation }){
                             />
                             <Text style={globalStyles.errorText}>{ props.touched.password && props.errors.password }</Text>
                             <View>
-                                <Button title='submit' color={globalColors.primary} onPress = {props.handleSubmit}/>
+                                <Button title='se connecter' color={globalColors.primary} onPress = {props.handleSubmit}/>
                             </View>
                         
                         </View>
                     )}
                 </Formik>
                 <View style={globalStyles.backButton}>
-                    <Button color={globalColors.secondary} title='GO back to main screen' onPress = {pressHandler}/>
+                    <Button color={globalColors.secondary} title="retour à l'accueil" onPress = {pressHandler}/>
                 </View>
             </View>
         </TouchableWithoutFeedback>
