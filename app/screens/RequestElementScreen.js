@@ -1,15 +1,19 @@
-import React from 'react';
-import { View, Text, Button } from 'react-native';
-import UploadForm from '../assets/modules/UploadFormModule';
-import { globalStyles } from '../assets/styles/global_styles';
-import RequestForm from '../assets/shared/RequestForm';
+import React, {useState} from "react";
+import { View, Text, Button, StyleSheet, Dimensions } from "react-native";
+import UploadForm from "../assets/modules/UploadFormModule";
+import { globalStyles } from "../assets/styles/global_styles";
+import RequestForm from "../assets/shared/RequestForm";
 
 export default function RequestScreen({ route, navigation }) {  
 
 
   if (typeof route.params == 'undefined')
     return (
-      <UploadForm/>
+      <View>
+        <UploadForm style={{height: Dimensions.get('window').height /1.2,}} />
+        <Button style={{top: 90}} title='Fermer sans enregistrer'  onPress={() => navigation.goBack()}/>
+      </View>
+      
     );
   else 
     return (

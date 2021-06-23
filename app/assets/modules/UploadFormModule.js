@@ -148,8 +148,7 @@ class UploadForm extends Component {
                 </form>
                 {this.fileData()}
                 {this.requestData()}
-                <button onClick={this.onFileUpload}>Enregistrer la requêquête</button>
-                <Button title='Fermer sans enregistrer'  onPress={() => navigation.goBack()}/>
+                <button onClick={this.onFileUpload}>Enregistrer la requête</button>
             </View>
         );
 	}
