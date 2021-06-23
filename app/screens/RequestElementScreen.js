@@ -1,7 +1,6 @@
 import React from "react";
-import { View, Text, TouchableOpacity, FlatList, Modal, Alert, Button } from "react-native";
+import { View, Text, TouchableOpacity, FlatList, Modal, Alert, Button, StyleSheet } from "react-native";
 import { globalStyles, globalColors } from "../assets/styles/global_styles";
-import AppLoading from 'expo-app-loading';
 import RequestForm from "../assets/shared/RequestForm";
 import EditCard from "../assets/shared/EditCard";
 import Card from "../assets/shared/RequestCard";
@@ -21,8 +20,8 @@ export default function RequestScreen({ route, navigation }) {
             <input type="file" name="fileToUpload" id="fileToUpload"/> 
             <input type="submit" value="Upload Image" name="submit"/>
           </form>
-          <Button title='Fermer sans enregistrer'  onPress={ () => navigation.goBack()}/>
-          <Button title='Enregistrer les modifications'  onPress={ () => navigation.goBack()}/>
+          <Button style={styles.marginTop} title='Fermer sans enregistrer'  onPress={ () => navigation.goBack()}/>
+          <Button style={styles.marginTop} title='Enregistrer les modifications'  onPress={ () => navigation.goBack()}/>
       </View>
     );
   else 
@@ -33,8 +32,14 @@ export default function RequestScreen({ route, navigation }) {
             Modifez une demande précédente
           </Text>
         </RequestForm>
-        <Button title='Fermer sans enregistrer'  onPress={ () => navigation.goBack()}/>
-        <Button title='Enregistrer les modifications'  onPress={ () => navigation.goBack()}/>
+        <Button style={styles.marginTop} title='Fermer sans enregistrer'  onPress={ () => navigation.goBack()}/>
+        <Button style={styles.marginTop} title='Enregistrer les modifications'  onPress={ () => navigation.goBack()}/>
       </View>
     )
 }
+
+const styles = StyleSheet.create({
+  marginTop: {
+    marginTop: 10,
+  }
+});
