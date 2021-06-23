@@ -21,6 +21,7 @@ export const globalStyles = StyleSheet.create({
         paddingTop : Platform.OS === "android" ? StatusBar.currentHeight : 0,
         justifyContent : "center",
         alignItems : "center",
+        minWidth : Platform.OS === "web" ? Dimensions.get('window').width / 4 : Dimensions.get('window').width,
     },
     modalText: {
         fontSize: 18,
@@ -59,6 +60,7 @@ export const globalStyles = StyleSheet.create({
     loginCard: {
         padding : 24,
         justifyContent: 'center',
+        textAlign: 'center',
         minWidth : Platform.OS === "web" ? Dimensions.get('window').width / 4 : Dimensions.get('window').width,
     },
     choiceCard: {

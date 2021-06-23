@@ -6,6 +6,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import WelcomeScreen from "../../screens/WelcomeScreen"
 import LoginScreen from "../../screens/LoginScreen"
 import ChooseScreen from "../../screens/ChooseScreen"
+import ChooseElementScreen from "../../screens/ChooseElementScreen"
 import RequestScreen from "../../screens/RequestScreen"
 import RequestElementScreen from "../../screens/RequestElementScreen"
 import PrintScreen from "../../screens/PrintScreen";
@@ -20,6 +21,7 @@ export const AppNavigator = () => (
       <Stack.Screen name="Home" component={WelcomeScreen} />
       <Stack.Screen name="Login" component={LoginScreen} />
       <Stack.Screen name="Choose" component={ChooseScreen} />
+      <Stack.Screen name="ChooseElement" component={ChooseElementScreen} />
       <Stack.Screen name="Request" component={RequestScreen} />
       <Stack.Screen name="RequestElement" component={RequestElementScreen} />
       <Stack.Screen name="Print" component={PrintScreen} />
