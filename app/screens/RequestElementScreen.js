@@ -17,12 +17,22 @@ export default function RequestScreen({ route, navigation }) {
             Formulez une nouvelle demande
           </Text>
           <form action="/inksac/api/upload.php" method="post" encType="multipart/form-data">
-            Select image to upload:
+            <label>Titre du fichier
+              <input type="text" name="fileName"/> 
+            </label>
+            <label>Deadline souhaitée
+              <input type="date" name="deadline"/> 
+            </label>
+            <label>Date d'impression souhaitée
+              <input type="date" name="printDate"/> 
+            </label>
+            <label>Commentaire
+              <input type="text" name="comment"/> 
+            </label>
             <input type="file" name="fileToUpload" id="fileToUpload"/> 
-            <input type="submit" value="Upload Image" name="submit"/>
+            <input type="submit" value="Enregistrer les informations" name="submit"/>
           </form>
           <Button title='Fermer sans enregistrer'  onPress={ () => navigation.goBack()}/>
-          <Button title='Enregistrer les modifications'  onPress={ () => navigation.goBack()}/>
       </View>
     );
   else 
