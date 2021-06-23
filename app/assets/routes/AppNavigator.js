@@ -7,6 +7,7 @@ import WelcomeScreen from "../../screens/WelcomeScreen"
 import LoginScreen from "../../screens/LoginScreen"
 import ChooseScreen from "../../screens/ChooseScreen"
 import RequestScreen from "../../screens/RequestScreen"
+import RequestScreenWeb from "../../screens/RequestScreenWeb"
 import PrintScreen from "../../screens/PrintScreen";
 
 const Stack = createStackNavigator();
@@ -19,7 +20,9 @@ export const AppNavigator = () => (
       <Stack.Screen name="Login" component={LoginScreen} />
       <Stack.Screen name="Choose" component={ChooseScreen} />
       <Stack.Screen name="Request" component={RequestScreen} />
+      <Stack.Screen name="RequestWeb" component={RequestScreenWeb} />
       <Stack.Screen name="Print" component={PrintScreen} />
+
     </Stack.Navigator>
   </NavigationContainer>
 )

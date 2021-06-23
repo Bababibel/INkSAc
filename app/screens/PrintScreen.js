@@ -63,6 +63,9 @@ export default function PrintScreen({ navigation }){
                         </TouchableOpacity>
                     )}
                 />
+                <View style={globalStyles.backButton}>
+                    <Button title='Logout' onPress={navigation.goBack}/>
+                </View>
             </View>
         )
     } else {

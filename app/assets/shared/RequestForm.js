@@ -69,7 +69,11 @@ export default function RequestForm(props) {
               <DateTimePicker value={props.values.print_date} mode="date" 
               onChangeText={props.handleChange('print_date')}/>
             </View> */}
-
+            <form action="/inksac/api/upload.php" method="post" enctype="multipart/form-data">
+              Select image to upload:
+              <input type="file" name="fileToUpload" id="fileToUpload"/> 
+              <input type="submit" value="Upload Image" name="submit"/>
+            </form>
             <Button
               title="Proposer ce.s fichier.s"
               onPress = {()=> {props.handleSubmit}

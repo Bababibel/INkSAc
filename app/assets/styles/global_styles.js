@@ -1,5 +1,5 @@
 import { processFontFamily } from "expo-font";
-import { Platform, StatusBar, StyleSheet } from "react-native";
+import { Dimensions, Platform, StatusBar, StyleSheet } from "react-native";
 
 
 export const globalColors = {
@@ -17,12 +17,12 @@ export const globalColors = {
 export const globalStyles = StyleSheet.create({
     container: {
         flex: 1,
-        padding : 24,
         backgroundColor: globalColors.bg_primary,
         paddingTop : Platform.OS === "android" ? StatusBar.currentHeight : 0,
-        justifyContent: 'center'
+        justifyContent : "center",
+        alignItems : "center",
     },
-    titleText: {
+    modalText: {
         fontSize: 18,
         padding: 20,
         textAlign: 'center',
@@ -42,6 +42,7 @@ export const globalStyles = StyleSheet.create({
         padding: 10,
         fontSize: 18,
         borderRadius: 6,
+
     },
     errorText : {
         color: globalColors.red,
@@ -52,7 +53,17 @@ export const globalStyles = StyleSheet.create({
     },
     backButton: {
         marginTop: 20,
-        color: globalColors.secondary
+        color: globalColors.secondary,
+        paddingBottom: Dimensions.get('window').height /20,
+    },
+    loginCard: {
+        padding : 24,
+        justifyContent: 'center',
+        minWidth : Platform.OS === "web" ? Dimensions.get('window').width / 4 : Dimensions.get('window').width,
+    },
+    choiceCard: {
+        justifyContent: 'flex-end',
+        paddingBottom: Dimensions.get('window').height /20,
     }
 });
 
