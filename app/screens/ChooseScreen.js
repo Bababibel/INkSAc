@@ -7,7 +7,10 @@ import Card from '../assets/shared/RequestCard';
 
 
 
-export default function ChooseScreen({ navigation }){
+export default function ChooseScreen({ route, navigation }){
+    const list_name = route.params;
+    console.log(list_name.list);
+
     const [dataLoaded, setDataLoaded] = useState(false);
 
     const [selected, setSelected] = useState(
@@ -18,7 +21,7 @@ export default function ChooseScreen({ navigation }){
     const [modalOpen, setModalOpen] = useState(false);
 
     const dataLoad = () => {
-        fetch('https://bgauthier.fr/inksac/api/request/getAllRequests.php')
+        fetch('https://bgauthier.fr/inksac/api/shared/getRequestsForList.php?list_name='+list_name.list)
         .then(reponse => reponse.json())
         .then((request) => {
             request.data.map((item) => {
@@ -28,7 +31,7 @@ export default function ChooseScreen({ navigation }){
                     file.data.map((item2) => {
                         setList((prevItem) => {
                             return [
-                                {key: item2.id, author: item.author_name, deadline: item.deadline, title: item2.name, comment: item.comment, hidden: item.hidden, state: item.state, color: item2.color, format: item2.format, nb_per_page: item2.nb_per_page, recto_verso: item2.recto_verso, stapple: item2.stapple, path: item2.path}, 
+                                {key: item2.id, deadline: item.deadline, author: item.author_name, author_id : item.id, delivery_date: item.delivery_date, title: item2.name, comment: item.comment, hidden: item.hidden, state: item.state, color: item2.color, format: item2.format, nb_per_page: item2.nb_per_page, recto_verso: item2.recto_verso, stapple: item2.stapple, path: item2.path}, 
                                 ...prevItem];
                         })
                     })
