@@ -9,7 +9,7 @@ export default function PrintElementScreen({ route, navigation }){
             <View style={globalStyles.modalText}>
                 <Text>Auteur : {item.author}</Text>
                 <Text>Titre : {item.title}</Text>
-                <Text>Pour le : {item.delivery_date}</Text>
+                <Text>Pour le : {item.deadline}  {/* Attention, deadline au lieu de delivery_date car seule date qui marche actuellement ...*/}</Text>
                 <Text>Recto Verso ? : {item.recto_verso}</Text>
                 <Text>Couleur ? : {item.color}</Text>
                 <Text>Format : {item.format}</Text>

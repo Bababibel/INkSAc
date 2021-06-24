@@ -1,4 +1,5 @@
 import React from 'react';
+import axios from 'axios';
 import {View, Text, Alert, Modal, TouchableOpacity, Button, FlatList, Platform} from 'react-native';
 import { useState } from 'react/cjs/react.development';
 import AppLoading from 'expo-app-loading';
@@ -11,10 +12,9 @@ export default function PrintScreen({ navigation }){
 
     const [modalOpen, setModalOpen] = useState(false);
 
-    const [selected, setSelected] = useState(
-        {key: '', author: '', delivery_date: '', title: '', comment: '', hidden: '', state: '', color: '', format: '', nb_per_page: '', recto_verso: '', stapple: '', path: ''});
+    const [selected, setSelected] = useState([]);
 
-    const [list, setList] = useState([]);
+    const [info, setList] = useState([]);
 
     const dataLoad = () => {
         fetch('https://bgauthier.fr/inksac/api/request/getAllRequests.php')
@@ -25,9 +25,10 @@ export default function PrintScreen({ navigation }){
                 .then(reponse => reponse.json())
                 .then((file) => {
                     file.data.map((item2) => {
+                        console.log(item2)
                         setList((prevItem) => {
                             return [
-                                {key: item2.id, author: item.author_name, delivery_date: item.delivery_date, title: item2.name, comment: item.comment, hidden: item.hidden, state: item.state, color: item2.color, format: item2.format, nb_per_page: item2.nb_per_page, recto_verso: item2.recto_verso, stapple: item2.stapple, path: item2.path}, 
+                                {key: item2.id, deadline: item.deadline, author: item.author_name, author_id : item.id, delivery_date: item.delivery_date, title: item2.name, comment: item.comment, hidden: item.hidden, state: item.state, color: item2.color, format: item2.format, nb_per_page: item2.nb_per_page, recto_verso: item2.recto_verso, stapple: item2.stapple, path: item2.path}, 
                                 ...prevItem];
                         })
                     })
@@ -41,16 +42,41 @@ export default function PrintScreen({ navigation }){
         .done()
     }
 
-    const changeState = (item) => {
+    const changeState = async (item) => {
+        console.log(item)
+        var newState = ''
         if(item.state == 'pending'){
-            fetch('https://bgauthier.fr/inksac/api/request/updateRequests.php?request_id='+item.id+'')
+            newState = "printed"
         }
         else if(item.state == 'printed'){
-            fetch('https://bgauthier.fr/inksac/api/request/getAllRequests.php?request_id=')
+            newState = 'coucou'
         }
         else{
-            fetch('https://bgauthier.fr/inksac/api/request/deleteRequests.php?id='+item.id)
+            newState = "pending"
         }
+        let formData = new FormData();
+        formData.append('id', item.key);
+        formData.append('author', item.author_id);
+        formData.append('deadline', item.deadline);
+        formData.append('delivery_date', item.deadline);
+        formData.append('title', item.title);
+        formData.append('comment', item.comment);
+        formData.append('hidden', item.hidden);
+        formData.append('state',  newState );
+        axios.post('https://bgauthier.fr/inksac/api/request/updateRequest.php', formData, {
+            method: 'POST',
+            headers: { "Content-Type" : "application/json" }
+        })
+        .then((reponse) => {
+            console.log(reponse);
+            if ('message' in reponse.data) {
+                console.log('Trying to update the request now...');
+                setList([])
+                dataLoad()
+            } else {
+                console.log('Internal error. Please try again or contact the support team');
+            }
+        })
     }
 
     if (dataLoaded) {
@@ -58,23 +84,26 @@ export default function PrintScreen({ navigation }){
             return (
                 <View style={globalStyles.container}>
                     <FlatList
-                        data={list}
+                        data={info}
                         renderItem={({item}) => (
-                            <TouchableOpacity onPress={ () => navigation.navigate('PrintElement', { 
-                                author : item.author,
-                                comment : item.comment,
-                                delivery_date : item.delivery_date,
-                                hidden : item.hidden,
-                                key : item.key,
-                                state : item.state,
-                                title : item.title,
-                                color: item.color,
-                                format: item.format,
-                                nb_per_page: item.nb_per_page,
-                                recto_verso: item.recto_verso, 
-                                stapple: item.stapple, 
-                                path: item.path
-                                })}>
+                            <TouchableOpacity onPress={ () => {
+                                console.log(item),
+                                navigation.navigate('PrintElement', { 
+                                    author : item.author,
+                                    comment : item.comment,
+                                    delivery_date : item.delivery_date,
+                                    deadline : item.deadline,
+                                    hidden : item.hidden,
+                                    key : item.key,
+                                    state : item.state,
+                                    title : item.title,
+                                    color: item.color,
+                                    format: item.format,
+                                    nb_per_page: item.nb_per_page,
+                                    recto_verso: item.recto_verso, 
+                                    stapple: item.stapple, 
+                                    path: item.path
+                                })}}>
                                 <Card>
                                     <Text style={globalStyles.modalText}>{ item.title }</Text>
                                 </Card>
@@ -96,7 +125,7 @@ export default function PrintScreen({ navigation }){
                         <View style={globalStyles.modalText}>
                             <Text>Auteur : {selected.author}</Text>
                             <Text>Titre : {selected.title}</Text>
-                            <Text>Pour le : {selected.delivery_date}</Text>
+                            <Text>Pour le : {selected.deadline} {/* Attention, deadline au lieu de delivery_date car seule date qui marche actuellement ...*/} </Text>
                             <Text>Recto Verso ? : {selected.recto_verso}</Text>
                             <Text>Couleur ? : {selected.color}</Text>
                             <Text>Format : {selected.format}</Text>
@@ -106,14 +135,14 @@ export default function PrintScreen({ navigation }){
                             <Text>Lieux : {selected.path}</Text>
                             <Text>Etat : {selected.state}</Text>
                             <Button title={selected.state}  onPress={ () => {
-                                setModalOpen(false)
-                                console.log(selected)
+                                setModalOpen(false),
+                                changeState(selected)
                                 }}
                             />
                         </View>
                     </Modal>
                     <FlatList
-                        data={list}
+                        data={info}
                         renderItem={({item}) => (
                             <TouchableOpacity onPress={ () => {setModalOpen(true), setSelected(item)}}>
                                 <Card>
