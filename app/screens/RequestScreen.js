@@ -56,7 +56,7 @@ export default function RequestScreen({ navigation }) {
               <Card>
                 <Text
                   style={globalStyles.titleText}
-                  onPress={() => navigation.navigate('RequestElement')}
+                  onPress={() => navigation.navigate('RequestElement', {modify : 'non'})}
                 >
                   Formulez une nouvelle demande
                 </Text>
@@ -65,7 +65,7 @@ export default function RequestScreen({ navigation }) {
               <FlatList
                   data={info}
                   renderItem={({item}) => (
-                      <TouchableOpacity onPress={ () => navigation.navigate('RequestElement', { item : item })}>
+                      <TouchableOpacity onPress={ () => navigation.navigate('RequestElement', { item : item, modify: 'oui' })}>
                           <EditCard>
                               <Text style={globalStyles.modalText}>{ item.title }</Text>
                           </EditCard>
