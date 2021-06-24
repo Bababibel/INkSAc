@@ -40,6 +40,9 @@ export default function LoginScreen({ navigation }){
                             else if(values.id.toLowerCase() == 'repro') {
                                 navigation.push('Print')
                             }
+                            else if(values.id.toLowerCase() == 'STI') {
+                                navigation.push('Print')
+                            }
                             else {
                                 navigation.push('Choose')
                             }

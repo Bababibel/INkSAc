@@ -18,7 +18,7 @@ export default function ChooseScreen({ navigation }){
     const [modalOpen, setModalOpen] = useState(false);
 
     const dataLoad = () => {
-        fetch('https://bgauthier.fr/inksac/api/request/getAllRequests.php')
+        fetch('https://bgauthier.fr/inksac/api/shared/getRequestsForList.php?list_name=STI')
         .then(reponse => reponse.json())
         .then((request) => {
             request.data.map((item) => {

@@ -25,6 +25,7 @@ export default function PrintScreen({ navigation }){
                 .then(reponse => reponse.json())
                 .then((file) => {
                     file.data.map((item2) => {
+                        console.log(item2)
                         setList((prevItem) => {
                             return [
                                 {key: item2.id, deadline: item.deadline, author: item.author_name, author_id : item.id, delivery_date: item.delivery_date, title: item2.name, comment: item.comment, hidden: item.hidden, state: item.state, color: item2.color, format: item2.format, nb_per_page: item2.nb_per_page, recto_verso: item2.recto_verso, stapple: item2.stapple, path: item2.path}, 
@@ -42,36 +43,40 @@ export default function PrintScreen({ navigation }){
     }
 
     const changeState = async (item) => {
-        console.log(item);
+        console.log(item)
+        var newState = ''
         if(item.state == 'pending'){
-            let formData = new FormData();
-            formData.append('id', item.key);
-            formData.append('author', item.author_id);
-            formData.append('deadline', item.deadline);
-            formData.append('delivery_date', item.deadline);
-            formData.append('title', item.title);
-            formData.append('comment', item.comment);
-            formData.append('hidden', item.hidden);
-            formData.append('state',  item.comment );
-            axios.post('https://bgauthier.fr/inksac/api/request/updateRequest.php', formData, {
-                method: 'POST',
-                headers: { "Content-Type" : "application/json" }
-            })
-            .then((reponse) => {
-                console.log(reponse);
-                if ('message' in reponse.data) {
-                    console.log('Trying to update the request now...');
-                } else {
-                    console.log('Internal error. Please try again or contact the support team');
-                }
-            })
+            newState = "printed"
         }
         else if(item.state == 'printed'){
-            fetch('https://bgauthier.fr/inksac/api/request/getAllRequests.php?request_id=')
+            newState = 'coucou'
         }
         else{
-            fetch('https://bgauthier.fr/inksac/api/request/deleteRequests.php?id='+item.id)
+            newState = "pending"
         }
+        let formData = new FormData();
+        formData.append('id', item.key);
+        formData.append('author', item.author_id);
+        formData.append('deadline', item.deadline);
+        formData.append('delivery_date', item.deadline);
+        formData.append('title', item.title);
+        formData.append('comment', item.comment);
+        formData.append('hidden', item.hidden);
+        formData.append('state',  newState );
+        axios.post('https://bgauthier.fr/inksac/api/request/updateRequest.php', formData, {
+            method: 'POST',
+            headers: { "Content-Type" : "application/json" }
+        })
+        .then((reponse) => {
+            console.log(reponse);
+            if ('message' in reponse.data) {
+                console.log('Trying to update the request now...');
+                setList([])
+                dataLoad()
+            } else {
+                console.log('Internal error. Please try again or contact the support team');
+            }
+        })
     }
 
     if (dataLoaded) {
