@@ -66,9 +66,9 @@ export default function RequestScreen({ navigation }) {
                   data={info}
                   renderItem={({item}) => (
                       <TouchableOpacity onPress={ () => navigation.navigate('RequestElement', { item : item })}>
-                          <Card>
-                              <Text style={globalStyles.modalText}>{ item.name }</Text>
-                          </Card>
+                          <EditCard>
+                              <Text style={globalStyles.modalText}>{ item.title }</Text>
+                          </EditCard>
                       </TouchableOpacity>
                   )}
               />

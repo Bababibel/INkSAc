@@ -16,20 +16,10 @@ export default function EditCard (props) {
 
   return (
     <View style={styles.card}>
-      <Modal visible={modalVisible} animationType="slide">
-        <Pressable onPress={() => setModalVisible(!modalVisible)}>
-          <Text style={globalStyles.closeText}>Fermer sans enregistrer</Text>
-        </Pressable>
-        <RequestForm modify={true} title={props.title} id={props.id} >
-          <Text style={globalStyles.titleText}>
-            Formulez une nouvelle demande
-          </Text>
-        </RequestForm>
-      </Modal>
       <View style={styles.cardIconContainer}>
         <Pressable
           style={styles.cardIcon}
-          onPress={() => setModalVisible(true)
+          onPress={() => console.log('Demande de modification de la requête d\'id : ' + props.id)
           }
         >
           <Text style={styles.cardIconText}>Éditer</Text>
@@ -48,7 +38,7 @@ export default function EditCard (props) {
                 {
                   text: "Je suis sûr de moi",
                   onPress: () => {
-                    console.log("Suppresion demandée de la requête d'id " + props.id)
+                    console.log("Demande de suppresion de la requête d'id " + props.id)
                   },
                 },
               ]
