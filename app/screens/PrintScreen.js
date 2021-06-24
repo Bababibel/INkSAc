@@ -4,6 +4,7 @@ import {View, Text, Alert, Modal, TouchableOpacity, Button, FlatList, Platform} 
 import { useState } from 'react/cjs/react.development';
 import AppLoading from 'expo-app-loading';
 import Card from '../assets/shared/RequestCard';
+import constants from '../assets/globals/constants';
 import { globalStyles } from '../assets/styles/global_styles';
 
 
@@ -17,18 +18,18 @@ export default function PrintScreen({ navigation }){
     const [info, setList] = useState([]);
 
     const dataLoad = () => {
-        fetch('https://bgauthier.fr/inksac/api/request/getAllRequests.php')
+        fetch(constants.getAllRequests)
         .then(reponse => reponse.json())
         .then((request) => {
             request.data.map((item) => {
-                fetch("https://bgauthier.fr/inksac/api/shared/getFilesFromRequest.php?request_id="+item.id)
+                fetch(constants.getFilesFromRequest+'?request_id='+item.id)
                 .then(reponse => reponse.json())
                 .then((file) => {
                     file.data.map((item2) => {
-                        console.log(item2)
+                        //console.log(item2)
                         setList((prevItem) => {
                             return [
-                                {key: item2.id, deadline: item.deadline, author: item.author_name, author_id : item.id, delivery_date: item.delivery_date, title: item2.name, comment: item.comment, hidden: item.hidden, state: item.state, color: item2.color, format: item2.format, nb_per_page: item2.nb_per_page, recto_verso: item2.recto_verso, stapple: item2.stapple, path: item2.path}, 
+                                {key: item2.id, file_id: item2.id , deadline: item.deadline, author_name: item.author_name, author_id: item.author, request_id : item.id, delivery_date: item.delivery_date, title: item2.name, comment: item.comment, hidden: item.hidden, state: item.state, color: item2.color, format: item2.format, nb_per_page: item2.nb_per_page, recto_verso: item2.recto_verso, stapple: item2.stapple, path: item2.path}, 
                                 ...prevItem];
                         })
                     })
@@ -43,19 +44,19 @@ export default function PrintScreen({ navigation }){
     }
 
     const changeState = async (item) => {
-        console.log(item)
+        //console.log(item)
         var newState = ''
         if(item.state == 'pending'){
-            newState = "printed"
+            newState = "A Imprimer"
         }
-        else if(item.state == 'printed'){
-            newState = 'coucou'
+        else if(item.state == 'A Imprimer'){
+            newState = 'Pret'
         }
         else{
-            newState = "pending"
+            newState = "archivé"
         }
         let formData = new FormData();
-        formData.append('id', item.key);
+        formData.append('id', item.request_id);
         formData.append('author', item.author_id);
         formData.append('deadline', item.deadline);
         formData.append('delivery_date', item.deadline);
@@ -64,11 +65,10 @@ export default function PrintScreen({ navigation }){
         formData.append('hidden', item.hidden);
         formData.append('state',  newState );
         axios.post('https://bgauthier.fr/inksac/api/request/updateRequest.php', formData, {
-            method: 'POST',
             headers: { "Content-Type" : "application/json" }
         })
         .then((reponse) => {
-            console.log(reponse);
+            console.log(reponse.data);
             if ('message' in reponse.data) {
                 console.log('Trying to update the request now...');
                 setList([])
@@ -89,7 +89,7 @@ export default function PrintScreen({ navigation }){
                             <TouchableOpacity onPress={ () => {
                                 console.log(item),
                                 navigation.navigate('PrintElement', { 
-                                    author : item.author,
+                                    author_name : item.author_name,
                                     comment : item.comment,
                                     delivery_date : item.delivery_date,
                                     deadline : item.deadline,
@@ -123,7 +123,9 @@ export default function PrintScreen({ navigation }){
                             <Text style={globalStyles.closeText}>Close</Text>
                         </TouchableOpacity>
                         <View style={globalStyles.modalText}>
-                            <Text>Auteur : {selected.author}</Text>
+                            <Text>id fichier: {selected.file_id}</Text>
+                            <Text>id requete: {selected.request_id}</Text>
+                            <Text>Auteur : {selected.author_name}</Text>
                             <Text>Titre : {selected.title}</Text>
                             <Text>Pour le : {selected.deadline} {/* Attention, deadline au lieu de delivery_date car seule date qui marche actuellement ...*/} </Text>
                             <Text>Recto Verso ? : {selected.recto_verso}</Text>

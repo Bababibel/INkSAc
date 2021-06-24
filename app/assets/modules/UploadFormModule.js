@@ -9,11 +9,7 @@ import React,{Component} from 'react';
 import { View, Text } from 'react-native';
 import { globalStyles } from "../styles/global_styles";
 import constants from '../globals/constants';
-import { toSqlFormat } from '../../tools/dateConverter';
-
-
-
-
+import { toSqlFormat } from '../tools/dateConverter'
 
 
 function setFileName(value) {
