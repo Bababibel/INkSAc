@@ -47,6 +47,7 @@ export default function ChooseScreen({ route, navigation }){
 
     if (dataLoaded) {
         if(Platform.OS === 'web'){
+            Alert.alert('Merci !', 'Grâce à vous, 504 polycopiés ont été économisés. Cela représente 1000000 tonnes de CO2');
             return (
                 <View style={globalStyles.container}>
                     <FlatList
