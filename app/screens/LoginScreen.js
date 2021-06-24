@@ -40,11 +40,20 @@ export default function LoginScreen({ navigation }){
                             else if(values.id.toLowerCase() == 'repro') {
                                 navigation.push('Print')
                             }
-                            else if(values.id.toLowerCase() == 'STI') {
-                                navigation.push('Print')
+                            else if(values.id.toLowerCase() == 'sti') {
+                                navigation.navigate('Choose', { 
+                                    list : 'STI',
+                                    })
+                            }
+                            else if(values.id.toLowerCase() == 'mri') {
+                                navigation.navigate('Choose', { 
+                                    list : 'MRI',
+                                    })
                             }
                             else {
-                                navigation.push('Choose')
+                                navigation.navigate('Choose', { 
+                                    list : 'MRI',
+                                    })
                             }
                         }}
                         >

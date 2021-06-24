@@ -7,7 +7,10 @@ import Card from '../assets/shared/RequestCard';
 
 
 
-export default function ChooseScreen({ navigation }){
+export default function ChooseScreen({ route, navigation }){
+    const list_name = route.params;
+    console.log(list_name.list);
+
     const [dataLoaded, setDataLoaded] = useState(false);
 
     const [selected, setSelected] = useState(
@@ -18,7 +21,7 @@ export default function ChooseScreen({ navigation }){
     const [modalOpen, setModalOpen] = useState(false);
 
     const dataLoad = () => {
-        fetch('https://bgauthier.fr/inksac/api/shared/getRequestsForList.php?list_name=STI')
+        fetch('https://bgauthier.fr/inksac/api/shared/getRequestsForList.php?list_name='+list_name.list)
         .then(reponse => reponse.json())
         .then((request) => {
             request.data.map((item) => {
