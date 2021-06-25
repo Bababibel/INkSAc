@@ -10,8 +10,17 @@ import Request from '../assets/classes/Request';
 import File from '../assets/classes/File';
 import { globalStyles } from '../assets/styles/global_styles';
 
+/* Problème à l'air de venir de l'asynchrone : 
+Les forEach de requete se stack et une fois l'ensemble stackés, 
+Le setDataLoaded(true) se trouve à la fin du premier asynchrone, donc une fois que la premiere requete et ses fichiers sont chargés, lecture du code
+Les autres requetes ont eu le temps de se charger mais pas tous les fichiers associés
+Au moment de la lecture de requete.files.blabla, pas chargé donc erreur. 
+Solution : arrivé à placer setDataLoaded(true) sur le dernier element qui va se charger en asynchrone ou virer l'asynchrone 
+Perso : Réussi aucune des propositions 
 
+*/
 export default function PrintScreen({ navigation }){
+
     const [dataLoaded, setDataLoaded] = useState(false);
 
     const [modalOpen, setModalOpen] = useState(false);
@@ -29,29 +38,48 @@ export default function PrintScreen({ navigation }){
         .then(response => {
             console.log('then')
             response.data.data.forEach(e => {
+                //console.log(e)
                 tmpRequests.push(new Request(e.id, e.author, e.author_name, e.deadline, e.delivery_date, e.expiration_date, e.title, e.comment, e.hidden, e.state))
-                axios.get(constants.getFilesFromRequest, {params: {'request_id': request.request_id}})
-            }),
-            setRequests(tmpRequests)
+                axios.get(constants.getFilesFromRequest, {params: {'request_id': e.id}})
+                .then(response => {
+                    if (response.data.data == undefined){
+                        console.log('No files for : '+ request.title)
+                        console.log(reponse.data)
+                    } else {
+                        console.log("file found")
+                        response.data.data.forEach(f => {
+                            console.log(f)
+                            tmpRequests.files.append(f.id)
+                        })
+                    }
+                })
+            })
+            console.log(tmpRequests),
+            setRequests(tmpRequests),
+            console.log('fin du chargement des données'),
+            setDataLoaded(true),
+            console.log('Data True')
         })
-        setDataLoaded(true)
     }
 
     const filesLoad = (request) => {
+        console.log(request)
         setFiles([])
         let tmpFiles = []
         console.log("chargement des fichiers")
-        axios.get(constants.getFilesFromRequest, {params: {'request_id': request.request_id}})
+        axios.get(constants.getFilesFromRequest, {params: {'request_id': request.id}})
         .then(response => {
-            response.data.data.forEach(f => {
-                tmpFiles.push(new File(f.id, f.name, f.path, f.color, f.stapple, f.format, f.recto_verso, f.nb_per_page, f.request_id))
-            })
-            console.log(tmpFiles)
-            tmpFiles.forEach(f => {
-                setFiles(f)
-            })
+            if (response.data.data == undefined){
+                console.log('No files for : '+ request.title)
+                console.log(reponse.data)
+            } else {
+                response.data.data.forEach(f => {
+                    //request.files.push(new File(f.id, f.name, f.path, f.color, f.stapple, f.format, f.recto_verso, f.nb_per_page, f.request_id))
+                    request.files.append(f.id)
+                    console.log("File found for :"+ request.title)
+                })
+            }
         })
-        .done()
     }
 
     const changeState = (item) => {
@@ -77,7 +105,7 @@ export default function PrintScreen({ navigation }){
         formData.append('comment', item.comment);
         formData.append('hidden', item.hidden);
         formData.append('state',  newState );
-        axios.post('https://bgauthier.fr/inksac/api/request/updateRequest.php', formData, {
+        axios.post(updateRequest, formData, {
             headers: { "Content-Type" : "application/json" }
         })
         .then((response) => {
@@ -116,7 +144,7 @@ export default function PrintScreen({ navigation }){
                     <FlatList
                         data={requests}
                         renderItem={({item}) => (
-                            <TouchableOpacity key={item.request_id} onPress={ () => {setSelected(item), filesLoad(item), setModalOpen(true)}}>
+                            <TouchableOpacity key={item.request_id} onPress={ () => {setSelected(item), /*filesLoad(item),*/ setModalOpen(true)}}>
                                 <Card>
                                     <Text style={globalStyles.modalText}>{ item.title }</Text>
                                 </Card>
@@ -124,7 +152,7 @@ export default function PrintScreen({ navigation }){
                         )}
                     />
                     <Modal visible={modalOpen} animationType='slide'>
-                        <TouchableOpacity onPress={() => {console.log(files), setModalOpen(false)}}>
+                        <TouchableOpacity onPress={() => {console.log("pika je te choisis"), setModalOpen(false)}}>
                             <Text style={globalStyles.closeText}>Close</Text>
                         </TouchableOpacity>
                         <View style={globalStyles.modalText}>
@@ -135,7 +163,7 @@ export default function PrintScreen({ navigation }){
                             <Text>Partiel ? : {selected.hidden}</Text>
                             <Text>Etat : {selected.state}</Text>
                             <Text>Titre Requete : {selected.title}</Text>
-
+                            {selected.files.map(superId => console.log(superId))}
                             <Text> FICHIER(s) :</Text>
                             <Text>id fichier: {files.id}</Text>
                             <Text>Titre Fichier : {files.name}</Text>
@@ -163,9 +191,9 @@ export default function PrintScreen({ navigation }){
         return (
             <AppLoading
             startAsync={dataLoad} 
-            onError={(text) => Alert.alert('Échec du chargement :(', String(text), [{text: 'Ok'}])}
+            onError={(text) => {console.log("Il y a une erreure") , Alert.alert('Échec du chargement :(', String(text), [{text: 'Ok'}])}}
             onFinish={() => {console.log('fini')}}
             />
-        ) 
+        )
     }
 }

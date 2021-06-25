@@ -19,7 +19,7 @@ class Request {
 
     attachFile(file) {
         file.request_id = this.request_id
-        this.files.push(file)
+        this.files = file
     }
 }
 

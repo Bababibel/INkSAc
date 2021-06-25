@@ -3,7 +3,6 @@ import axios from 'axios';
 import {View, Text, Alert, Button} from 'react-native';
 import constants from '../assets/globals/constants';
 import { globalStyles } from '../assets/styles/global_styles';
-import constants from '../assets/globals/constants';
 
 export default function PrintElementScreen({ route, navigation }){
     const item = route.params;
