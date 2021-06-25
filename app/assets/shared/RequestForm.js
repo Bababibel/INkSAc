@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { StyleSheet, View, TextInput, Text, Button } from "react-native";
 import RNDateTimePicker from "@react-native-community/datetimepicker";
-import { globalColors } from "../styles/global_styles";
+import { globalColors } from "../globals/globalStyles";
 import { Formik } from "formik";
 
 export default function RequestForm(props) {

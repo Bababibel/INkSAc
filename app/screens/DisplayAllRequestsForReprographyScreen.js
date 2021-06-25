@@ -8,10 +8,10 @@ import Card from '../assets/shared/RequestCard';
 import constants from '../assets/globals/constants';
 import Request from '../assets/classes/Request';
 import File from '../assets/classes/File';
-import { globalStyles } from '../assets/styles/global_styles';
+import { globalStyles } from '../assets/globals/globalStyles';
 
 
-export default function PrintScreen({ navigation }){
+export default function DisplayAllRequestsForReprographyScreen({ navigation }){
     const [dataLoaded, setDataLoaded] = useState(false);
 
     const [requests, setRequests] = useState([]);

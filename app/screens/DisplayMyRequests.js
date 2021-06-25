@@ -10,11 +10,11 @@ import {
   Button,
   Platform,
 } from "react-native";
+import { globalStyles, globalColors } from "../assets/globals/globalStyles";
 import AppLoading from "expo-app-loading";
 
 import Request from "../assets/classes/Request";
 import File from "../assets/classes/File";
-import { globalStyles, globalColors } from "../assets/styles/global_styles";
 import RequestForm from "../assets/shared/RequestForm";
 import EditCard from "../assets/shared/EditCard";
 import Card from "../assets/shared/RequestCard";
@@ -38,8 +38,8 @@ export default function RequestScreen({ route, navigation }) {
     .then((request) => {
       let tmpRequete = []
         request.data.map((item) => {
-          console.log("route.id : "+id.params.id+'et item.id'+item.author)
-          if(id.param.id == item.author){
+          console.log("route.id : "+id.params.id+'et item.id'+item.id)
+          if(id.param.id == item.id){
             print('pass')
           fetch(constants.getFilesFromRequest + "?request_id=" + item.id)
           .then(reponse => reponse.json())
@@ -75,9 +75,9 @@ export default function RequestScreen({ route, navigation }) {
             <Card>
               <Text
                 style={globalStyles.titleText}
-                onPress={() =>{
-                  navigation.navigate("RequestElement", { 
-                    modify: "no" })}
+                onPress={() =>
+                  navigation.navigate("CreateOrUpdateRequest", { 
+                    modify: "no" })
                 }>
                 Formulez une nouvelle demande
               </Text>
@@ -89,13 +89,10 @@ export default function RequestScreen({ route, navigation }) {
             renderItem={({ item }) => (
                   <TouchableOpacity
                     onPress={() =>
-                      {console.log('bite'),
-                      navigation.navigate("RequestElement", {
+                      navigation.navigate("DisplayMyRequests", {
                         item: item,
                         modify: "just print",
-                      })}
-                    }
-                  >
+                      })}>
                     <EditCard item={item}>
                       <Text style={globalStyles.cardIconText}>{item.title}</Text>  
                     </EditCard>

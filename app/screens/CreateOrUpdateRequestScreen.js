@@ -1,10 +1,10 @@
 import React, {useState} from "react";
 import { View, Text, Button, ScrollView} from "react-native";
-import UploadForm from "../assets/modules/UploadFormModule";
-import { globalStyles } from "../assets/styles/global_styles";
+import UpdateForm from "../assets/modules/UpdateFormModule";
+import { globalStyles } from "../assets/globals/globalStyles";
 import RequestForm from "../assets/shared/RequestForm";
 
-export default function RequestElementScreen({ route, navigation }) {  
+export default function CreateOrUpdateRequestScreen({ route, navigation }) {  
 
   if (!route.params || !route.params.item || route.params.modify == 'no') {
     return (

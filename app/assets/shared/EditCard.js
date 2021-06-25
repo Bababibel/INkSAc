@@ -7,10 +7,10 @@ import {
   Pressable,
   Platform
 } from "react-native";
-import { useNavigation } from '@react-navigation/native';
 
+import { globalStyles } from "../globals/globalStyles";
+import { useNavigation } from '@react-navigation/native';
 import constants from "../globals/constants";
-import { globalStyles } from "../styles/global_styles";
 
 export default class EditCard extends Component {
   render(){
@@ -82,8 +82,9 @@ export default class EditCard extends Component {
           </Pressable>
         </View>
         <View style={globalStyles.cardContent}>{this.props.children}</View>
-
-      </View>
+    </View>
     )
   }
 }
+      
+
