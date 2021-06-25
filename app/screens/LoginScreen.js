@@ -33,7 +33,7 @@ export default function LoginScreen({ navigation }){
             <View style={globalStyles.container}>
                 <View style={globalStyles.loginCard}>
                     <Formik
-                        initialValues={{ id : '1', password : 'e'}}
+                        initialValues={{ id : 'repro', password : 'e'}}
                         validationSchema={LoginSchema}
                         onSubmit={(values) => {
                             axios.get(constants.getUser, {params: {'id': values.id}})

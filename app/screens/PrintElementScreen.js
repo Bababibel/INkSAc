@@ -21,6 +21,9 @@ export default function PrintElementScreen({ route, navigation }){
             newState = "Archiver"
         }
         else if(item.item.state == 'Archiver'){
+            newState = "Supprimer"
+        }
+        else if(item.item.state == 'Supprimer'){
             var action = false
         }
         console.log(newState)
@@ -34,7 +37,6 @@ export default function PrintElementScreen({ route, navigation }){
             formData.append('comment', item.item.comment);
             formData.append('hidden', item.item.hidden);
             formData.append('state',  newState );
-            //console.log(formData)
             axios.post(constants.updateRequest , formData, {
                 headers: { "Content-Type" : "application/json" }
             })
@@ -48,7 +50,11 @@ export default function PrintElementScreen({ route, navigation }){
                 navigation.push('Print')
             })
         } else {
-            console.log("suppression en cours ... "+item.item.request_id )
+            console.log("suppression des fichiers en cours ... "+item.item.request_id )
+            axios.get(constants.deleteFile , {params: {'id' : item.item.files.id}}, {
+                headers: { "Content-Type" : "application/json" }
+            })
+            console.log("suppression de la requete en cours ... "+item.item.request_id )
             axios.get(constants.deleteRequest , {params: {'id' : item.item.request_id}}, {
                 headers: { "Content-Type" : "application/json" }
             })
@@ -59,7 +65,7 @@ export default function PrintElementScreen({ route, navigation }){
                 } else {
                     console.log('Internal error. Please try again or contact the support team');
                 }
-                navigation.push('Print')
+                navigation.push('PrintElement')
             })
         }
         

@@ -4,6 +4,7 @@ export default {
     uploadUrl: baseUrl+'api/upload.php',
     postFile: baseUrl+'api/file/createFile.php',
     updateFile: baseUrl+'api/file/updateFile.php',
+    deleteFile: baseUrl+'api/file/deleteFile.php',
     postRequest: baseUrl+'api/request/createRequest.php',
     addFileToRequest: baseUrl+'api/link/addFileToRequest.php',
     addListToRequest : baseUrl+'api/link/addListToRequest.php',
