@@ -12,6 +12,7 @@ import { globalStyles } from '../assets/styles/global_styles';
 
 
 export default function PrintScreen({ navigation }){
+
     const [dataLoaded, setDataLoaded] = useState(false);
 
     const [modalOpen, setModalOpen] = useState(false);
@@ -20,26 +21,57 @@ export default function PrintScreen({ navigation }){
 
     const [requests, setRequests] = useState([]);
 
+    const[files, setFiles] = useState([])
+
     const dataLoad = () => {
         console.log('chargement des données')
+        let tmpRequests = []
         axios.get(constants.getAllRequests)
         .then(response => {
-            let data = response.data
-            let tmpRequests = []
+            console.log('then')
             response.data.data.forEach(e => {
+                //console.log(e)
                 tmpRequests.push(new Request(e.id, e.author, e.author_name, e.deadline, e.delivery_date, e.expiration_date, e.title, e.comment, e.hidden, e.state))
-            })
-            tmpRequests.forEach(e => {
-                axios.get(constants.getFilesFromRequest, {params: {'request_id': e.request_id}})
+                axios.get(constants.getFilesFromRequest, {params: {'request_id': e.id}})
                 .then(response => {
-                    response.data.data.forEach(f => {
-                        e.attachFile(new File(f.id, f.name, f.path, f.color, f.stapple, f.format, f.recto_verso, f.nb_per_page, f.request_id))
-                    })
-                })    
+                    if (response.data.data == undefined){
+                        console.log('No files for : '+ request.title)
+                        console.log(reponse.data)
+                    } else {
+                        console.log("file found")
+                        response.data.data.forEach(f => {
+                            console.log(f)
+                            tmpRequests.files.append(f.id)
+                        })
+                    }
+                })
             })
-            setRequests(tmpRequests)
+            console.log(tmpRequests),
+            setRequests(tmpRequests),
+            console.log('fin du chargement des données'),
+            setDataLoaded(true),
+            console.log('Data True')
         })
-        
+    }
+
+    const filesLoad = (request) => {
+        console.log(request)
+        setFiles([])
+        let tmpFiles = []
+        console.log("chargement des fichiers")
+        axios.get(constants.getFilesFromRequest, {params: {'request_id': request.id}})
+        .then(response => {
+            if (response.data.data == undefined){
+                console.log('No files for : '+ request.title)
+                console.log(reponse.data)
+            } else {
+                response.data.data.forEach(f => {
+                    //request.files.push(new File(f.id, f.name, f.path, f.color, f.stapple, f.format, f.recto_verso, f.nb_per_page, f.request_id))
+                    request.files.append(f.id)
+                    console.log("File found for :"+ request.title)
+                })
+            }
+        })
     }
 
     const changeState = (item) => {
@@ -65,7 +97,7 @@ export default function PrintScreen({ navigation }){
         formData.append('comment', item.comment);
         formData.append('hidden', item.hidden);
         formData.append('state',  newState );
-        axios.post('https://bgauthier.fr/inksac/api/request/updateRequest.php', formData, {
+        axios.post(updateRequest, formData, {
             headers: { "Content-Type" : "application/json" }
         })
         .then((response) => {
@@ -104,7 +136,7 @@ export default function PrintScreen({ navigation }){
                     <FlatList
                         data={requests}
                         renderItem={({item}) => (
-                            <TouchableOpacity key={item.request_id} onPress={ () => {setSelected(item), setModalOpen(true)}}>
+                            <TouchableOpacity key={item.request_id} onPress={ () => {setSelected(item), /*filesLoad(item),*/ setModalOpen(true)}}>
                                 <Card>
                                     <Text style={globalStyles.modalText}>{ item.title }</Text>
                                 </Card>
@@ -112,24 +144,28 @@ export default function PrintScreen({ navigation }){
                         )}
                     />
                     <Modal visible={modalOpen} animationType='slide'>
-                        <TouchableOpacity onPress={() => {console.log(selected), setModalOpen(false)}}>
+                        <TouchableOpacity onPress={() => {console.log("pika je te choisis"), setModalOpen(false)}}>
                             <Text style={globalStyles.closeText}>Close</Text>
                         </TouchableOpacity>
                         <View style={globalStyles.modalText}>
-                            <Text>id fichier: {selected.id}</Text>
+                            <Text> REQUETE :</Text>
                             <Text>id requete: {selected.request_id}</Text>
                             <Text>Auteur : {selected.author_name}</Text>
-                            <Text>Titre Requete : {selected.title}</Text>
-                            <Text>Titre Fichier : {selected.title}</Text>
                             <Text>Pour le : {selected.deadline}</Text>
-                            <Text>Recto Verso ? : {selected.recto_verso}</Text>
-                            <Text>Couleur ? : {selected.color}</Text>
-                            <Text>Format : {selected.format}</Text>
-                            <Text>Nombre de Diapo par Page : {selected.nb_per_page}</Text>
-                            <Text>Nombre d'agraphes : {selected.stapple}</Text>
                             <Text>Partiel ? : {selected.hidden}</Text>
-                            <Text>Lieux : {selected.path}</Text>
                             <Text>Etat : {selected.state}</Text>
+                            <Text>Titre Requete : {selected.title}</Text>
+                            {selected.files.map(superId => console.log(superId))}
+                            <Text> FICHIER(s) :</Text>
+                            <Text>id fichier: {files.id}</Text>
+                            <Text>Titre Fichier : {files.name}</Text>
+                            <Text>Recto Verso ? : {files.recto_verso}</Text>
+                            <Text>Couleur ? : {files.color}</Text>
+                            <Text>Format : {files.format}</Text>
+                            <Text>Nombre de Diapo par Page : {files.nb_per_page}</Text>
+                            <Text>Nombre d'agraphes : {files.stapple}</Text>
+                            <Text>Lieux : {files.path}</Text>
+                            
                             <Button title={selected.state}  onPress={ () => {
                                 setModalOpen(false),
                                 changeState(selected)
@@ -147,9 +183,9 @@ export default function PrintScreen({ navigation }){
         return (
             <AppLoading
             startAsync={dataLoad} 
-            onError={(text) => Alert.alert('Échec du chargement :(', String(text), [{text: 'Ok'}])}
-            onFinish={() => {setDataLoaded(true)}}
+            onError={(text) => {console.log("Il y a une erreure") , Alert.alert('Échec du chargement :(', String(text), [{text: 'Ok'}])}}
+            onFinish={() => {console.log('fini')}}
             />
-        ) 
+        )
     }
 }

@@ -6,7 +6,7 @@ import { globalStyles } from '../assets/styles/global_styles';
 
 export default function PrintElementScreen({ route, navigation }){
     const item = route.params;
-    console.log(item.item.author_name)
+    console.log(item.item.files[1])
     console.log(item)
 
     const changeState = (item) => {
