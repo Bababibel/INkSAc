@@ -7,23 +7,21 @@
 import axios from 'axios';
 import React,{Component, useState} from 'react';
 import { View, Text, Alert } from 'react-native';
+import { MuiPickersUtilsProvider, KeyboardTimePicker, KeyboardDatePicker } from '@material-ui/pickers';
+import DateFnsUtils from '@date-io/date-fns';
 
 import { globalStyles } from "../styles/global_styles";
 import constants from '../globals/constants';
-import { toSqlFormat } from '../tools/dateConverter';
+import { toSqlFormatDate, toSqlFormatTime, computeDateTimeForSql } from '../tools/dateConverter';
 import List from '../classes/List';
 
-function setFileName(value) {
-    console.log(value);
-}
 
 const currDate = new Date();
-
-function rien(event) {
-    event.target.parentNode.value = event.target.value
-}
+const futDate = new Date(currDate.setDate(currDate.getDate() + 7));
 
 class UploadForm extends Component {
+
+    /*formSubmitted = () => {this.props.parentCallBack(true);}*/
 
 
 	state = {
@@ -36,26 +34,42 @@ class UploadForm extends Component {
         format: "A4",
         nb_per_page: 1,
 
-        userList: "STI",
-        deadline: toSqlFormat(currDate),
-        delivery_date: toSqlFormat(new Date(currDate.setDate(currDate.getDate() + 7))),
+        userList: "",
+        deadline: computeDateTime(currDate, currDate), // computed with date + time
+        deadline_date: currDate,
+        deadline_time: currDate,
+        delivery: computeDateTime(futDate, futDate), // computed with date + time
+        delivery_date: futDate,
+        delivery_time: futDate,
         comment: "",
         title: "",
         hidden: 0,
-	};
-    handleColorChange = (e) => { this.setState({color: e.target.value}); console.log("Color: " + this.state.color) }
-    handleStappleChange = (e) => { this.setState({stapple: e.target.value}); console.log("State: " + this.state.stapple) }
-    handleR_VChange = (e) => { this.setState({recto_verso: e.target.value}); console.log("Recto_verso: " + this.state.recto_verso) }
-    handleFormatChange = (e) => { this.setState({format: e.target.value}); console.log("Format: " + this.state.format) }
-    handleNbPerPageChange = (e) => { this.setState({nb_per_page: e.target.value}); console.log("Nb_per_page: " + this.state.nb_per_page) }
 
-    handleListChange = (e) => { this.setState({userList: e.target.value}); console.log("List: " + this.state.userList) }
-    handleDeadlineChange = (e) => { this.setState({deadline: e.target.value}); console.log("Deadline: " + this.state.deadline) }
-    handleDeliveryDateChange = (e) => { this.setState({delivery_date: e.target.value}); console.log("Delivery_date: " + this.state.delivery_date) }
-    handleCommentChange = (e) => { this.setState({comment: e.target.value}); console.log("Comment: " + this.state.comment) }
-    handleTitleChange = (e) => { this.setState({title: e.target.value}); console.log("title: " + this.state.Title) }
-    handleHiddenChange = (e) => { this.setState({hidden: e.target.value}); console.log("Hidden: " + this.state.hidden) }
-    setFileName = (e) => { this.setState({ fileName: e.target.value }); console.log("File name: " + this.state.fileName)}
+        error: "",
+	};
+    // File form properties
+    handleColorChange = (e) => { this.setState({color: e.target.value});}
+    handleStappleChange = (e) => { this.setState({stapple: e.target.value});}
+    handleR_VChange = (e) => { this.setState({recto_verso: e.target.value});}
+    handleFormatChange = (e) => { this.setState({format: e.target.value});}
+    handleNbPerPageChange = (e) => { this.setState({nb_per_page: e.target.value});}
+    // Request form properties
+    handleListChange = (e) => { this.setState({userList: e.target.value}); console.log(this.state.userList)}
+    handleDeadlineDateChange = (e) => { this.setState({deadline_date: e}); this.state.deadline = this.computeDateTime(this.state.deadline_date, this.state.deadline_time);}
+    handleDeadlineTimeChange = (e) => { this.setState({deadline_time: e}); this.state.deadline = this.computeDateTime(this.state.deadline_date, this.state.deadline_time);}
+    handleDeliveryDateChange = (e) => { this.setState({delivery_date: e}); this.state.delivery = this.computeDateTime(this.state.delivery_date, this.state.delivery_time);}
+    handleDeliveryTimeChange = (e) => { this.setState({delivery_time: e}); this.state.delivery = this.computeDateTime(this.state.delivery_date, this.state.delivery_time);}
+    handleCommentChange = (e) => { this.setState({comment: e.target.value});}
+    handleTitleChange = (e) => { this.setState({title: e.target.value});}
+    handleHiddenChange = (e) => { this.setState({hidden: e.target.value});}
+    setFileName = (e) => { this.setState({ fileName: e.target.value });}
+    setError = (msg) => { this.setState({ error: msg }) }
+
+
+    useGetLists = () => (() => {
+        console.log("coucou")
+        this.getLists();
+      }, [null]);
 
     getLists = () => {
         axios.get(constants.getAllLists)
@@ -63,7 +77,7 @@ class UploadForm extends Component {
             if ('data' in response.data) {
                 let lists = [];
                 let data = response.data.data;
-                let key=1;
+                lists.push(new List(0, 'Selectionnez une liste',0 , this.computeDateTime(currDate, currDate), ""));
                 data.forEach(e => {
                     lists.push(new List(e.id, e.name, e.theorical_count, e.creation_date, e.location));
                 });
@@ -73,6 +87,12 @@ class UploadForm extends Component {
                 Alert.alert("Oups!", "Le serveur ne répond pas, ou a rencontré une erreur.", [{text: 'Ok'}])
             }
         })
+        return (<View></View>)
+    }
+
+    formSubmitted = () => {
+        if (this.state.error == "") this.props.params.navigation.goBack();
+        else this.setError("Coucou Baptiste, tu as oublié ton cerveau entre deux lignes de Javascript. Si un utilisateur voit ça, vous le droit de l'insulter. Cordialement, Baptiste, le 25/06/2021.");
     }
 
 	onFileChange = event => {
@@ -83,6 +103,7 @@ class UploadForm extends Component {
     
 	
 	onFileUpload = async () => {
+        this.setError("");
         const fileFormData = new FormData();
         // Create the post request to grab data from $_POST['file] in the php server
         fileFormData.append("file",
@@ -121,7 +142,7 @@ class UploadForm extends Component {
                 })
             }
             else if ('message' in response.data) {
-                console.log(response.data.message);
+                this.setError(response.data.message);
             }
             else {
                 Alert.alert("Oups!", "Le serveur ne répond pas, ou a rencontré une erreur.", [{text: 'Ok'}])
@@ -130,20 +151,13 @@ class UploadForm extends Component {
 	};
 
     uploadRequest = async (file_path) => {
-        let myForm = document.getElementById('requestData');
-        let createRequestFormData = new FormData(myForm);
-        let delivery_date = createRequestFormData.get('delivery_date');
-        let deadline = createRequestFormData.get('deadline');
-        /* Edit date to convert into a correct format */
-        const deadlineDate = new Date();
-        deadlineDate.setDate(deadlineDate.getDate() + 7);
-        const deadlineDateFormatted = toSqlFormat(deadlineDate);
-        const deliveryDate = new Date();
-        deliveryDate.setDate(deliveryDate.getDate() + 10);
-        const deliveryDateFormatted = toSqlFormat(deliveryDate);
-        createRequestFormData.append('delivery_date', deliveryDateFormatted);
-        createRequestFormData.append('deadline', deadlineDateFormatted);
+        let createRequestFormData = new FormData();
+        createRequestFormData.append('delivery_date', this.state.delivery);
+        createRequestFormData.append('deadline', this.state.deadline);
         createRequestFormData.append('author', 1);
+        createRequestFormData.append('title', this.state.title);
+        createRequestFormData.append('comment', this.state.comment);
+        createRequestFormData.append('hidden', this.state.hidden);
         // POSTING REQUEST
         axios.post(constants.postRequest, createRequestFormData, {
             headers: {'Content-Type': 'multipart/form-data'},
@@ -165,23 +179,21 @@ class UploadForm extends Component {
                         this.linkListToRequest(request_id);
                     }
                     else {
-                        console.log('Internal error. Please try again or contact the support team.');
-                        Alert.alert("Oups!", "Le serveur ne répond pas, ou a rencontré une erreur.", [{text: 'Ok'}])
+                        this.setError('Internal error. Please try again or contact the support team.');
+                        this.setError("Oups!", "Le serveur ne répond pas, ou a rencontré une erreur.")
 
                     }
                 })
             }
             else {
-                console.log('Unable to post request and get its id.');
+                this.setError('Unable to post request and get its id: '+ response.data.message);
             }
         })
     };
 
     linkListToRequest = async (request_id) => {
         let myForm = document.getElementById('requestData');
-        console.log(myForm);
         let createRequestFormData = new FormData(myForm);
-        let userList = createRequestFormData.get('userList');
         createRequestFormData.append('list_name', this.state.userList);
         createRequestFormData.append('request_id', request_id);
         // POSTING LINK BETWEEN LIST AND REQUEST
@@ -189,12 +201,18 @@ class UploadForm extends Component {
             headers: {'Content-Type': 'multipart/form-data'},
         })
         .then(response => {
-            console.log(response.data)
-            if ('message' in response.data) {
-                console.log('Request to link the list sent: ' + response.data.message);
+            if ('error' in response.data) {
+                if (!response.data.error) {
+                    this.formSubmitted()
+                }
+                else {
+                    console.log('Request to link the list sent: ' + response.data.message);
+                    this.setError(response.data.message)
+                    console.log(this.state.error);
+                }
             }
             else {
-                console.log('Internal error during the link between the file and the request.');
+                this.setError('Internal error during the link between the file and the request.');
             }
         })
     };
@@ -244,6 +262,26 @@ class UploadForm extends Component {
         }
     };
 
+    deadlinePicker = () => {
+        if (this.state.hidden==0) {
+            return (
+                <div>
+                    <label>Deadline souhaitée (fin de vote pour les élèves)<br/>
+                        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                            <KeyboardDatePicker disableToolbar variant="inline" format="yyyy/MM/dd"
+                                margin="normal" id="date-picker-inline" label="Date picker inline" value={this.state.delivery_date}
+                                onChange={this.handleDeliveryDateChange} KeyboardButtonProps={{'aria-label': 'change date'}}/>
+                            <KeyboardTimePicker
+                                margin="normal" id="time-picker" label="Time picker" value={this.state.delivery_time} 
+                                onChange={this.handleDeliveryTimeChange} KeyboardButtonProps={{'aria-label': 'change time'}}/>
+                        </MuiPickersUtilsProvider>
+                    </label>
+                </div>
+            )
+        }
+        
+    }
+
     requestForm = () => {
         if (this.state.selectedFile) {
             return (
@@ -252,17 +290,21 @@ class UploadForm extends Component {
                         <h1>Demande une requête</h1>
                         
                         <label>Liste d'élèves concernée<br/>
-                            <select type="text" name="userList" style={styles.smallInput}>
-                                {this.state.userLists.map(l => <option key={l.id} value={l.name} onChange={this.handleListChange}>{l.name}</option>)}
+                            <select type="text" name="userList" style={styles.smallInput}  onChange={this.handleListChange}>
+                                {this.state.userLists.map(l => <option key={l.id} value={l.name}>{l.name}</option>)}
                             </select>
                         </label>
-                        <label>Deadline de vote souhaitée<br/>
-                            <input type="date" name="deadline" value={this.state.deadline} onChange={this.handleDeadlineChange} style={styles.smallInput} /><br/>
+                        
+                        <label>Date de livraison attendue<br/>
+                        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                            <KeyboardDatePicker disableToolbar variant="inline" format="yyyy/MM/dd"
+                                margin="normal" id="date-picker-inline" label="Date picker inline" value={this.state.deadline_date}
+                                onChange={this.handleDeadlineDateChange} KeyboardButtonProps={{'aria-label': 'change date'}}/>
+                            <KeyboardTimePicker
+                                margin="normal" id="time-picker" label="Time picker" value={this.state.deadline_time} 
+                                onChange={this.handleDeadlineTimeChange} KeyboardButtonProps={{'aria-label': 'change time'}}/>
+                        </MuiPickersUtilsProvider>
                         </label>
-                        <label>Date d'impression souhaitée<br/>
-                            <input type="date" name="delivery_date" value={this.state.delivery_date} onChange={this.handleDeliveryDateChange} style={styles.smallInput}/> <br/>
-                        </label>
-
                         <label>Titre de la requête<br/>
                             <input type="text" name="title" value={this.state.title} onChange={this.handleTitleChange} style={styles.smallInput}/> <br/>
                         </label>
@@ -273,29 +315,41 @@ class UploadForm extends Component {
                             <input type="radio" name="hidden" value="0" checked={this.state.hidden==0} onChange={this.handleHiddenChange} style={styles.smallInput}/><label>Non</label>
                             <input type="radio" name="hidden" value="1" checked={this.state.hidden==1} onChange={this.handleHiddenChange} style={styles.smallInput}/><label>Oui</label>
                         </label><br/>
-                        <button onClick={this.onFileUpload}>Enregistrer la requête</button>
-                        {this.getLists()}
+                        <View>
+                            {this.deadlinePicker()}
+                        </View>
+                        <button type="button" onClick={this.onFileUpload}>Enregistrer la requête</button>
 
                     </form>
                 </div>
-                );
-            }
-        };
+            );
+        }
+    };
+
+
     render() {
-    return (
-        <View style={globalStyles.container}>
-            <form id="file" style={styles.form}>
-                <Text style={[globalStyles.titleText, styles.title]}>
-                    Formulez une nouvelle demande
-                </Text>
-                <input type="file" onChange={this.onFileChange} style={styles.input}/>
-            </form>
-            {this.fileForm()}
-            {this.requestForm()}
-        </View>
-    );
-}
-}
+        if (this.state.userLists.length <= 0) {
+            this.getLists();
+            return (
+                <View><Text>Chargement des listes depuis le serveur distant...</Text></View>
+            )
+        }
+        return (
+            <View style={globalStyles.container}>
+                <form id="file" style={styles.form}>
+                    <Text style={[globalStyles.titleText, styles.title]}>
+                        Formulez une nouvelle demande
+                    </Text>
+                    <input type="file" onChange={this.onFileChange} style={styles.input}/>
+                </form>
+                {this.fileForm()}
+                {this.requestForm()}
+
+                <Text style={{color: 'red', fontSize: 20, marginVertical: 10}}>{this.state.error}</Text>
+            </View>
+            );
+    }
+}   
 
 export default UploadForm;
 

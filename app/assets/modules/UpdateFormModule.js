@@ -9,12 +9,9 @@ import React,{Component} from 'react';
 import { View, Text } from 'react-native';
 import { globalStyles, globalColors } from "../styles/global_styles";
 import constants from '../globals/constants';
-import { toSqlFormat } from '../tools/dateConverter'
+import { toSqlFormatDate, toSqlFormatTime } from '../tools/dateConverter'
 import List from '../classes/List';
 
-function setFileName(value) {
-    console.log(value);
-}
 
 const currDate = new Date();
 
