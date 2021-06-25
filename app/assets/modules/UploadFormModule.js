@@ -7,6 +7,7 @@
 import axios from 'axios';
 import React,{Component, useState} from 'react';
 import { View, Text, Alert } from 'react-native';
+import { MuiPickersUtilsProvider, KeyboardTimePicker, KeyboardDatePicker } from '@material-ui/pickers';
 
 import { globalStyles } from "../styles/global_styles";
 import constants from '../globals/constants';
@@ -30,21 +31,26 @@ class UploadForm extends Component {
         nb_per_page: 1,
 
         userList: "STI",
-        deadline: toSqlFormat(currDate),
-        delivery_date: toSqlFormat(new Date(currDate.setDate(currDate.getDate() + 7))),
+        deadline_date: currDate,
+        deadline_time: "20:00:00",
+        delivery_date: new Date(currDate.setDate(currDate.getDate() + 7)),
+        delivery_time: "8:00:00",
         comment: "",
         title: "",
         hidden: 0,
 	};
+    // File form properties
     handleColorChange = (e) => { this.setState({color: e.target.value}); console.log("Color: " + this.state.color) }
     handleStappleChange = (e) => { this.setState({stapple: e.target.value}); console.log("State: " + this.state.stapple) }
     handleR_VChange = (e) => { this.setState({recto_verso: e.target.value}); console.log("Recto_verso: " + this.state.recto_verso) }
     handleFormatChange = (e) => { this.setState({format: e.target.value}); console.log("Format: " + this.state.format) }
     handleNbPerPageChange = (e) => { this.setState({nb_per_page: e.target.value}); console.log("Nb_per_page: " + this.state.nb_per_page) }
-
+    // Request form properties
     handleListChange = (e) => { this.setState({userList: e.target.value}); console.log("List: " + this.state.userList) }
-    handleDeadlineChange = (e) => { this.setState({deadline: e.target.value}); console.log("Deadline: " + this.state.deadline) }
+    handleDeadlineDateChange = (e) => { this.setState({deadline_date: e.target.value}); console.log("Deadline_date: " + this.state.deadline_date) }
+    handleDeadlineTimeChange = (e) => { this.setState({deadline_time: e.target.value}); console.log("Deadline_time: " + this.state.deadline_time) }
     handleDeliveryDateChange = (e) => { this.setState({delivery_date: e.target.value}); console.log("Delivery_date: " + this.state.delivery_date) }
+    handleDeliveryTimeChange = (e) => { this.setState({delivery_time: e.target.value}); console.log("Delivery_time: " + this.state.delivery_time) }
     handleCommentChange = (e) => { this.setState({comment: e.target.value}); console.log("Comment: " + this.state.comment) }
     handleTitleChange = (e) => { this.setState({title: e.target.value}); console.log("title: " + this.state.Title) }
     handleHiddenChange = (e) => { this.setState({hidden: e.target.value}); console.log("Hidden: " + this.state.hidden) }
@@ -248,7 +254,12 @@ class UploadForm extends Component {
                             </select>
                         </label>
                         <label>Deadline de vote souhaitée<br/>
-                            <input type="date" name="deadline" value={this.state.deadline} onChange={this.handleDeadlineChange} style={styles.smallInput} /><br/>
+                            <KeyboardDatePicker disableToolbar variant="inline" format="yyyy/MM/dd"
+                                margin="normal" id="date-picker-inline" label="Date picker inline" value={this.state.deliveryDate}
+                                onChange={this.handleDeliveryDateChange} KeyboardButtonProps={{'aria-label': 'change date'}}/>
+                            <KeyboardTimePicker
+                                margin="normal" id="time-picker" label="Time picker" value={this.state.deliveryTime} 
+                                onChange={this.handleDeliveryTimeChange} KeyboardButtonProps={{'aria-label': 'change time'}}/>
                         </label>
                         <label>Date d'impression souhaitée<br/>
                             <input type="date" name="delivery_date" value={this.state.delivery_date} onChange={this.handleDeliveryDateChange} style={styles.smallInput}/> <br/>
