@@ -15,6 +15,9 @@ import AppLoading from "expo-app-loading";
 import RequestForm from "../assets/shared/RequestForm";
 import EditCard from "../assets/shared/EditCard";
 import Card from "../assets/shared/RequestCard";
+import constants from "../assets/globals/constants";
+
+var percentage =  0
 
 export default function RequestScreen({ navigation }) {
   const [dataLoaded, setDataLoaded] = useState(false);
@@ -52,16 +55,18 @@ export default function RequestScreen({ navigation }) {
   }; /**/
 
   const dataLoad = () => {
-    fetch('https://bgauthier.fr/inksac/api/request/getAllRequests.php')
+    fetch(constants.getAllRequests)
     .then(reponse => reponse.json())
     .then((request) => {
         request.data.map((item) => {
-          fetch("https://bgauthier.fr/inksac/api/shared/getFilesFromRequest.php?request_id="+item.id)
+          fetch(constants.getFilesFromRequest + "?request_id=" + item.id)
           .then(reponse => reponse.json())
           .then((files) => {
             if (typeof files.data != 'undefined')
               files.data.map((item2) => {
                 if (typeof item2.message == 'undefined') {
+                  percentage+=(100/19)
+                  console.log(percentage + '% chargés')
                   /* console.log('info'+info+'cool')
                   console.log({
                     title: item.id,
@@ -141,15 +146,22 @@ export default function RequestScreen({ navigation }) {
                       })
                     }
                   >
-                    <Card item={item}>
+                    <EditCard item={item}>
                       <Text style={globalStyles.modalText}>{item.title}</Text>
-                    </Card>
+                    </EditCard>
                   </TouchableOpacity>
                 )
               }
-            renderSectionHeader={({ section: { title, id } }) => (
-              <Text>{title}{id}</Text>
-            )
+            renderSectionHeader={({ section: { title } }) => {
+              if (title && title != 'undefined')
+                return (
+                  <Text>{title}</Text>
+                )
+              else 
+                return (
+                  <Text>Cette requête n'a pas encore de titre</Text>
+                )
+            }
             }
           />
           <View style={globalStyles.backButton}>

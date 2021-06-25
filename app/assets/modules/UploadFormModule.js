@@ -12,7 +12,7 @@ import DateFnsUtils from '@date-io/date-fns';
 
 import { globalStyles } from "../styles/global_styles";
 import constants from '../globals/constants';
-import { toSqlFormatDate, toSqlFormatTime } from '../tools/dateConverter';
+import { toSqlFormatDate, toSqlFormatTime, computeDateTimeForSql } from '../tools/dateConverter';
 import List from '../classes/List';
 
 
@@ -23,9 +23,6 @@ class UploadForm extends Component {
 
     /*formSubmitted = () => {this.props.parentCallBack(true);}*/
 
-    computeDateTime = (date, time) => {
-        return toSqlFormatDate(date) +  " " + toSqlFormatTime(time);
-    }
 
 	state = {
 	    selectedFile: null,
@@ -38,10 +35,10 @@ class UploadForm extends Component {
         nb_per_page: 1,
 
         userList: "",
-        deadline: this.computeDateTime(currDate, currDate), // computed with date + time
+        deadline: computeDateTime(currDate, currDate), // computed with date + time
         deadline_date: currDate,
         deadline_time: currDate,
-        delivery: this.computeDateTime(futDate, futDate), // computed with date + time
+        delivery: computeDateTime(futDate, futDate), // computed with date + time
         delivery_date: futDate,
         delivery_time: futDate,
         comment: "",
@@ -57,7 +54,7 @@ class UploadForm extends Component {
     handleFormatChange = (e) => { this.setState({format: e.target.value});}
     handleNbPerPageChange = (e) => { this.setState({nb_per_page: e.target.value});}
     // Request form properties
-    handleListChange = (e) => { this.setState({userList: e.target.value});}
+    handleListChange = (e) => { this.setState({userList: e.target.value}); console.log(this.state.userList)}
     handleDeadlineDateChange = (e) => { this.setState({deadline_date: e}); this.state.deadline = this.computeDateTime(this.state.deadline_date, this.state.deadline_time);}
     handleDeadlineTimeChange = (e) => { this.setState({deadline_time: e}); this.state.deadline = this.computeDateTime(this.state.deadline_date, this.state.deadline_time);}
     handleDeliveryDateChange = (e) => { this.setState({delivery_date: e}); this.state.delivery = this.computeDateTime(this.state.delivery_date, this.state.delivery_time);}
@@ -80,6 +77,7 @@ class UploadForm extends Component {
             if ('data' in response.data) {
                 let lists = [];
                 let data = response.data.data;
+                lists.push(new List(0, 'Selectionnez une liste',0 , this.computeDateTime(currDate, currDate), ""));
                 data.forEach(e => {
                     lists.push(new List(e.id, e.name, e.theorical_count, e.creation_date, e.location));
                 });
@@ -94,7 +92,7 @@ class UploadForm extends Component {
 
     formSubmitted = () => {
         if (this.state.error == "") this.props.params.navigation.goBack();
-        else this.setError("eh toi la bas mange tes morts");
+        else this.setError("Coucou Baptiste, tu as oublié ton cerveau entre deux lignes de Javascript. Si un utilisateur voit ça, vous le droit de l'insulter. Cordialement, Baptiste, le 25/06/2021.");
     }
 
 	onFileChange = event => {
@@ -105,6 +103,7 @@ class UploadForm extends Component {
     
 	
 	onFileUpload = async () => {
+        this.setError("");
         const fileFormData = new FormData();
         // Create the post request to grab data from $_POST['file] in the php server
         fileFormData.append("file",
@@ -195,7 +194,6 @@ class UploadForm extends Component {
     linkListToRequest = async (request_id) => {
         let myForm = document.getElementById('requestData');
         let createRequestFormData = new FormData(myForm);
-        let userList = createRequestFormData.get('userList');
         createRequestFormData.append('list_name', this.state.userList);
         createRequestFormData.append('request_id', request_id);
         // POSTING LINK BETWEEN LIST AND REQUEST
@@ -292,8 +290,8 @@ class UploadForm extends Component {
                         <h1>Demande une requête</h1>
                         
                         <label>Liste d'élèves concernée<br/>
-                            <select type="text" name="userList" style={styles.smallInput}>
-                                {this.state.userLists.map(l => <option key={l.id} value={l.name} onChange={this.handleListChange}>{l.name}</option>)}
+                            <select type="text" name="userList" style={styles.smallInput}  onChange={this.handleListChange}>
+                                {this.state.userLists.map(l => <option key={l.id} value={l.name}>{l.name}</option>)}
                             </select>
                         </label>
                         

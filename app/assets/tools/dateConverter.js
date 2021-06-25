@@ -21,4 +21,9 @@ function toSqlFormatTime(time) {
     return stringTime;
 }
 
-export { toSqlFormatDate, toSqlFormatTime };
+// Takes 2 Date() objects as input, one for the date, and the other for the time. It makes it sql-friendly for database.
+function computeDateTimeForSql(date, time) {
+    return toSqlFormatDate(date) +  " " + toSqlFormatTime(time);
+}
+
+export { toSqlFormatDate, toSqlFormatTime, computeDateTimeForSql };

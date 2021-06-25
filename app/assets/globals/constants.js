@@ -9,7 +9,9 @@ export default {
     addListToRequest : baseUrl+'api/link/addListToRequest.php',
     updateRequest : baseUrl+'api/request/updateRequest.php',
     getAllRequests : baseUrl+'api/request/getAllRequests.php',
+    getAllFiles : baseUrl+'api/file/getAllFiles.php',
     getAllLists : baseUrl+'api/userList/getAllLists.php',
     getList : baseUrl+'api/userList/getList.php',
+    getRequestsForList : baseUrl+'api/shared/getRequestsForList.php',
     getFilesFromRequest : baseUrl+'api/shared/getFilesFromRequest.php'
 }
