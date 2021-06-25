@@ -31,7 +31,6 @@ export default function ChooseScreen({ route, navigation }){
                 .then((file) => {
                     if (file.data.message == undefined){
                         file.data.data.map((item2) => {
-                            //console.log(item2)
                             const newFile = new File(item2.id, item2.name, item2.path, item2.color, item2.stapple, item2.format, item2.recto_verso, item2.nb_per_page, item.id)
                             const newRequete = new Request(item.id, item.author_id, item.author_name, item.deadline, item.delivery_date, item.expiration_date, item.title, item.comment, item.hidden, item.state)
                             newRequete.attachFile(newFile)

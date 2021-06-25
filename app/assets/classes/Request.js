@@ -14,7 +14,7 @@ class Request {
         this.comment = comment
         this.hidden = hidden
         this.state = state
-        this.files = []
+        this.files = File
     }
 
     attachFile(file) {

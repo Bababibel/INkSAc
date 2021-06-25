@@ -31,7 +31,7 @@ export default function LoginScreen({ navigation }){
             <View style={globalStyles.container}>
                 <View style={globalStyles.loginCard}>
                     <Formik
-                        initialValues={{ id : 'prof', password : ''}}
+                        initialValues={{ id : 'sti', password : 'e'}}
                         validationSchema={LoginSchema}
                         onSubmit={(values) => {
                             if(values.id.toLowerCase() == 'prof') {
