@@ -7,6 +7,10 @@ import RequestForm from "../assets/shared/RequestForm";
 
 export default function RequestElementScreen({ route, navigation }) {  
 
+  if (typeof route.params == 'undefined') {
+    return <Text>Votre page n'a pas réussi à charger : probablement une erreur de navigation :'(</Text>
+  }
+
   const item = route.params.item;
   /*
     return(
