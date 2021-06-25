@@ -1,6 +1,7 @@
 import axios from 'axios';
 import constants from '../globals/constants';
 
+
 class Request {
     constructor(request_id, author_id, author_name, deadline, delivery_date, expiration_date, title, comment, hidden, state) {
         this.request_id = request_id
@@ -13,12 +14,12 @@ class Request {
         this.comment = comment
         this.hidden = hidden
         this.state = state
-        this.files = ['']
+        this.files = []
     }
 
     attachFile(file) {
         file.request_id = this.request_id
-        this.files.push(file)
+        this.files = file
     }
 }
 
