@@ -1,8 +1,10 @@
 import React from 'react';
+import axios from 'axios';
 import { View, Text, Button, TextInput, Keyboard, TouchableWithoutFeedback, Platform, Alert } from 'react-native';
 import { Formik } from 'formik';
 import * as yup from 'yup';
 import { globalStyles, globalColors } from '../assets/styles/global_styles';
+import constants from '../assets/globals/constants';
 
 
 const LoginSchema = yup.object({
@@ -31,30 +33,35 @@ export default function LoginScreen({ navigation }){
             <View style={globalStyles.container}>
                 <View style={globalStyles.loginCard}>
                     <Formik
-                        initialValues={{ id : 'sti', password : 'e'}}
+                        initialValues={{ id : '1', password : 'e'}}
                         validationSchema={LoginSchema}
                         onSubmit={(values) => {
-                            if(values.id.toLowerCase() == 'prof') {
-                                navigation.push('Request')
-                            }
-                            else if(values.id.toLowerCase() == 'repro') {
-                                navigation.push('Print')
-                            }
-                            else if(values.id.toLowerCase() == 'sti') {
-                                navigation.navigate('Choose', { 
-                                    list : 'STI',
-                                    })
-                            }
-                            else if(values.id.toLowerCase() == 'mri') {
-                                navigation.navigate('Choose', { 
-                                    list : 'MRI',
-                                    })
-                            }
-                            else {
-                                navigation.navigate('Choose', { 
-                                    list : 'MRI',
-                                    })
-                            }
+                            axios.get(constants.getUser, {params: {'id': values.id}})
+                            //axios.get(constants.getAllUsers)
+                            .then((response) => {
+                                console.log(response.data)
+                                if(values.id.toLowerCase() == 'prof') {
+                                    navigation.push('Request')
+                                }
+                                else if(values.id.toLowerCase() == 'repro') {
+                                    navigation.push('Print')
+                                }
+                                else if(values.id.toLowerCase() == 'sti') {
+                                    navigation.navigate('Choose', { 
+                                        list : 'STI',
+                                        })
+                                }
+                                else if(values.id.toLowerCase() == 'mri') {
+                                    navigation.navigate('Choose', { 
+                                        list : 'MRI',
+                                        })
+                                }
+                                else {
+                                    navigation.navigate('Choose', { 
+                                        list : 'MRI',
+                                        })
+                                }
+                            })
                         }}
                         >
                         {(props) => (

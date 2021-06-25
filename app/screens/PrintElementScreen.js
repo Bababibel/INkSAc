@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import {View, Text, Alert, Button} from 'react-native';
+
 import constants from '../assets/globals/constants';
 import { globalStyles } from '../assets/styles/global_styles';
 
@@ -8,38 +9,60 @@ export default function PrintElementScreen({ route, navigation }){
     const item = route.params;
 
     const changeState = (item) => {
-        var newState = 'A Imprimer'
-        if(item.state == 'pending'){
+        var newState = 'Imprimer'
+        var action = true
+        if(item.item.state == 'pending'){
             console.log('Le sondage auprès des élèves n\'est pas fini')
         }
-        else if(item.state == 'A Imprimer'){
+        else if(item.item.state == 'Imprimer'){
             newState = 'Pret'
         }
-        else if(item.state == 'Pret'){
-            newState = "archivé"
+        else if(item.item.state == 'Pret'){
+            newState = "Archiver"
         }
-        let formData = new FormData();
-        formData.append('id', item.item.request_id);
-        formData.append('author', item.item.author_id);
-        formData.append('deadline', item.item.deadline);
-        formData.append('delivery_date', item.item.delivery_date);
-        formData.append('title', item.item.title);
-        formData.append('comment', item.item.comment);
-        formData.append('hidden', item.item.hidden);
-        formData.append('state',  newState );
-        console.log(formData)
-        axios.post(constants.updateRequest , formData, {
-            headers: { "Content-Type" : "application/json" }
-        })
-        .then((reponse) => {
-            console.log(reponse.data);
-            if ('message' in reponse || 'data' in reponse) {
-                console.log('Trying to update the request now...');
-            } else {
-                console.log('Internal error. Please try again or contact the support team');
-            }
-            navigation.push('Print')
-        })
+        else if(item.item.state == 'Archiver'){
+            var action = false
+        }
+        console.log(newState)
+        if (action){
+            let formData = new FormData();
+            formData.append('id', item.item.request_id);
+            formData.append('author', item.item.author_id);
+            formData.append('deadline', item.item.deadline);
+            formData.append('delivery_date', item.item.delivery_date);
+            formData.append('title', item.item.title);
+            formData.append('comment', item.item.comment);
+            formData.append('hidden', item.item.hidden);
+            formData.append('state',  newState );
+            //console.log(formData)
+            axios.post(constants.updateRequest , formData, {
+                headers: { "Content-Type" : "application/json" }
+            })
+            .then((reponse) => {
+                console.log(reponse.data);
+                if ('message' in reponse || 'data' in reponse) {
+                    console.log('Trying to update the request now...');
+                } else {
+                    console.log('Internal error. Please try again or contact the support team');
+                }
+                navigation.push('Print')
+            })
+        } else {
+            console.log("suppression en cours ... "+item.item.request_id )
+            axios.get(constants.deleteRequest , {params: {'id' : item.item.request_id}}, {
+                headers: { "Content-Type" : "application/json" }
+            })
+            .then((reponse) => {
+                console.log(reponse.data);
+                if ('message' in reponse || 'data' in reponse) {
+                    console.log('Trying to update the request now...');
+                } else {
+                    console.log('Internal error. Please try again or contact the support team');
+                }
+                navigation.push('Print')
+            })
+        }
+        
     }
 
     return(
