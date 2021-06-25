@@ -122,9 +122,9 @@ export default function RequestScreen({ navigation }) {
               <Text
                 style={globalStyles.titleText}
                 onPress={() =>
-                  navigation.navigate("RequestElement", { modify: "no" })
-                }
-              >
+                  navigation.navigate("RequestElement", { 
+                    modify: "no" })
+                }>
                 Formulez une nouvelle demande
               </Text>
             </Card>

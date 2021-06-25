@@ -14,10 +14,9 @@ import PrintElementScreen from "../../screens/PrintElementScreen";
 
 const Stack = createStackNavigator();
 
-
 export const AppNavigator = () => (
   <NavigationContainer>
-    <Stack.Navigator initialRouteName='RequestElement' headerMode='none'>
+    <Stack.Navigator initialRouteName='Login' headerMode='none'>
       <Stack.Screen name="Home" component={WelcomeScreen} />
       <Stack.Screen name="Login" component={LoginScreen} />
       <Stack.Screen name="Choose" component={ChooseScreen} />
@@ -26,7 +25,6 @@ export const AppNavigator = () => (
       <Stack.Screen name="RequestElement" component={RequestElementScreen} />
       <Stack.Screen name="Print" component={PrintScreen} />
       <Stack.Screen name="PrintElement" component={PrintElementScreen} />
-
     </Stack.Navigator>
   </NavigationContainer>
 )
