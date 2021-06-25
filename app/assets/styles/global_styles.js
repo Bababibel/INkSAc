@@ -11,7 +11,8 @@ export const globalColors = {
     black: 'black', 
     red: 'red',
     textLight: 'white', 
-    textDark: 'black'
+    textDark: 'black',
+    fileInput: '#d9cb9e',
 };
 
 export const globalStyles = StyleSheet.create({

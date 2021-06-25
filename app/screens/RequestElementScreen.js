@@ -30,17 +30,20 @@ export default function RequestElementScreen({ route, navigation }) {
     return (
       <ScrollView>
         <UploadForm/>
-        <Button style={{top: 90}} title='Fermer sans enregistrer' onPress={() => navigation.goBack()}/>
+        <Button title='Fermer sans enregistrer' onPress={() => navigation.goBack()}/>
       </ScrollView>
       
     );
   else if (route.params.modify == 'yes')
-   { 
+   {
+     /* 
+     console.log('objet passé à UpdateForm : ')
+     console.log(item) */
      return (
-      <View>
+      <ScrollView>
         <UpdateForm params={{item : item}}/>
-        <Button style={{top: 90}} title='Fermer sans enregistrer' onPress={() => navigation.goBack()}/>
-      </View>
+        <Button title='Ferme sans enregistrer' onPress={() => navigation.goBack()}/>
+      </ScrollView>
       
     );}
   else
