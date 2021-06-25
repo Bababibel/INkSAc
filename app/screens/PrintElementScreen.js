@@ -2,6 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import {View, Text, Alert, Modal, TouchableOpacity, Button, FlatList} from 'react-native';
 import { globalStyles } from '../assets/styles/global_styles';
+import constants from '../assets/globals/constants';
 
 export default function PrintElementScreen({ route, navigation }){
     const item = route.params;
@@ -26,7 +27,7 @@ export default function PrintElementScreen({ route, navigation }){
         formData.append('comment', item.comment);
         formData.append('hidden', item.hidden);
         formData.append('state',  newState );
-        axios.post('https://bgauthier.fr/inksac/api/request/updateRequest.php', formData, {
+        axios.post(constants.updateRequest, formData, {
             headers: { "Content-Type" : "application/json" }
         })
         .then((reponse) => {

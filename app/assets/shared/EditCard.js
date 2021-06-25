@@ -5,22 +5,21 @@ import {
   Text,
   Alert,
   Pressable,
-  Modal,
 } from "react-native";
 import { globalColors, globalStyles } from "../styles/global_styles";
-import RequestForm from "./RequestForm";
+
+import { useNavigation } from '@react-navigation/native';
 
 export default function EditCard (props) {
-  
-  const [modalVisible, setModalVisible] = useState(false);
+
+  const navigation = useNavigation()
 
   return (
     <View style={styles.card}>
       <View style={styles.cardIconContainer}>
         <Pressable
           style={styles.cardIcon}
-          onPress={() => console.log('Demande de modification de la requête d\'id : ' + props.id)
-          }
+          onPress={() => navigation.navigate('RequestElement', { item : props.item, modify : 'yes'})}
         >
           <Text style={styles.cardIconText}>Éditer</Text>
         </Pressable>

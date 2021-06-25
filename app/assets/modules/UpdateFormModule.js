@@ -1,12 +1,12 @@
 /*
-##########################################################################
-#  Form module to upload files and post a request. WEB compatible ONLY ! #
-##########################################################################
+############################################################################
+#  Form module to update files and update a request. WEB compatible ONLY ! #
+############################################################################
 */
 
 import axios from 'axios';
 import React,{Component} from 'react';
-import { View, Text} from 'react-native';
+import { View, Text } from 'react-native';
 import { globalStyles } from "../styles/global_styles";
 import constants from '../globals/constants';
 import { toSqlFormat } from '../tools/dateConverter'
@@ -15,11 +15,7 @@ function setFileName(value) {
     console.log(value);
 }
 
-function rien(event) {
-    event.target.parentNode.value = event.target.value
-}
-
-class UploadForm extends Component {
+class UpdateForm extends Component {
 
 	state = {
 	    selectedFile: null
@@ -28,8 +24,6 @@ class UploadForm extends Component {
 	onFileChange = event => {
 	    this.setState({ selectedFile: event.target.files[0] });
 	};
-
-    
 	
 	onFileUpload = async () => {
         const fileFormData = new FormData();
@@ -184,11 +178,12 @@ class UploadForm extends Component {
             }
         };
     render() {
+        console.log(this)
     return (
-        <View style={globalStyles.container}>
+        <View style={[globalStyles.container, styles.maxHeight]}>
             <form id="file" style={styles.form}>
                 <Text style={[globalStyles.titleText, styles.title]}>
-                    Formulez une nouvelle demande
+                    Modifiez une demande existante
                 </Text>
                 <input type="file" onChange={this.onFileChange} style={styles.input}/>
             </form>
@@ -200,9 +195,12 @@ class UploadForm extends Component {
 }
 }
 
-export default UploadForm;
+export default UpdateForm;
 
 const styles = {
+    maxHeight: {
+        height: '100vh',
+    },
     form: {
         display: 'flex',
         flexDirection: 'column',
