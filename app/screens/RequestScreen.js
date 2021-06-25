@@ -10,8 +10,11 @@ import {
   Button,
   Platform,
 } from "react-native";
-import { globalStyles, globalColors } from "../assets/styles/global_styles";
 import AppLoading from "expo-app-loading";
+
+import Request from "../assets/classes/Request";
+import File from "../assets/classes/File";
+import { globalStyles, globalColors } from "../assets/styles/global_styles";
 import RequestForm from "../assets/shared/RequestForm";
 import EditCard from "../assets/shared/EditCard";
 import Card from "../assets/shared/RequestCard";
@@ -23,6 +26,8 @@ export default function RequestScreen({ navigation }) {
   const [dataLoaded, setDataLoaded] = useState(false);
 
   const [modalVisible, setModalVisible] = useState(false);
+
+  const [requests, setRequests] = useState([]);
 
   /*
   const dataLoad = () => {
@@ -55,9 +60,11 @@ export default function RequestScreen({ navigation }) {
   }; /**/
 
   const dataLoad = () => {
+    
     fetch(constants.getAllRequests)
     .then(reponse => reponse.json())
     .then((request) => {
+      let tmpRequete = []
         request.data.map((item) => {
           fetch(constants.getFilesFromRequest + "?request_id=" + item.id)
           .then(reponse => reponse.json())
@@ -65,25 +72,13 @@ export default function RequestScreen({ navigation }) {
             if (typeof files.data != 'undefined')
               files.data.map((item2) => {
                 if (typeof item2.message == 'undefined') {
-                  percentage+=(100/19)
-                  //console.log(percentage + '% chargés')
-                  /* console.log('info'+info+'cool')
-                  console.log({
-                    title: item.id,
-                    data : [
-                      {requestid : item.id, key: item2.id, deadline: item.deadline, author: item.author_name, delivery_date: item.delivery_date, title: item2.name, comment: item.comment, hidden: item.hidden, state: item.state, color: item2.color, format: item2.format, nb_per_page: item2.nb_per_page, recto_verso: item2.recto_verso, stapple: item2.stapple, path: item2.path}, 
-                      ]
-                    }) */
-                  setList((prevItem) => {
-                      return [{
-                        title: item.title,
-                        id: item.id,
-                        data : [
-                          {requestid : item.id, key: item2.id, deadline: item.deadline, author: item.author_name, delivery_date: item.delivery_date, title: item2.name, comment: item.comment, hidden: item.hidden, state: item.state, color: item2.color, format: item2.format, nb_per_page: item2.nb_per_page, recto_verso: item2.recto_verso, stapple: item2.stapple, path: item2.path}, 
-                          ]
-                        },
-                      ...prevItem]
-                  })
+                    const newFile = new File(item2.id, item2.name, item2.path, item2.color, item2.stapple, item2.format, item2.recto_verso, item2.nb_per_page, item.id)
+                    const newRequete = new Request(item.id, item.author, item.author_name, item.deadline, item.delivery_date, item.expiration_date, item.title, item.comment, item.hidden, item.state)
+                    newRequete.attachFile(newFile)
+                    tmpRequete.push(newRequete)
+                    setRequests((prevItem) => {
+                        return [newRequete ,...prevItem];
+                    })
                 }
               })
           })
@@ -94,60 +89,41 @@ export default function RequestScreen({ navigation }) {
         Alert.alert('erreur data');
     })
     .done()
-  } /**/
-
- /*  const info = [
-    {
-      title: "Main dishes",
-      data: ["Pizza", "Burger", "Risotto"]
-    },
-    {
-      title: "Sides",
-      data: ["French Fries", "Onion Rings", "Fried Shrimps"]
-    },
-    {
-      title: "Drinks",
-      data: ["Water", "Coke", "Beer"]
-    },
-    {
-      title: "Desserts",
-      data: ["Cheese Cake", "Ice Cream"]
-    }
-  ]; */
-
-  //const [info, setList] = useState([{title: 0, data: ['coucou1', 'coucou2']}]);
-  const [info, setList] = useState([]);
+  }
 
   if (dataLoaded) {
     if (Platform.OS === "web") {
       return (
+        //console.log(requests),
         <View style={globalStyles.container}>
           <TouchableOpacity>
             <Card>
               <Text
                 style={globalStyles.titleText}
-                onPress={() =>
+                onPress={() =>{
+                  console.log('pass'),
                   navigation.navigate("RequestElement", { 
-                    modify: "no" })
+                    modify: "no" })}
                 }>
                 Formulez une nouvelle demande
               </Text>
             </Card>
           </TouchableOpacity>
 
-          <SectionList
-            data={info}
-            keyExtractor={(info, index) => info + index}
+          <FlatList
+            data={requests}
             renderItem={({ item }) => (
-              //console.log('item'),
+            console.log('bite'),
                   <TouchableOpacity
                     onPress={() =>
+                      console.log('bite'),
                       navigation.navigate("RequestElement", {
                         item: item,
                         modify: "just print",
                       })
                     }
                   >
+                     {console.log('bite bleu')}
                     <EditCard item={item}>
                       <Text style={globalStyles.titleText}>{item.title}</Text>  
                     </EditCard>
@@ -166,12 +142,13 @@ export default function RequestScreen({ navigation }) {
             }
             }
           />
+          {console.log("coucou2")}
           <View style={globalStyles.backButton}>
             <Button title="Logout" onPress={navigation.goBack} />
           </View>
         </View>
-      );
-    } else {
+      )
+          } else {
       return (
         <View style={globalStyles.container}>
           <TouchableOpacity>
@@ -199,10 +176,9 @@ export default function RequestScreen({ navigation }) {
             </RequestForm>
           </Modal>
           <FlatList
-            data={info}
+            data={requests}
             keyExtractor={(info, index) => info + index}
             renderItem={({ item }) => (
-              //console.log(item.data[0]),
               <TouchableOpacity>
                 <EditCard item = {item}>
                   <Text style={globalStyles.cardIconText}>{item.title}</Text>
@@ -214,7 +190,7 @@ export default function RequestScreen({ navigation }) {
             <Button title="Logout" onPress={navigation.goBack} />
           </View>
         </View>
-      );
+      )
     }
   } else {
     return (
@@ -227,6 +203,6 @@ export default function RequestScreen({ navigation }) {
           setDataLoaded(true);
         }}
       />
-    );
+    )
   }
 }
