@@ -67,7 +67,6 @@ class UploadForm extends Component {
 
 
     useGetLists = () => (() => {
-        console.log("coucou")
         this.getLists();
       }, [null]);
 

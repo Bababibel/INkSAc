@@ -1,12 +1,16 @@
-import React from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { View, Text, Button, TextInput, Keyboard, TouchableWithoutFeedback, Platform, Alert } from 'react-native';
 import { Formik } from 'formik';
 import * as yup from 'yup';
+import axios from 'axios';
+
 import { globalStyles, globalColors } from '../assets/styles/global_styles';
+import User from '../assets/classes/User';
+import constants from '../assets/globals/constants'
 
 
 const LoginSchema = yup.object({
-    id : yup.string()
+    email : yup.string()
         .required()
         .min(1),
     password : yup.string()
@@ -26,47 +30,61 @@ export default function LoginScreen({ navigation }){
         navigation.goBack()
     }
 
+    const [errorMsg, setErrorMsg] = useState(null);
+    const [user, setUser] = useState(null);
+
+
+    
+
+
+    function submitted(email) {
+        axios.get(constants.getUserByEmail, { params: { 'email': email } })
+        .then(response => {
+            if (response.data) { // server answered
+                if ('data' in response.data) { // there is data to collect
+                    let u = response.data.data[0]; // first object in the data array
+                    let tmpUser = new User(u.id, u.email, u.first_name, u.last_name, u.role, u.creation_date, u.last_login_date, u.location, u.list_names);
+                    console.log(tmpUser)
+                    setErrorMsg("coucou")
+                    setUser(tmpUser)
+                }
+                else if ('message' in response.data) { // no data but error message
+                    setErrorMsg("Erreur. Réponse du serveur: "+response.data.message);
+                }
+                else setErrorMsg("Le serveur a renvoyé une réponse inhabituelle");
+            }
+            else setErrorMsg("Le serveur distant ne répond pas");
+        })
+    } 
+
+    // wait for full-update of the variable "user" before evaluating it
+    useEffect(() => { 
+        if (user != null) {
+            navigation.navigate("Choose", {
+                list: user.lists[0],
+            });
+            }
+        }, [user]);
+
     return (
         <TouchableWithoutFeedback onPress={dismissKeyboard}>
             <View style={globalStyles.container}>
                 <View style={globalStyles.loginCard}>
                     <Formik
-                        initialValues={{ id : 'sti', password : 'e'}}
+                        initialValues={{ email : '@insacvl.fr', password : 'e'}}
                         validationSchema={LoginSchema}
-                        onSubmit={(values) => {
-                            if(values.id.toLowerCase() == 'prof') {
-                                navigation.push('Request')
-                            }
-                            else if(values.id.toLowerCase() == 'repro') {
-                                navigation.push('Print')
-                            }
-                            else if(values.id.toLowerCase() == 'sti') {
-                                navigation.navigate('Choose', { 
-                                    list : 'STI',
-                                    })
-                            }
-                            else if(values.id.toLowerCase() == 'mri') {
-                                navigation.navigate('Choose', { 
-                                    list : 'MRI',
-                                    })
-                            }
-                            else {
-                                navigation.navigate('Choose', { 
-                                    list : 'MRI',
-                                    })
-                            }
-                        }}
-                        >
+                        onSubmit={(values) => submitted(values.email)}>
                         {(props) => (
                             <View >
+                                <Text>{errorMsg}</Text>
                                 <Text style={globalStyles.titleText}> Login </Text>
                                 <TextInput
                                     style={globalStyles.input}
                                     placeholder='Identifiant'
-                                    onChangeText={props.handleChange('id')}
-                                    value={props.values.id} 
+                                    onChangeText={props.handleChange('email')}
+                                    value={props.values.email} 
                                 />
-                                <Text style={globalStyles.errorText}>{ props.touched.id && props.errors.id}</Text>
+                                <Text style={globalStyles.errorText}>{ props.touched.email && props.errors.email}</Text>
 
                                 <TextInput
                                     style={globalStyles.input}
@@ -83,9 +101,10 @@ export default function LoginScreen({ navigation }){
                             </View>
                         )}
                     </Formik>
-                    <Button color={globalColors.secondary} title='GO back to main screen' onPress = {pressHandler}/>
+                    <Button color={globalColors.secondary} title='Retour' onPress = {pressHandler}/>
                 </View>
             </View>
         </TouchableWithoutFeedback>
     );
 }
+

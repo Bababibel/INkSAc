@@ -12,6 +12,7 @@ export default {
     getAllFiles : baseUrl+'api/file/getAllFiles.php',
     getAllLists : baseUrl+'api/userList/getAllLists.php',
     getList : baseUrl+'api/userList/getList.php',
+    getUserByEmail : baseUrl+'api/user/getUserByEmail.php',
     getRequestsForList : baseUrl+'api/shared/getRequestsForList.php',
     getFilesFromRequest : baseUrl+'api/shared/getFilesFromRequest.php'
 }
