@@ -1,4 +1,3 @@
-import { processFontFamily } from "expo-font";
 import { Dimensions, Platform, StatusBar, StyleSheet } from "react-native";
 
 
@@ -21,8 +20,11 @@ export const globalStyles = StyleSheet.create({
         flexGrow: 1,
         backgroundColor: globalColors.bg_primary,
         paddingTop : Platform.OS === "android" ? StatusBar.currentHeight : 0,
+        paddingLeft: 30,
+        paddingRight : 30,
         justifyContent : "center",
         alignItems : "center",
+        borderRadius : 10000,
         minWidth : Platform.OS === "web" ? Dimensions.get('window').width / 4 : Dimensions.get('window').width,
     },
     modalText: {
@@ -68,6 +70,35 @@ export const globalStyles = StyleSheet.create({
     choiceCard: {
         justifyContent: 'flex-end',
         paddingBottom: Dimensions.get('window').height /20,
-    }
+    },
+    card: {
+        borderRadius: 6,
+        elevation: 3,
+        backgroundColor: globalColors.bg_primary,
+        shadowOffset: { width: 1, height: 1 },
+        shadowColor: globalColors.bg_secondary,
+        shadowOpacity: 0.3,
+        shadowRadius: 2,
+        marginHorizontal: 4,
+        marginVertical: 6,
+      },
+      cardContent: {
+        marginHorizontal: 18,
+        marginVertical: 10,
+      },
+      cardIconContainer: {
+        flexDirection: "row",
+        textAlign: "center",
+      },
+      cardIcon: {
+        width: "50%",
+        justifyContent: "center",
+        textAlign: "center",
+        borderWidth: 1,
+        borderColor: "black",
+      },
+      cardIconText: {
+        textAlign: "center",
+      },
 });
 

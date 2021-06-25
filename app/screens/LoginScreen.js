@@ -43,10 +43,7 @@ export default function LoginScreen({ navigation }){
             if (response.data) { // server answered
                 if ('data' in response.data) { // there is data to collect
                     let u = response.data.data[0]; // first object in the data array
-                    let tmpUser = new User(u.id, u.email, u.first_name, u.last_name, u.role, u.creation_date, u.last_login_date, u.location, u.list_names);
-                    console.log(tmpUser)
-                    setErrorMsg("coucou")
-                    setUser(tmpUser)
+                    setUser(new User(u.id, u.email, u.first_name, u.last_name, u.role, u.creation_date, u.last_login_date, u.location, u.list_names))
                 }
                 else if ('message' in response.data) { // no data but error message
                     setErrorMsg("Erreur. Réponse du serveur: "+response.data.message);

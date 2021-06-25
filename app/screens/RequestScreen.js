@@ -135,8 +135,8 @@ export default function RequestScreen({ navigation }) {
             </Card>
           </TouchableOpacity>
           <SectionList
-            sections={info}
-            keyExtractor={(item, index) => item + index}
+            data={info}
+            keyExtractor={(info, index) => info + index}
             renderItem={({ item }) => (
                   <TouchableOpacity
                     onPress={() =>
@@ -147,7 +147,7 @@ export default function RequestScreen({ navigation }) {
                     }
                   >
                     <EditCard item={item}>
-                      <Text style={globalStyles.modalText}>{item.title}</Text>
+                      <Text style={globalStyles.modalText}>{'item'}</Text>
                     </EditCard>
                   </TouchableOpacity>
                 )

@@ -14,13 +14,7 @@ import { globalStyles } from '../assets/styles/global_styles';
 export default function PrintScreen({ navigation }){
     const [dataLoaded, setDataLoaded] = useState(false);
 
-    const [modalOpen, setModalOpen] = useState(false);
-
-    const [selected, setSelected] = useState([]);
-
     const [requests, setRequests] = useState([]);
-
-    const[files, setFiles] = useState([])
 
     const dataLoad = () => {
         axios.get(constants.getAllRequests)
@@ -60,6 +54,7 @@ export default function PrintScreen({ navigation }){
             <View style={globalStyles.container}>
                 <FlatList
                     data={requests}
+                    keyExtractor={(item, index) => item + index}
                     renderItem={({item}) => (
                         <TouchableOpacity onPress={ () => navigation.navigate('PrintElement', { item : item })}>
                             <Card>
