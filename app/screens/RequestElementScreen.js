@@ -1,13 +1,14 @@
 import React, {useState} from "react";
-import { View, Text, Button, StyleSheet, Dimensions } from "react-native";
+import { View, Text, Button, ScrollView} from "react-native";
 import UploadForm from "../assets/modules/UploadFormModule";
+import UpdateForm from "../assets/modules/UpdateFormModule";
 import { globalStyles } from "../assets/styles/global_styles";
 import RequestForm from "../assets/shared/RequestForm";
 
-export default function RequestScreen({ route, navigation }) {  
+export default function RequestElementScreen({ route, navigation }) {  
 
   const item = route.params.item;
-  console.log('etape')/*
+  /*
     return(
         <View>
             <View style={globalStyles.modalText}>
@@ -21,16 +22,25 @@ export default function RequestScreen({ route, navigation }) {
         </View>
     ) */
 
-  if (route.params.item == 'non')
+  if (route.params.modify == 'no')
     return (
-      <View>
-        <UploadForm style={{height: Dimensions.get('window').height /1.2,}} />
-        <Button style={{top: 90}} title='Fermer sans enregistrer'  onPress={() => navigation.goBack()}/>
-      </View>
+      <ScrollView>
+        <UploadForm/>
+        <Button style={{top: 90}} title='Fermer sans enregistrer' onPress={() => navigation.goBack()}/>
+      </ScrollView>
       
     );
-  else 
-    return(
+  else if (route.params.modify == 'yes')
+   { 
+     return (
+      <View>
+        <UpdateForm params={{item : item}}/>
+        <Button style={{top: 90}} title='Fermer sans enregistrer' onPress={() => navigation.goBack()}/>
+      </View>
+      
+    );}
+  else
+    return (
       <View>
           <View style={globalStyles.modalText}>
               <Text>Auteur : {item.author}</Text>

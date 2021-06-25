@@ -17,6 +17,7 @@ export const globalColors = {
 export const globalStyles = StyleSheet.create({
     container: {
         flex: 1,
+        flexGrow: 1,
         backgroundColor: globalColors.bg_primary,
         paddingTop : Platform.OS === "android" ? StatusBar.currentHeight : 0,
         justifyContent : "center",
