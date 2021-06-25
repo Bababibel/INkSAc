@@ -22,42 +22,14 @@ import constants from "../assets/globals/constants";
 
 var percentage =  0
 
-export default function RequestScreen({ navigation }) {
+export default function RequestScreen({ route, navigation }) {
+  const id = route
+  console.log(id)
   const [dataLoaded, setDataLoaded] = useState(false);
 
   const [modalVisible, setModalVisible] = useState(false);
 
   const [requests, setRequests] = useState([]);
-
-  /*
-  const dataLoad = () => {
-    fetch("https://bgauthier.fr/inksac/api/request/getAllRequests.php")
-      .then((reponse) => reponse.json())
-      .then((list) => {
-        list.data.map((item) => {
-          setList((prevItem) => {
-            console.log(item)
-            return [
-              {
-                key: item.id,
-                deadline: item.deadline,
-                author: item.author_name,
-                author_id: item.id,
-                delivery_date: item.delivery_date,
-                title: item.name,
-                comment: item.comment,
-                hidden: item.hidden,
-                state: item.state,
-              },
-              ...prevItem,
-            ];
-          });
-        });
-      })
-      .catch(() => {
-        Alert.alert("erreur data");
-      });
-  }; /**/
 
   const dataLoad = () => {
     
@@ -66,6 +38,9 @@ export default function RequestScreen({ navigation }) {
     .then((request) => {
       let tmpRequete = []
         request.data.map((item) => {
+          console.log("route.id : "+id.params.id+'et item.id'+item.id)
+          if(id.param.id == item.id){
+            print('pass')
           fetch(constants.getFilesFromRequest + "?request_id=" + item.id)
           .then(reponse => reponse.json())
           .then((files) => {
@@ -82,7 +57,7 @@ export default function RequestScreen({ navigation }) {
                 }
               })
           })
-        })
+        }})
     })
 
     .catch(() => {
