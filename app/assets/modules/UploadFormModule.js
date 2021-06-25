@@ -14,8 +14,15 @@ import constants from '../globals/constants';
 import { toSqlFormat } from '../tools/dateConverter';
 import List from '../classes/List';
 
+function setFileName(value) {
+    console.log(value);
+}
 
 const currDate = new Date();
+
+function rien(event) {
+    event.target.parentNode.value = event.target.value
+}
 
 class UploadForm extends Component {
 
@@ -78,6 +85,8 @@ class UploadForm extends Component {
 	    this.setState({ selectedFile: event.target.files[0] });
 	    this.setState({ fileName: event.target.files[0].name });
 	};
+
+    
 	
 	onFileUpload = async () => {
         const fileFormData = new FormData();
@@ -285,7 +294,7 @@ class UploadForm extends Component {
         };
     render() {
     return (
-        <View style={[globalStyles.container, styles.maxHeight]}>
+        <View style={globalStyles.container}>
             <form id="file" style={styles.form}>
                 <Text style={[globalStyles.titleText, styles.title]}>
                     Formulez une nouvelle demande
@@ -302,9 +311,6 @@ class UploadForm extends Component {
 export default UploadForm;
 
 const styles = {
-    maxHeight: {
-        height: '100vh',
-    },
     form: {
         display: 'flex',
         flexDirection: 'column',

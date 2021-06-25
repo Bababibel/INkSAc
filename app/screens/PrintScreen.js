@@ -3,8 +3,11 @@ import axios from 'axios';
 import {View, Text, Alert, Modal, TouchableOpacity, Button, FlatList, Platform} from 'react-native';
 import { useState } from 'react/cjs/react.development';
 import AppLoading from 'expo-app-loading';
+
 import Card from '../assets/shared/RequestCard';
 import constants from '../assets/globals/constants';
+import Request from '../assets/classes/Request';
+import File from '../assets/classes/File';
 import { globalStyles } from '../assets/styles/global_styles';
 
 
@@ -15,45 +18,43 @@ export default function PrintScreen({ navigation }){
 
     const [selected, setSelected] = useState([]);
 
-    const [info, setList] = useState([]);
+    const [requests, setRequests] = useState([]);
 
     const dataLoad = () => {
-        fetch(constants.getAllRequests)
-        .then(reponse => reponse.json())
-        .then((request) => {
-            request.data.map((item) => {
-                fetch(constants.getFilesFromRequest+'?request_id='+item.id)
-                .then(reponse => reponse.json())
-                .then((file) => {
-                    file.data.map((item2) => {
-                        //console.log(item2)
-                        setList((prevItem) => {
-                            return [
-                                {key: item2.id, file_id: item2.id , deadline: item.deadline, author_name: item.author_name, author_id: item.author, request_id : item.id, delivery_date: item.delivery_date, title: item2.name, comment: item.comment, hidden: item.hidden, state: item.state, color: item2.color, format: item2.format, nb_per_page: item2.nb_per_page, recto_verso: item2.recto_verso, stapple: item2.stapple, path: item2.path}, 
-                                ...prevItem];
-                        })
-                    })
-                })
-                    
+        console.log('chargement des données')
+        axios.get(constants.getAllRequests)
+        .then(response => {
+            let data = response.data
+            let tmpRequests = []
+            response.data.data.forEach(e => {
+                tmpRequests.push(new Request(e.id, e.author, e.author_name, e.deadline, e.delivery_date, e.expiration_date, e.title, e.comment, e.hidden, e.state))
             })
+            tmpRequests.forEach(e => {
+                axios.get(constants.getFilesFromRequest, {params: {'request_id': e.request_id}})
+                .then(response => {
+                    response.data.data.forEach(f => {
+                        e.attachFile(new File(f.id, f.name, f.path, f.color, f.stapple, f.format, f.recto_verso, f.nb_per_page, f.request_id))
+                    })
+                })    
+            })
+            setRequests(tmpRequests)
         })
-        .catch(() => {
-            Alert.alert('erreur data');
-        })
-        .done()
+        
     }
 
-    const changeState = async (item) => {
-        //console.log(item)
-        var newState = ''
+    const changeState = (item) => {
+        var newState = 'A imprimer'
         if(item.state == 'pending'){
-            newState = "A Imprimer"
+            Alert.alert('Action impossible', 'Le sondage auprès des élèves n\'est pas encore fini')
         }
         else if(item.state == 'A Imprimer'){
             newState = 'Pret'
         }
-        else{
+        else if(item.state == 'Pret'){
             newState = "archivé"
+        }
+        else {
+            newState = "pending"
         }
         let formData = new FormData();
         formData.append('id', item.request_id);
@@ -67,11 +68,10 @@ export default function PrintScreen({ navigation }){
         axios.post('https://bgauthier.fr/inksac/api/request/updateRequest.php', formData, {
             headers: { "Content-Type" : "application/json" }
         })
-        .then((reponse) => {
-            console.log(reponse.data);
-            if ('message' in reponse.data) {
+        .then((response) => {
+            if ('message' in response.data) {
                 console.log('Trying to update the request now...');
-                setList([])
+                setRequests([])
                 dataLoad()
             } else {
                 console.log('Internal error. Please try again or contact the support team');
@@ -84,26 +84,9 @@ export default function PrintScreen({ navigation }){
             return (
                 <View style={globalStyles.container}>
                     <FlatList
-                        data={info}
+                        data={requests}
                         renderItem={({item}) => (
-                            <TouchableOpacity onPress={ () => {
-                                console.log(item),
-                                navigation.navigate('PrintElement', { 
-                                    author_name : item.author_name,
-                                    comment : item.comment,
-                                    delivery_date : item.delivery_date,
-                                    deadline : item.deadline,
-                                    hidden : item.hidden,
-                                    key : item.key,
-                                    state : item.state,
-                                    title : item.title,
-                                    color: item.color,
-                                    format: item.format,
-                                    nb_per_page: item.nb_per_page,
-                                    recto_verso: item.recto_verso, 
-                                    stapple: item.stapple, 
-                                    path: item.path
-                                })}}>
+                            <TouchableOpacity onPress={ () => navigation.navigate('PrintElement', { item : item })}>
                                 <Card>
                                     <Text style={globalStyles.modalText}>{ item.title }</Text>
                                 </Card>
@@ -118,16 +101,27 @@ export default function PrintScreen({ navigation }){
         } else {
             return (
                 <View style={globalStyles.container}>
+                    <FlatList
+                        data={requests}
+                        renderItem={({item}) => (
+                            <TouchableOpacity key={item.request_id} onPress={ () => {setSelected(item), setModalOpen(true)}}>
+                                <Card>
+                                    <Text style={globalStyles.modalText}>{ item.title }</Text>
+                                </Card>
+                            </TouchableOpacity>
+                        )}
+                    />
                     <Modal visible={modalOpen} animationType='slide'>
-                        <TouchableOpacity onPress={() => setModalOpen(false)}>
+                        <TouchableOpacity onPress={() => {console.log(selected), setModalOpen(false)}}>
                             <Text style={globalStyles.closeText}>Close</Text>
                         </TouchableOpacity>
                         <View style={globalStyles.modalText}>
-                            <Text>id fichier: {selected.file_id}</Text>
+                            <Text>id fichier: {selected.id}</Text>
                             <Text>id requete: {selected.request_id}</Text>
                             <Text>Auteur : {selected.author_name}</Text>
-                            <Text>Titre : {selected.title}</Text>
-                            <Text>Pour le : {selected.deadline} {/* Attention, deadline au lieu de delivery_date car seule date qui marche actuellement ...*/} </Text>
+                            <Text>Titre Requete : {selected.title}</Text>
+                            <Text>Titre Fichier : {selected.title}</Text>
+                            <Text>Pour le : {selected.deadline}</Text>
                             <Text>Recto Verso ? : {selected.recto_verso}</Text>
                             <Text>Couleur ? : {selected.color}</Text>
                             <Text>Format : {selected.format}</Text>
@@ -143,16 +137,6 @@ export default function PrintScreen({ navigation }){
                             />
                         </View>
                     </Modal>
-                    <FlatList
-                        data={info}
-                        renderItem={({item}) => (
-                            <TouchableOpacity onPress={ () => {setModalOpen(true), setSelected(item)}}>
-                                <Card>
-                                    <Text style={globalStyles.modalText}>{ item.title }</Text>
-                                </Card>
-                            </TouchableOpacity>
-                        )}
-                    />
                     <View style={globalStyles.backButton}>
                         <Button title='Logout' onPress={navigation.goBack}/>
                     </View>
