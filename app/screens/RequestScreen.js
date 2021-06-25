@@ -101,7 +101,6 @@ export default function RequestScreen({ navigation }) {
               <Text
                 style={globalStyles.titleText}
                 onPress={() =>{
-                  console.log('pass'),
                   navigation.navigate("RequestElement", { 
                     modify: "no" })}
                 }>
@@ -113,19 +112,17 @@ export default function RequestScreen({ navigation }) {
           <FlatList
             data={requests}
             renderItem={({ item }) => (
-            console.log('bite'),
                   <TouchableOpacity
                     onPress={() =>
-                      console.log('bite'),
+                      {console.log('bite'),
                       navigation.navigate("RequestElement", {
                         item: item,
                         modify: "just print",
-                      })
+                      })}
                     }
                   >
-                     {console.log('bite bleu')}
                     <EditCard item={item}>
-                      <Text style={globalStyles.titleText}>{item.title}</Text>  
+                      <Text style={globalStyles.cardIconText}>{item.title}</Text>  
                     </EditCard>
                   </TouchableOpacity>
                 )
@@ -142,7 +139,6 @@ export default function RequestScreen({ navigation }) {
             }
             }
           />
-          {console.log("coucou2")}
           <View style={globalStyles.backButton}>
             <Button title="Logout" onPress={navigation.goBack} />
           </View>
