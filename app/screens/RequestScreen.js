@@ -134,10 +134,12 @@ export default function RequestScreen({ navigation }) {
               </Text>
             </Card>
           </TouchableOpacity>
+
           <SectionList
             data={info}
             keyExtractor={(info, index) => info + index}
             renderItem={({ item }) => (
+              console.log('item'),
                   <TouchableOpacity
                     onPress={() =>
                       navigation.navigate("RequestElement", {
@@ -147,7 +149,7 @@ export default function RequestScreen({ navigation }) {
                     }
                   >
                     <EditCard item={item}>
-                      <Text style={globalStyles.modalText}>{'item'}</Text>
+                      <Text style={globalStyles.titleText}>{item.title}</Text>  
                     </EditCard>
                   </TouchableOpacity>
                 )
@@ -155,7 +157,7 @@ export default function RequestScreen({ navigation }) {
             renderSectionHeader={({ section: { title } }) => {
               if (title && title != 'undefined')
                 return (
-                  <Text>{title}</Text>
+                  <Text>bite</Text>
                 )
               else 
                 return (
@@ -198,10 +200,11 @@ export default function RequestScreen({ navigation }) {
           </Modal>
           <FlatList
             data={info}
+            keyExtractor={(info, index) => info + index}
             renderItem={({ item }) => (
               <TouchableOpacity>
                 <EditCard>
-                  <Text style={globalStyles.titleText}>{item.name}</Text>
+                  <Text style={globalStyles.cardIconText}>{item.title}</Text>
                 </EditCard>
               </TouchableOpacity>
             )}

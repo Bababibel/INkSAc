@@ -7,7 +7,7 @@ import {
   Pressable,
 } from "react-native";
 
-import { globalColors, globalStyles } from "../styles/global_styles";
+import { globalStyles } from "../styles/global_styles";
 
 import { useNavigation } from '@react-navigation/native';
 
@@ -26,7 +26,8 @@ export default function EditCard (props) {
         </Pressable>
         <Pressable
           style={globalStyles.cardIcon}
-          onPress={() =>
+          onPress={() => {
+            console.log(props.children),
             Alert.alert(
               "Attention !",
               "Voulez-vous vraiment supprimer cette requête ?",
@@ -43,12 +44,15 @@ export default function EditCard (props) {
                 },
               ]
             )
-          }
+          }}
         >
           <Text style={globalStyles.cardIconText}>Supprimer</Text>
         </Pressable>
       </View>
       <View style={globalStyles.cardContent}>{props.children}</View>
+      <View>
+        <Text>{props.title}</Text>
+      </View>
     </View>
   );
 }

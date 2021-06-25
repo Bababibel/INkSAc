@@ -57,9 +57,10 @@ export default function LoginScreen({ navigation }){
     // wait for full-update of the variable "user" before evaluating it
     useEffect(() => { 
         if (user != null) {
-            navigation.navigate("Choose", {
+            /*navigation.navigate("Choose", {
                 list: user.lists[0],
-            });
+            });*/
+            navigation.navigate("Request");
             }
         }, [user]);
 
@@ -68,7 +69,7 @@ export default function LoginScreen({ navigation }){
             <View style={globalStyles.container}>
                 <View style={globalStyles.loginCard}>
                     <Formik
-                        initialValues={{ email : '@insacvl.fr', password : 'e'}}
+                        initialValues={{ email : 'prof@insacvl.fr', password : 'e'}}
                         validationSchema={LoginSchema}
                         onSubmit={(values) => submitted(values.email)}>
                         {(props) => (
