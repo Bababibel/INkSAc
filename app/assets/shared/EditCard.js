@@ -14,6 +14,10 @@ import constants from "../globals/constants";
 
 export default class EditCard extends Component {
   render(){
+    console.log('Je rentre item : item et je recois dans this.props : ')
+    console.log(this.props)
+    console.log('et décompose this.props.item : ')
+    console.log(this.props.item)
     return (
       <View style={globalStyles.card}>
         <View style={globalStyles.cardIconContainer}>

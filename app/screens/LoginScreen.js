@@ -56,8 +56,8 @@ export default function LoginScreen({ navigation }){
             /*navigation.navigate("Choose", {
                 list: user.lists[0],
             });*/
-            navigation.navigate("Request", {
-                id : 1
+            navigation.navigate("DisplayMyRequests", {
+                id : 7
             });
             }
         }, [user]);
