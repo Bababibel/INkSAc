@@ -99,6 +99,7 @@ export const globalStyles = StyleSheet.create({
       },
       cardIconText: {
         textAlign: "center",
+        justifyContent : "center",
       },
 });
 

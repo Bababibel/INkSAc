@@ -12,6 +12,9 @@ import {
 } from "react-native";
 import { globalStyles, globalColors } from "../assets/globals/globalStyles";
 import AppLoading from "expo-app-loading";
+
+import Request from "../assets/classes/Request";
+import File from "../assets/classes/File";
 import RequestForm from "../assets/shared/RequestForm";
 import EditCard from "../assets/shared/EditCard";
 import Card from "../assets/shared/RequestCard";
@@ -23,6 +26,8 @@ export default function DisplayMyRequests({ navigation }) {
   const [dataLoaded, setDataLoaded] = useState(false);
 
   const [modalVisible, setModalVisible] = useState(false);
+
+  const [requests, setRequests] = useState([]);
 
   /*
   const dataLoad = () => {
@@ -55,9 +60,11 @@ export default function DisplayMyRequests({ navigation }) {
   }; /**/
 
   const dataLoad = () => {
+    
     fetch(constants.getAllRequests)
     .then(reponse => reponse.json())
     .then((request) => {
+      let tmpRequete = []
         request.data.map((item) => {
           fetch(constants.getFilesFromRequest + "?request_id=" + item.id)
           .then(reponse => reponse.json())
@@ -65,16 +72,13 @@ export default function DisplayMyRequests({ navigation }) {
             if (typeof files.data != 'undefined')
               files.data.map((item2) => {
                 if (typeof item2.message == 'undefined') {
-                  setList((prevItem) => {
-                      return [{
-                        title: item.title,
-                        id: item.id,
-                        data : [
-                          {requestid : item.id, key: item2.id, deadline: item.deadline, author: item.author_name, delivery_date: item.delivery_date, title: item2.name, comment: item.comment, hidden: item.hidden, state: item.state, color: item2.color, format: item2.format, nb_per_page: item2.nb_per_page, recto_verso: item2.recto_verso, stapple: item2.stapple, path: item2.path}, 
-                          ]
-                        },
-                      ...prevItem]
-                  })
+                    const newFile = new File(item2.id, item2.name, item2.path, item2.color, item2.stapple, item2.format, item2.recto_verso, item2.nb_per_page, item.id)
+                    const newRequete = new Request(item.id, item.author, item.author_name, item.deadline, item.delivery_date, item.expiration_date, item.title, item.comment, item.hidden, item.state)
+                    newRequete.attachFile(newFile)
+                    tmpRequete.push(newRequete)
+                    setRequests((prevItem) => {
+                        return [newRequete ,...prevItem];
+                    })
                 }
               })
           })
@@ -85,33 +89,12 @@ export default function DisplayMyRequests({ navigation }) {
         Alert.alert('erreur data');
     })
     .done()
-  } /**/
-
- /*  const info = [
-    {
-      title: "Main dishes",
-      data: ["Pizza", "Burger", "Risotto"]
-    },
-    {
-      title: "Sides",
-      data: ["French Fries", "Onion Rings", "Fried Shrimps"]
-    },
-    {
-      title: "Drinks",
-      data: ["Water", "Coke", "Beer"]
-    },
-    {
-      title: "Desserts",
-      data: ["Cheese Cake", "Ice Cream"]
-    }
-  ]; */
-
-  //const [info, setList] = useState([{title: 0, data: ['coucou1', 'coucou2']}]);
-  const [info, setList] = useState([]);
+  }
 
   if (dataLoaded) {
     if (Platform.OS === "web") {
       return (
+        //console.log(requests),
         <View style={globalStyles.container}>
           <TouchableOpacity>
             <Card>
@@ -125,20 +108,18 @@ export default function DisplayMyRequests({ navigation }) {
               </Text>
             </Card>
           </TouchableOpacity>
-          <SectionList
-            data={info}
-            keyExtractor={(info, index) => info + index}
+
+          <FlatList
+            data={requests}
             renderItem={({ item }) => (
                   <TouchableOpacity
                     onPress={() =>
                       navigation.navigate("DisplayMyRequests", {
                         item: item,
                         modify: "just print",
-                      })
-                    }
-                  >
+                      })}>
                     <EditCard item={item}>
-                      <Text style={globalStyles.modalText}>{'item'}</Text>
+                      <Text style={globalStyles.cardIconText}>{item.title}</Text>  
                     </EditCard>
                   </TouchableOpacity>
                 )
@@ -146,7 +127,7 @@ export default function DisplayMyRequests({ navigation }) {
             renderSectionHeader={({ section: { title } }) => {
               if (title && title != 'undefined')
                 return (
-                  <Text>{title}</Text>
+                  <Text>bite</Text>
                 )
               else 
                 return (
@@ -159,8 +140,8 @@ export default function DisplayMyRequests({ navigation }) {
             <Button title="Logout" onPress={navigation.goBack} />
           </View>
         </View>
-      );
-    } else {
+      )
+          } else {
       return (
         <View style={globalStyles.container}>
           <TouchableOpacity>
@@ -188,11 +169,12 @@ export default function DisplayMyRequests({ navigation }) {
             </RequestForm>
           </Modal>
           <FlatList
-            data={info}
+            data={requests}
+            keyExtractor={(info, index) => info + index}
             renderItem={({ item }) => (
               <TouchableOpacity>
-                <EditCard>
-                  <Text style={globalStyles.titleText}>{item.name}</Text>
+                <EditCard item = {item}>
+                  <Text style={globalStyles.cardIconText}>{item.title}</Text>
                 </EditCard>
               </TouchableOpacity>
             )}
@@ -201,7 +183,7 @@ export default function DisplayMyRequests({ navigation }) {
             <Button title="Logout" onPress={navigation.goBack} />
           </View>
         </View>
-      );
+      )
     }
   } else {
     return (
@@ -214,6 +196,6 @@ export default function DisplayMyRequests({ navigation }) {
           setDataLoaded(true);
         }}
       />
-    );
+    )
   }
 }
