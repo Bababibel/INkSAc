@@ -1,58 +1,67 @@
-import React, { useState } from "react";
+import React, { Component, useState } from "react";
+import axios from "axios";
 import {
-  StyleSheet,
   View,
   Text,
   Alert,
   Pressable,
 } from "react-native";
-
-import { globalStyles } from "../styles/global_styles";
-
 import { useNavigation } from '@react-navigation/native';
 
-export default function EditCard (props) {
+import constants from "../globals/constants";
+import { globalStyles } from "../styles/global_styles";
 
-  const navigation = useNavigation()
-
-  return (
-    <View style={globalStyles.card}>
-      <View style={globalStyles.cardIconContainer}>
-        <Pressable
-          style={globalStyles.cardIcon}
-          onPress={() => navigation.navigate('RequestElement', { item : props.item, modify : 'yes'})}
-        >
-          <Text style={globalStyles.cardIconText}>Éditer</Text>
-        </Pressable>
-        <Pressable
-          style={globalStyles.cardIcon}
-          onPress={() => {
-            console.log(props.children),
-            Alert.alert(
-              "Attention !",
-              "Voulez-vous vraiment supprimer cette requête ?",
-              [
-                {
-                  text: "Annuler",
-                  style: "cancel",
-                },
-                {
-                  text: "Je suis sûr de moi",
-                  onPress: () => {
-                    console.log("Demande de suppresion de la requête d'id " + props.id)
+export default class EditCard extends Component {
+  render(){
+    console.log(this.props.item)
+    console.log("this.props.item")
+    //const navigation = useNavigation()
+    console.log("this.props.item")
+    return (
+      console.log("this.props.item"),
+      <View style={globalStyles.card}>
+        <View style={globalStyles.cardIconContainer}>
+          <Pressable
+            style={globalStyles.cardIcon}
+            onPress={() => navigation.navigate('RequestElement', { item : this.props.item, modify : 'yes'})}
+          >
+            <Text style={globalStyles.cardIconText}>Éditer</Text>
+          </Pressable>
+          <Pressable
+            style={globalStyles.cardIcon}
+            onPress={() => {
+              Alert.alert(
+                "Attention !",
+                "Voulez-vous vraiment supprimer cette requête ?",
+                [
+                  {
+                    text: "Annuler",
+                    style: "cancel",
+                    onPress:()=>{ console.log('request id : '+this.props.item)}
                   },
-                },
-              ]
-            )
-          }}
-        >
-          <Text style={globalStyles.cardIconText}>Supprimer</Text>
-        </Pressable>
+                  {
+                    text: "Je suis sûr de moi",
+                    onPress: () => {
+                      axios.get(constants.deleteFile , {params: {'id' : this.props.item.files.id}}, {
+                        headers: { "Content-Type" : "application/json" }
+                      })
+                      console.log("suppression de la requete en cours ... "+this.props.item.request_id )
+                      axios.get(constants.deleteRequest , {params: {'id' : this.props.item.request_id}}, {
+                        headers: { "Content-Type" : "application/json" }
+                      })
+                      console.log("Demande de suppresion de la requête d'id " + this.props.item.id)
+                    },
+                  },
+                ]
+              )
+            }}
+          >
+            <Text style={globalStyles.cardIconText}>Supprimer</Text>
+          </Pressable>
+        </View>
+        <View style={globalStyles.cardContent}>{this.props.children}</View>
+
       </View>
-      <View style={globalStyles.cardContent}>{props.children}</View>
-      <View>
-        <Text>{props.title}</Text>
-      </View>
-    </View>
-  );
+    );
+  }
 }

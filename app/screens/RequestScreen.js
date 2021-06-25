@@ -66,7 +66,7 @@ export default function RequestScreen({ navigation }) {
               files.data.map((item2) => {
                 if (typeof item2.message == 'undefined') {
                   percentage+=(100/19)
-                  console.log(percentage + '% chargés')
+                  //console.log(percentage + '% chargés')
                   /* console.log('info'+info+'cool')
                   console.log({
                     title: item.id,
@@ -139,7 +139,7 @@ export default function RequestScreen({ navigation }) {
             data={info}
             keyExtractor={(info, index) => info + index}
             renderItem={({ item }) => (
-              console.log('item'),
+              //console.log('item'),
                   <TouchableOpacity
                     onPress={() =>
                       navigation.navigate("RequestElement", {
@@ -202,8 +202,9 @@ export default function RequestScreen({ navigation }) {
             data={info}
             keyExtractor={(info, index) => info + index}
             renderItem={({ item }) => (
+              //console.log(item.data[0]),
               <TouchableOpacity>
-                <EditCard>
+                <EditCard item = {item}>
                   <Text style={globalStyles.cardIconText}>{item.title}</Text>
                 </EditCard>
               </TouchableOpacity>
