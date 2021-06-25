@@ -3,14 +3,14 @@ import axios from 'axios';
 import {View, Text,TouchableOpacity, FlatList, Modal, Button, Alert, Platform } from 'react-native';
 import AppLoading from 'expo-app-loading';
 
-import { globalStyles } from '../assets/styles/global_styles';
+import { globalStyles } from '../assets/globals/globalStyles';
 import Request from '../assets/classes/Request';
 import File from '../assets/classes/File';
 import constants from '../assets/globals/constants';
 import Card from '../assets/shared/RequestCard';
 
 
-export default function ChooseScreen({ route, navigation }){
+export default function DisplayRequestsByListScreen({ route, navigation }){
     const list_name = route.params;
     console.log(list_name.list);
 
@@ -57,35 +57,35 @@ export default function ChooseScreen({ route, navigation }){
         if(Platform.OS === 'web'){
             Alert.alert('Merci !', 'Grâce à vous, 504 polycopiés ont été économisés. Cela représente 1000000 tonnes de CO2');
             return (
-                <View style={globalStyles.container}>
+                <View style={globalStymes.container}>
                     <FlatList
                         data={info}
                         renderItem={({item}) => (
                             <TouchableOpacity onPress={ () => navigation.navigate('ChooseElement', { item : item })}>
                                 <Card>
-                                    <Text style={globalStyles.modalText}>{ item.title }</Text>
+                                    <Text style={globalStymes.modalText}>{ item.title }</Text>
                                 </Card>
                             </TouchableOpacity>
                         )}
                     />
-                    <View style={globalStyles.backButton}>
+                    <View style={globalStymes.backButton}>
                         <Button title='Logout' onPress={navigation.goBack}/>
                     </View>
                 </View>
             )
         } else {
             return (
-                <View style={globalStyles.container}>
+                <View style={globalStymes.container}>
                     <Modal visible={modalOpen} animationType='slide'>
                         <TouchableOpacity onPress={() => setModalOpen(false)}>
-                            <Text style={globalStyles.closeText}>Close</Text>
+                            <Text style={globalStymes.closeText}>Close</Text>
                         </TouchableOpacity>
-                        <View style={globalStyles.modalText}>
+                        <View style={globalStymes.modalText}>
                             <Text>Auteur : {selected.author_name}</Text>
                             <Text>Titre : {selected.title}</Text>
                             <Text>Pour le : {selected.deadline}</Text>
                         </View>
-                        <View style={globalStyles.modalText}>
+                        <View style={globalStymes.modalText}>
                                 <Button title='Accepter'  onPress={ () => setModalOpen(false)}/>
                                 <Button title='Refuser'  onPress={ () => setModalOpen(false)}/>
                         </View>
@@ -95,12 +95,12 @@ export default function ChooseScreen({ route, navigation }){
                         renderItem={({item}) => (
                             <TouchableOpacity onPress={ () => {setModalOpen(true), setSelected(item)}}>
                                 <Card>
-                                    <Text style={globalStyles.modalText}>{ item.title }</Text>
+                                    <Text style={globalStymes.modalText}>{ item.title }</Text>
                                 </Card>
                             </TouchableOpacity>
                         )}
                     />
-                    <View style={globalStyles.backButton}>
+                    <View style={globalStymes.backButton}>
                         <Button title='Logout' onPress={navigation.goBack}/>
                     </View>
                 </View>

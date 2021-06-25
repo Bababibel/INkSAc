@@ -3,9 +3,9 @@ import axios from 'axios';
 import {View, Text, Alert, Button} from 'react-native';
 
 import constants from '../assets/globals/constants';
-import { globalStyles } from '../assets/styles/global_styles';
+import { globalStyles } from '../assets/globals/globalStyles';
 
-export default function PrintElementScreen({ route, navigation }){
+export default function ManageRequestForReprographyScreen({ route, navigation }){
     const item = route.params;
 
     const changeState = (item) => {

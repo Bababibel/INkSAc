@@ -7,7 +7,7 @@ import {
   Pressable,
 } from "react-native";
 
-import { globalColors, globalStyles } from "../styles/global_styles";
+import { globalStyles } from "../globals/globalStyles";
 
 import { useNavigation } from '@react-navigation/native';
 
@@ -20,7 +20,7 @@ export default function EditCard (props) {
       <View style={globalStyles.cardIconContainer}>
         <Pressable
           style={globalStyles.cardIcon}
-          onPress={() => navigation.navigate('RequestElement', { item : props.item, modify : 'yes'})}
+          onPress={() => navigation.navigate('DisplayMyRequests', { item : props.item, modify : 'yes'})}
         >
           <Text style={globalStyles.cardIconText}>Éditer</Text>
         </Pressable>

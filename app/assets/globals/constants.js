@@ -18,5 +18,7 @@ export default {
     getRequestsForList : baseUrl+'api/shared/getRequestsForList.php',
     getFilesFromRequest : baseUrl+'api/shared/getFilesFromRequest.php',
     getUser : baseUrl+'api/user/getUser.php',
-    getAllUsers : baseUrl+'api/user/getAllUsers.php'
+    getAllUsers : baseUrl+'api/user/getAllUsers.php',
+
+    globalUser: null,
 }

@@ -4,10 +4,9 @@ import { Formik } from 'formik';
 import * as yup from 'yup';
 import axios from 'axios';
 
-import { globalStyles, globalColors } from '../assets/styles/global_styles';
+import { globalStyles, globalColors } from '../assets/globals/globalStyles';
 import User from '../assets/classes/User';
 import constants from '../assets/globals/constants'
-
 
 const LoginSchema = yup.object({
     email : yup.string()
@@ -21,21 +20,15 @@ const LoginSchema = yup.object({
 export default function LoginScreen({ navigation }){
 
     const dismissKeyboard = () => {
-        if (Platform.OS === "android" ||  Platform.OS === "ios"){
-            Keyboard.dismiss()
-        }
+        if (Platform.OS === "android" ||  Platform.OS === "ios") Keyboard.dismiss()
     }
     
-    const pressHandler = () => {
+    const handleGoBack = () => {
         navigation.goBack()
     }
 
     const [errorMsg, setErrorMsg] = useState(null);
     const [user, setUser] = useState(null);
-
-
-    
-
 
     function submitted(email) {
         axios.get(constants.getUserByEmail, { params: { 'email': email } })
@@ -43,7 +36,9 @@ export default function LoginScreen({ navigation }){
             if (response.data) { // server answered
                 if ('data' in response.data) { // there is data to collect
                     let u = response.data.data[0]; // first object in the data array
-                    setUser(new User(u.id, u.email, u.first_name, u.last_name, u.role, u.creation_date, u.last_login_date, u.location, u.list_names))
+                    let tmpUser = new User(u.id, u.email, u.first_name, u.last_name, u.role, u.creation_date, u.last_login_date, u.location, u.list_names);
+                    constants.globalUser = tmpUser;
+                    setUser(tmpUser);
                 }
                 else if ('message' in response.data) { // no data but error message
                     setErrorMsg("Erreur. Réponse du serveur: "+response.data.message);
@@ -54,14 +49,13 @@ export default function LoginScreen({ navigation }){
         })
     } 
 
+    // REDIRECTION
     // wait for full-update of the variable "user" before evaluating it
-    useEffect(() => { 
-        if (user != null) {
-            navigation.navigate("Choose", {
-                list: user.lists[0],
-            });
-            }
-        }, [user]);
+    const redirect = useEffect(() => { 
+        if (user != null) { // user is loaded from database
+            navigation.navigate("Welcome");
+        }
+    }, [user]);
 
     return (
         <TouchableWithoutFeedback onPress={dismissKeyboard}>
@@ -73,7 +67,7 @@ export default function LoginScreen({ navigation }){
                         onSubmit={(values) => submitted(values.email)}>
                         {(props) => (
                             <View >
-                                <Text>{errorMsg}</Text>
+                                <Text style={{color: 'red', fontSize: 18, marginBottom: 10}}>{errorMsg}</Text>
                                 <Text style={globalStyles.titleText}> Login </Text>
                                 <TextInput
                                     style={globalStyles.input}
@@ -98,7 +92,7 @@ export default function LoginScreen({ navigation }){
                             </View>
                         )}
                     </Formik>
-                    <Button color={globalColors.secondary} title='Retour' onPress = {pressHandler}/>
+                    <Button color={globalColors.secondary} title='Retour' onPress = {handleGoBack}/>
                 </View>
             </View>
         </TouchableWithoutFeedback>

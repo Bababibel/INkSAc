@@ -1,6 +1,6 @@
 import React from 'react';
 import { Platform, StatusBar, StyleSheet, View } from 'react-native';
-import { globalColors } from '../styles/global_styles';
+import { globalColors } from '../globals/globalStyles';
 
 export default function Card(props) {
     return (

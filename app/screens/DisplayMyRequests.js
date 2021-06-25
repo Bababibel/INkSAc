@@ -10,7 +10,7 @@ import {
   Button,
   Platform,
 } from "react-native";
-import { globalStyles, globalColors } from "../assets/styles/global_styles";
+import { globalStyles, globalColors } from "../assets/globals/globalStyles";
 import AppLoading from "expo-app-loading";
 import RequestForm from "../assets/shared/RequestForm";
 import EditCard from "../assets/shared/EditCard";
@@ -19,7 +19,7 @@ import constants from "../assets/globals/constants";
 
 var percentage =  0
 
-export default function RequestScreen({ navigation }) {
+export default function DisplayMyRequests({ navigation }) {
   const [dataLoaded, setDataLoaded] = useState(false);
 
   const [modalVisible, setModalVisible] = useState(false);
@@ -65,15 +65,6 @@ export default function RequestScreen({ navigation }) {
             if (typeof files.data != 'undefined')
               files.data.map((item2) => {
                 if (typeof item2.message == 'undefined') {
-                  percentage+=(100/19)
-                  console.log(percentage + '% chargés')
-                  /* console.log('info'+info+'cool')
-                  console.log({
-                    title: item.id,
-                    data : [
-                      {requestid : item.id, key: item2.id, deadline: item.deadline, author: item.author_name, delivery_date: item.delivery_date, title: item2.name, comment: item.comment, hidden: item.hidden, state: item.state, color: item2.color, format: item2.format, nb_per_page: item2.nb_per_page, recto_verso: item2.recto_verso, stapple: item2.stapple, path: item2.path}, 
-                      ]
-                    }) */
                   setList((prevItem) => {
                       return [{
                         title: item.title,
@@ -127,7 +118,7 @@ export default function RequestScreen({ navigation }) {
               <Text
                 style={globalStyles.titleText}
                 onPress={() =>
-                  navigation.navigate("RequestElement", { 
+                  navigation.navigate("CreateOrUpdateRequest", { 
                     modify: "no" })
                 }>
                 Formulez une nouvelle demande
@@ -140,7 +131,7 @@ export default function RequestScreen({ navigation }) {
             renderItem={({ item }) => (
                   <TouchableOpacity
                     onPress={() =>
-                      navigation.navigate("RequestElement", {
+                      navigation.navigate("DisplayMyRequests", {
                         item: item,
                         modify: "just print",
                       })

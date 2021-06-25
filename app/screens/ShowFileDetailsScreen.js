@@ -1,8 +1,8 @@
 import React from 'react';
 import {View, Text, Button} from 'react-native';
-import { globalStyles } from '../assets/styles/global_styles';
+import { globalStyles } from '../assets/globals/globalStyles';
 
-export default function ChooseElementScreen({ route, navigation }){
+export default function ShowFileDetailsScreen({ route, navigation }){
     const item = route.params.item;
     console.log(item)
     return(

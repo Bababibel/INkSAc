@@ -1,30 +1,37 @@
 import React from "react";
-import { Text } from "react-native";
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import WelcomeScreen from "../../screens/WelcomeScreen"
 import LoginScreen from "../../screens/LoginScreen"
-import ChooseScreen from "../../screens/ChooseScreen"
-import ChooseElementScreen from "../../screens/ChooseElementScreen"
-import RequestScreen from "../../screens/RequestScreen"
-import RequestElementScreen from "../../screens/RequestElementScreen"
-import PrintScreen from "../../screens/PrintScreen";
-import PrintElementScreen from "../../screens/PrintElementScreen";
+import ShowFileDetailsScreen from "../../screens/ShowFileDetailsScreen";
+import DisplayRequestsByListScreen from '../../screens/DisplayRequestsByListScreen'
+import DisplayMyRequests from "../../screens/DisplayMyRequests";
+import DisplayAllRequestsForReprographyScreen from "../../screens/DisplayAllRequestsForReprographyScreen";
+import CreateOrUpdateRequestScreen from "../../screens/CreateOrUpdateRequestScreen";
+
+import ManageRequestForReprographyScreen from "../../screens/ManageRequestForReprographyScreen";
+import ManageListsScreen from '../../screens/admin/ManageListsScreen';
+import ManageUsersScreen from '../../screens/admin/ManageUsersScreen';
 
 const Stack = createStackNavigator();
 
 export const AppNavigator = () => (
   <NavigationContainer>
-    <Stack.Navigator initialRouteName='Login' headerMode='none'>
-      <Stack.Screen name="Home" component={WelcomeScreen} />
+    <Stack.Navigator initialRouteName='Welcome' headerMode='none'>
+      <Stack.Screen name="Welcome" component={WelcomeScreen} />
       <Stack.Screen name="Login" component={LoginScreen} />
-      <Stack.Screen name="Choose" component={ChooseScreen} />
-      <Stack.Screen name="ChooseElement" component={ChooseElementScreen} />
-      <Stack.Screen name="Request" component={RequestScreen} />
-      <Stack.Screen name="RequestElement" component={RequestElementScreen} />
-      <Stack.Screen name="Print" component={PrintScreen} />
-      <Stack.Screen name="PrintElement" component={PrintElementScreen} />
+      <Stack.Screen name="DisplayAllRequestsForReprography" component={DisplayAllRequestsForReprographyScreen} />
+      <Stack.Screen name="ShowFileDetails" component={ShowFileDetailsScreen} />
+      <Stack.Screen name="CreateOrUpdateRequest" component={CreateOrUpdateRequestScreen} />
+
+      {/* Main buttons on welcome screen after authentification */}
+      <Stack.Screen name="DisplayRequestsByList" component={DisplayRequestsByListScreen} /> 
+      <Stack.Screen name="DisplayMyRequests" component={DisplayMyRequests} />
+      <Stack.Screen name="ManageRequestForReprography" component={ManageRequestForReprographyScreen} />
+      <Stack.Screen name="ManageLists" component={ManageListsScreen} />
+      <Stack.Screen name="ManageUsers" component={ManageUsersScreen} />
+      
     </Stack.Navigator>
   </NavigationContainer>
 )

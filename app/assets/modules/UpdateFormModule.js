@@ -7,9 +7,9 @@
 import axios from 'axios';
 import React,{Component} from 'react';
 import { View, Text } from 'react-native';
-import { globalStyles, globalColors } from "../styles/global_styles";
+import { globalStyles } from "../globals/globalStyles";
+import { globalColors } from '../globals/globalStyles';
 import constants from '../globals/constants';
-import { toSqlFormatDate, toSqlFormatTime } from '../tools/dateConverter'
 import List from '../classes/List';
 
 

@@ -10,10 +10,10 @@ import { View, Text, Alert } from 'react-native';
 import { MuiPickersUtilsProvider, KeyboardTimePicker, KeyboardDatePicker } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
 
-import { globalStyles } from "../styles/global_styles";
-import constants from '../globals/constants';
-import { toSqlFormatDate, toSqlFormatTime, computeDateTimeForSql } from '../tools/dateConverter';
+import { globalStyles } from "../globals/globalStyles";
+import { computeDateTimeForSql } from '../tools/dateConverter';
 import List from '../classes/List';
+import constants from '../globals/constants';
 
 
 const currDate = new Date();
@@ -35,10 +35,10 @@ class UploadForm extends Component {
         nb_per_page: 1,
 
         userList: "",
-        deadline: computeDateTime(currDate, currDate), // computed with date + time
+        deadline: computeDateTimeForSql(currDate, currDate), // computed with date + time
         deadline_date: currDate,
         deadline_time: currDate,
-        delivery: computeDateTime(futDate, futDate), // computed with date + time
+        delivery: computeDateTimeForSql(futDate, futDate), // computed with date + time
         delivery_date: futDate,
         delivery_time: futDate,
         comment: "",
@@ -55,10 +55,10 @@ class UploadForm extends Component {
     handleNbPerPageChange = (e) => { this.setState({nb_per_page: e.target.value});}
     // Request form properties
     handleListChange = (e) => { this.setState({userList: e.target.value}); console.log(this.state.userList)}
-    handleDeadlineDateChange = (e) => { this.setState({deadline_date: e}); this.state.deadline = this.computeDateTime(this.state.deadline_date, this.state.deadline_time);}
-    handleDeadlineTimeChange = (e) => { this.setState({deadline_time: e}); this.state.deadline = this.computeDateTime(this.state.deadline_date, this.state.deadline_time);}
-    handleDeliveryDateChange = (e) => { this.setState({delivery_date: e}); this.state.delivery = this.computeDateTime(this.state.delivery_date, this.state.delivery_time);}
-    handleDeliveryTimeChange = (e) => { this.setState({delivery_time: e}); this.state.delivery = this.computeDateTime(this.state.delivery_date, this.state.delivery_time);}
+    handleDeadlineDateChange = (e) => { this.setState({deadline_date: e}); this.state.deadline = computeDateTimeForSql(this.state.deadline_date, this.state.deadline_time);}
+    handleDeadlineTimeChange = (e) => { this.setState({deadline_time: e}); this.state.deadline = computeDateTimeForSql(this.state.deadline_date, this.state.deadline_time);}
+    handleDeliveryDateChange = (e) => { this.setState({delivery_date: e}); this.state.delivery = computeDateTimeForSql(this.state.delivery_date, this.state.delivery_time);}
+    handleDeliveryTimeChange = (e) => { this.setState({delivery_time: e}); this.state.delivery = computeDateTimeForSql(this.state.delivery_date, this.state.delivery_time);}
     handleCommentChange = (e) => { this.setState({comment: e.target.value});}
     handleTitleChange = (e) => { this.setState({title: e.target.value});}
     handleHiddenChange = (e) => { this.setState({hidden: e.target.value});}
@@ -76,7 +76,7 @@ class UploadForm extends Component {
             if ('data' in response.data) {
                 let lists = [];
                 let data = response.data.data;
-                lists.push(new List(0, 'Selectionnez une liste',0 , this.computeDateTime(currDate, currDate), ""));
+                lists.push(new List(0, 'Selectionnez une liste',0 , computeDateTimeForSql(currDate, currDate), ""));
                 data.forEach(e => {
                     lists.push(new List(e.id, e.name, e.theorical_count, e.creation_date, e.location));
                 });
