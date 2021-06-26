@@ -15,7 +15,6 @@ export default function DisplayRequestsByListScreen({ route, navigation }){
     const list_name = route.params;
 
     const [dataLoaded, setDataLoaded] = useState(false);
-    const [selected, setSelected] = useState();
     const [info, setList] = useState([]);
     const [modalOpen, setModalOpen] = useState(false);
 
