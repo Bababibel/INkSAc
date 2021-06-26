@@ -24,7 +24,6 @@ export const globalStyles = StyleSheet.create({
         paddingRight : 30,
         justifyContent : "center",
         alignItems : "center",
-        borderRadius : 10000,
         minWidth : Platform.OS === "web" ? Dimensions.get('window').width / 4 : Dimensions.get('window').width,
     },
     modalText: {

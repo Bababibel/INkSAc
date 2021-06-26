@@ -1,10 +1,9 @@
 import React, {useState, useEffect, useRef} from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
 
 import User from '../classes/User';
-import { globalStyles, globalColors } from '../globals/globalStyles';
-import { InputLabel, Select, FormControl, MenuItem } from '@material-ui/core';
-import axios from 'axios';
+import { Select, FormControl, MenuItem } from '@material-ui/core';
+import AlertAskConfirmationOnUserDeleteModule from './AlertAskConfirmationOnUserDeleteModule';
 
 
 
@@ -15,6 +14,8 @@ function UserModule({userProps}) {
     
     let user = new User(userProps[0], userProps[1], userProps[2], userProps[3], userProps[4], userProps[5], userProps[6], userProps[7], userProps[8]);
     const [role, setRole] = useState(user.role);
+    const [isVisible, setIsVisible] = useState(true);
+    const [isConfirmOpened, setIsConfirmOpen] = useState(false);
     
     // Store the previous role for the useEffect()
     const prevRoleRef = useRef();
@@ -30,36 +31,54 @@ function UserModule({userProps}) {
         }
     }, [role, prevRole])
 
-    return (
-        <View style={[styles.container, {backgroundColor: (user.location=="Bourges" ? 'ghostwhite' : 'gainsboro')}]}>
-            <View style={styles.row}>
-                <Text style={styles.biggerText}>{user.first_name}</Text>
-                <Text style={styles.biggerText}>{user.last_name}</Text>
-                <FormControl>
-                    <Select
-                        value={role}
-                        onChange={e => setRole(e.target.value)}>
-                        <MenuItem value={"student"}>Étudiant</MenuItem>
-                        <MenuItem value={"teacher"}>Enseignant</MenuItem>
-                        <MenuItem value={"reprography"}>Reprographie</MenuItem>
-                        <MenuItem value={"admin"}>Administrateur</MenuItem>
-                    </Select>
-                </FormControl>
+    let deleteFunction = () => {
+        user.deleteInDb();
+        setIsVisible(false);
+    }
+
+    let generateAlertConfirm = () => {
+        if (isConfirmOpened) return (<AlertAskConfirmationOnUserDeleteModule deleteFunction={deleteFunction}/>)
+    }
+
+    if (isVisible) {
+        return (
+            <View style={[styles.container, {backgroundColor: (user.location=="Bourges" ? 'ghostwhite' : 'gainsboro')}]}>
+                {generateAlertConfirm()}
+                <TouchableOpacity
+                        onPress={() => {setIsConfirmOpen(true)}}
+                        style={styles.deleteButton}>
+                    <Text style={styles.X}>X</Text>
+                </TouchableOpacity>
+                <View style={styles.row}>
+                    <Text style={styles.biggerText}>{user.first_name}</Text>
+                    <Text style={styles.biggerText}>{user.last_name}</Text>
+                    <FormControl>
+                        <Select
+                            value={role}
+                            onChange={e => setRole(e.target.value)}>
+                            <MenuItem value={"student"}>Étudiant</MenuItem>
+                            <MenuItem value={"teacher"}>Enseignant</MenuItem>
+                            <MenuItem value={"reprography"}>Reprographie</MenuItem>
+                            <MenuItem value={"admin"}>Administrateur</MenuItem>
+                        </Select>
+                    </FormControl>
+                </View>
+                <View style={styles.row}>
+                    <Text>Liste(s): </Text>
+                    {user.lists.map(list => {return <Text key={Math.random()*1000} style={styles.list}>{list}</Text>})}
+                </View>
+                <View style={styles.row}>
+                    <Text>{user.location}</Text>
+                    <Text>{user.email}</Text>
+                </View>
+                <View style={styles.row}>
+                    <Text>{user.last_login_date}</Text>
+                    <Text>{user.creation_date}</Text>
+                </View>
             </View>
-            <View style={styles.row}>
-                <Text>Liste(s): </Text>
-                {user.lists.map(list => {return <Text key={Math.random()} style={styles.list}>{list}</Text>})}
-            </View>
-            <View style={styles.row}>
-                <Text>{user.location}</Text>
-                <Text>{user.email}</Text>
-            </View>
-            <View style={styles.row}>
-                <Text>{user.last_login_date}</Text>
-                <Text>{user.creation_date}</Text>
-            </View>
-        </View>
-    )
+        )
+    }
+    else return null;
 }
 
 const styles = StyleSheet.create({
@@ -69,6 +88,7 @@ const styles = StyleSheet.create({
         marginBottom: 5,
     },
     container: {
+        position: 'relative',
         flex: 1,
         justifyContent: 'center',
         flexWrap: 'wrap',
@@ -76,13 +96,30 @@ const styles = StyleSheet.create({
         marginTop: 5,
         width: '100%',
         marginHorizontal: 'auto',
-        padding: 5,
         fontFamily: 'ubuntu-regular',
         borderRadius: 5,
         maxWidth: 600,
         minHeight: 60,
     },
+    deleteButton: {
+        position: 'absolute',
+        top: 0,
+        right: 0,
+        width: 20,
+        backgroundColor: 'red',
+        borderTopRightRadius: 5,
+        borderBottomLeftRadius: 5,
+        zIndex: 10,
+        padding: 0,
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    X: {
+        color: 'white',
+    },
     row: {
+        marginVertical: 1,
         width: '100%',
         flex: 1,
         flexDirection: 'row',

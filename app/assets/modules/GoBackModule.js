@@ -5,7 +5,6 @@ import { globalColors } from '../globals/globalStyles'
 function GoBackModule({ navigation }) {
     if (Platform.OS === "web" && navigation.canGoBack()) {
         return (
-            console.log('coucou je suis la normalement'),
             <View styles={styles.container}>
                 <TouchableOpacity onPress={() => navigation.goBack()}>
                     <Image style={styles.icon}
@@ -29,6 +28,8 @@ const styles = StyleSheet.create({
         position: 'absolute',
         top: 30,
         left: 30,
+        height: 50,
+        width: 50,
         backgroundColor: globalColors.bg_secondary,
         borderRadius: 15,
         flex: 1,

@@ -7,6 +7,7 @@ import axios from 'axios';
 import { globalStyles, globalColors } from '../assets/globals/globalStyles';
 import User from '../assets/classes/User';
 import constants from '../assets/globals/constants'
+import GoBackModule from '../assets/modules/GoBackModule';
 
 const LoginSchema = yup.object({
     email : yup.string()
@@ -39,6 +40,7 @@ export default function LoginScreen({ navigation }){
                     let tmpUser = new User(u.id, u.email, u.first_name, u.last_name, u.role, u.creation_date, u.last_login_date, u.location, u.list_names);
                     constants.globalUser = tmpUser;
                     setUser(tmpUser);
+                    axios.get(constants.loggedUser, { params: { 'id': u.id } })
                 }
                 else if ('message' in response.data) { // no data but error message
                     setErrorMsg("Erreur. Réponse du serveur: "+response.data.message);
@@ -55,34 +57,23 @@ export default function LoginScreen({ navigation }){
         if (user != null) {
             navigation.navigate("Welcome", {
                 list: user.lists[0],
-<<<<<<< HEAD
             });
-            /*navigation.navigate("DisplayMyRequests", {
-                id : 7
-            });*/
-=======
-            });*/
-            /*navigation.navigate("DisplayRequestsByList", {
-                list_name : 'GSI'
-            });
-            }*/
-            navigation.navigate("DisplayAllRequestsForReprography");
->>>>>>> 6272d23291740db0b3987a5f47c304c7c998b3fb
-            }
-        }, [user]);
+        }
+    }, [user]);
 
     return (
-        <TouchableWithoutFeedback onPress={dismissKeyboard}>
-            <View style={globalStyles.container}>
-                <View style={globalStyles.loginCard}>
+        <View style={{flex: 1}}>
+            <GoBackModule navigation={navigation} />
+            <TouchableWithoutFeedback onPress={dismissKeyboard}>
+                <View style={globalStyles.container}>
                     <Formik
                         initialValues={{ email : 'admin@insacvl.fr', password : 'e'}}
                         validationSchema={LoginSchema}
                         onSubmit={(values) => submitted(values.email)}>
                         {(props) => (
-                            <View >
+                            <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                                <Text style={{fontSize: 30, marginBottom: 30}}> Se connecter </Text>
                                 <Text style={{color: 'red', fontSize: 18, marginBottom: 10}}>{errorMsg}</Text>
-                                <Text style={globalStyles.titleText}> Login </Text>
                                 <TextInput
                                     style={globalStyles.input}
                                     placeholder='Identifiant'
@@ -100,16 +91,14 @@ export default function LoginScreen({ navigation }){
                                 />
                                 <Text style={globalStyles.errorText}>{ props.touched.password && props.errors.password }</Text>
                                 <View>
-                                    <Button title='submit' color={globalColors.primary} onPress = {props.handleSubmit}/>
+                                    <Button title='Valider' color={globalColors.primary} onPress = {props.handleSubmit}/>
                                 </View>
-                            
                             </View>
                         )}
                     </Formik>
-                    <Button color={globalColors.secondary} title='Retour' onPress = {handleGoBack}/>
                 </View>
-            </View>
-        </TouchableWithoutFeedback>
+            </TouchableWithoutFeedback>
+        </View>
     );
 }
 

@@ -24,10 +24,29 @@ class User {
         formData.append('location', this.location);
         axios.post(constants.updateUser, formData)
         .then(response => {
-            if ('message' in response.data) console.log("From User class: "+response.data.message)
+            if ('message' in response.data) { 
+                console.log("From User class: "+response.data.message)
+                return true;
+            }
             else {
                 console.log("From User class: ERROR NO ANSWER");
                 console.log(response);
+                return false;
+            }
+        })
+    }
+
+    deleteInDb() {
+        axios.get(constants.deleteUser, { params: { 'id': this.id }})
+        .then(response => {
+            if ('message' in response.data) { 
+                console.log("From User class: "+response.data.message)
+                return true;
+            }
+            else {
+                console.log("From User class: ERROR NO ANSWER");
+                console.log(response);
+                return false;
             }
         })
     }
