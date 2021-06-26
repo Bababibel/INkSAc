@@ -1,3 +1,3 @@
-npm install -g @react-navigation/native @react-native-community/datetimepicker react-native-input-style
+npm install -g @react-navigation/native @react-native-community/datetimepicker react-native-input-style @react@^17.0.0
 
-expo install react-native-gesture-handler react-native-reanimated react-native-screens react-native-safe-area-context @react-native-community/masked-view expo-font expo-app-loading formik yup axios  @material-ui/core @material-ui/pickers date-fns @date-io/date-fns@1.3.13 react-native-gridview
+expo install react-native-gesture-handler react-native-reanimated react-native-screens react-native-safe-area-context @react-native-community/masked-view expo-font expo-app-loading formik yup axios  @material-ui/core@^4.0.0 @material-ui/pickers date-fns @date-io/date-fns@1.3.13 @emotion/react

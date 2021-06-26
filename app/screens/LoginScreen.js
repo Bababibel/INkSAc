@@ -53,12 +53,12 @@ export default function LoginScreen({ navigation }){
     // wait for full-update of the variable "user" before evaluating it
     useEffect(() => { 
         if (user != null) {
-            /*navigation.navigate("Choose", {
+            navigation.navigate("Welcome", {
                 list: user.lists[0],
-            });*/
-            navigation.navigate("DisplayMyRequests", {
-                id : 7
             });
+            /*navigation.navigate("DisplayMyRequests", {
+                id : 7
+            });*/
             }
         }, [user]);
 

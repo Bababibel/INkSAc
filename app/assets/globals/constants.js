@@ -19,6 +19,7 @@ export default {
     getFilesFromRequest : baseUrl+'api/shared/getFilesFromRequest.php',
     getUser : baseUrl+'api/user/getUser.php',
     getAllUsers : baseUrl+'api/user/getAllUsers.php',
+    updateUser : baseUrl+'api/user/updateUser.php',
 
     globalUser: null,
 }
