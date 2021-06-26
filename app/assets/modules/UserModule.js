@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useRef} from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import { View, StyleSheet, Text, Platform } from 'react-native';
 
 import User from '../classes/User';
 import { globalStyles, globalColors } from '../globals/globalStyles';
@@ -30,11 +30,9 @@ function UserModule({userProps}) {
         }
     }, [role, prevRole])
 
-    return (
-        <View style={[styles.container, {backgroundColor: (user.location=="Bourges" ? 'ghostwhite' : 'gainsboro')}]}>
-            <View style={styles.row}>
-                <Text style={styles.biggerText}>{user.first_name}</Text>
-                <Text style={styles.biggerText}>{user.last_name}</Text>
+    const platformHandle = () => {
+        if(Platform.OS === 'web'){
+            return (
                 <FormControl>
                     <Select
                         value={role}
@@ -45,6 +43,17 @@ function UserModule({userProps}) {
                         <MenuItem value={"admin"}>Administrateur</MenuItem>
                     </Select>
                 </FormControl>
+            )
+        } else {
+            return null
+        }
+    }
+    return (
+        <View style={[styles.container, {backgroundColor: (user.location=="Bourges" ? 'ghostwhite' : 'gainsboro')}]}>
+            <View style={styles.row}>
+                <Text style={styles.biggerText}>{user.first_name}</Text>
+                <Text style={styles.biggerText}>{user.last_name}</Text>
+                {platformHandle()}
             </View>
             <View style={styles.row}>
                 <Text>Liste(s): </Text>
