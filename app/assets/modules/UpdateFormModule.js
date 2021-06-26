@@ -6,7 +6,7 @@
 
 import axios from 'axios';
 import React,{Component} from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { globalStyles } from "../globals/globalStyles";
 import { globalColors } from '../globals/globalStyles';
 import constants from '../globals/constants';
@@ -256,17 +256,17 @@ class UpdateForm extends Component {
 
 export default UpdateForm;
 
-const styles = {
+const styles = StyleSheet.create({
     form: {
         display: 'flex',
         flexDirection: 'column',
-        gap: 10,
+        marginVertical: 5,
         fontFamily: 'ubuntu-regular',
     },
     fileForm: {
         display: 'flex',
         flexDirection: 'column',
-        gap: 5,
+        marginVertical: 2.5,
         fontFamily: 'ubuntu-regular',
     },
     input: {
@@ -293,4 +293,4 @@ const styles = {
         width: '100%',
         marginTop: 10,
     }
-};
+});

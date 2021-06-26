@@ -356,13 +356,13 @@ const styles = {
     form: {
         display: 'flex',
         flexDirection: 'column',
-        gap: 10,
+        marginVertical: 5,
         fontFamily: 'ubuntu-regular',
     },
     fileForm: {
         display: 'flex',
         flexDirection: 'column',
-        gap: 5,
+        marginVertical: 2.5,
         fontFamily: 'ubuntu-regular',
     },
     input: {

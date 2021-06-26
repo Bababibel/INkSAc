@@ -4,11 +4,9 @@ import {
   Text,
   TouchableOpacity,
   FlatList,
-  SectionList,
-  Modal,
   Alert,
-  Button,
   Platform,
+  ScrollView
 } from "react-native";
 import axios from "axios";
 import { globalStyles, globalColors } from "../assets/globals/globalStyles";
@@ -20,6 +18,7 @@ import MyModal from "../assets/modules/ModalModule";
 import EditCard from "../assets/shared/EditCard";
 import Card from "../assets/shared/RequestCard";
 import constants from "../assets/globals/constants";
+import GoBackModule from "../assets/modules/GoBackModule";
 
 var percentage =  0
 
@@ -38,7 +37,6 @@ export default function RequestScreen({ route, navigation }) {
       request.data.map((item) => {
         console.log("route.id : "+id.params.id+'et item.id'+item.author)
         if(id.params.id == item.author){
-         
           axios.get(constants.getFilesFromRequest , {params: {'request_id' : item.id}}, {
                       headers: { "Content-Type" : "application/json" }
                     })
@@ -81,41 +79,53 @@ export default function RequestScreen({ route, navigation }) {
     }
   }
 
-  if (dataLoaded) {
+  if (dataLoaded && requests.lenght) {
     return(
-    <View style={globalStyles.container}>
-      <TouchableOpacity>
-        <Card>
-          <Text
-            style={globalStyles.titleText}
-            onPress={() => pressHandle()}>
-            Formulez une nouvelle demande
-          </Text>
-        </Card>
-      </TouchableOpacity>
-      <FlatList
-        data={requests}
-        keyExtractor={(info, index) => info + index}
-        renderItem={({ item }) => (
-          <TouchableOpacity onPress={() => clickHandle() }>
-            <EditCard item = {item}>
-              <Text style={globalStyles.cardIconText}>{item.title}</Text>
-            </EditCard>
-          </TouchableOpacity>
-        )}
-      />
-      <View style={globalStyles.backButton}>
-        <Button title="Logout" onPress={navigation.goBack} />
+      <ScrollView>
+      <GoBackModule navigation={navigation}/>
+      <View style={globalStyles.container}>
+        <TouchableOpacity>
+          <Card>
+            <Text
+              onPress={() => pressHandle()}>
+              Formulez une nouvelle demande
+            </Text>
+          </Card>
+        </TouchableOpacity>
+        <FlatList
+          data={requests}
+          keyExtractor={(info, index) => info + index}
+          renderItem={({ item }) => (
+            <TouchableOpacity onPress={() => clickHandle() }>
+              <EditCard item = {item}>
+                <Text style={globalStyles.cardIconText}>{item.title}</Text>
+              </EditCard>
+            </TouchableOpacity>
+          )}
+        />
+          <MyModal page={'DisplayMyRequests'} setModalVisible={setModalVisible} modalVisible={modalVisible}/>
       </View>
-        <MyModal page={'DisplayMyRequests'} setModalVisible={setModalVisible} modalVisible={modalVisible}/>
-    </View>)
+      
+    </ScrollView>)
   } else {
     return (
-      <AppLoading
-        startAsync={dataLoad}
-        onError={(text) => Alert.alert("Échec du chargement :(", String(text), [{ text: "Ok" }])}
-        onFinish={() => setDataLoaded(true)}
-      />
+      <View style={globalStyles.container}>
+        <AppLoading
+          startAsync={dataLoad}
+          onError={(text) => Alert.alert("Échec du chargement :(", String(text), [{ text: "Ok" }])}
+          onFinish={() => setDataLoaded(true)}
+        />
+        <GoBackModule navigation={navigation}/>
+        <Text style={globalStyles.modalText}> Vous n'avez aucune requète</Text>
+        <TouchableOpacity>
+          <Card>
+            <Text
+              onPress={() => pressHandle()}>
+              Formulez une nouvelle demande
+            </Text>
+          </Card>
+        </TouchableOpacity>
+      </View>
     )
   }
 }

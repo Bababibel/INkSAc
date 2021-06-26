@@ -53,7 +53,7 @@ function WelcomeScreen({ navigation }) {
                 title="Mes demandes"
                 color={globalColors.primary}
                 style={styles.welcomeButton}
-                onPress={() => navigation.push('DisplayMyRequests')}/>
+                onPress={() => navigation.push('DisplayMyRequests', { id : /*user.id*/ 3 })}/>
         )
     }
     function seeAllRequestsButton() {

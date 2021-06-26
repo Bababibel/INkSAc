@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, TouchableOpacity, Image, StyleSheet, Platform, Text } from 'react-native'
+import { View, TouchableOpacity, Image, StyleSheet, Platform, Text, Button, Dimensions, StatusBar } from 'react-native'
 import { globalColors } from '../globals/globalStyles'
 
 function GoBackModule({ navigation }) {
@@ -16,9 +16,7 @@ function GoBackModule({ navigation }) {
         )
     }
     else {
-        console.log(navigation)
-        console.log(Platform.OS)
-        return null;
+        return(null)
     }
 }
 

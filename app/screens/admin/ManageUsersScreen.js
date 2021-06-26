@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, {useState, useEffect} from 'react';
 import { ScrollView } from 'react-native-gesture-handler';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Platform, StatusBar } from 'react-native';
 import AppLoading from 'expo-app-loading';
 import { TextField, Select, MenuItem, InputLabel, FormControl } from '@material-ui/core';
 
@@ -9,6 +9,7 @@ import List from '../../assets/classes/List';
 import constants from '../../assets/globals/constants';
 import UserModule from '../../assets/modules/UserModule';
 import GoBackModule from '../../assets/modules/GoBackModule';
+import { globalStyles } from '../../assets/globals/globalStyles';
 
 // Will contain all users, displayed or not
 
@@ -68,15 +69,14 @@ function ManageUsersScreen({ navigation, route }) {
         })
     }, [emailFilter, listFilter, locationFilter, roleFilter])
 
-
-    if (dataLoaded) {
-        return (
-            <ScrollView>
-                <GoBackModule navigation={navigation}/>
+    const platformHandle = () => {
+        if(Platform.OS === 'web'){
+            console.log("web")
+            return (
                 <View style={styles.inputContainer}>
                     <TextField value={emailFilter} 
-                               onChange={e => setEmailFilter(e.target.value)} 
-                               label="Email"/>
+                            onChange={e => setEmailFilter(e.target.value)} 
+                            label="Email"/>
                     <FormControl >
                         <InputLabel>Rôle</InputLabel>
                         <Select
@@ -111,6 +111,19 @@ function ManageUsersScreen({ navigation, route }) {
                         </Select>
                     </FormControl>
                 </View>
+            )
+        } else {
+            return (
+                <Text style={styles.inputContainer} >Liste des Utilisateurs</Text>
+            )
+        }
+    }
+
+    if (dataLoaded) {
+        return (
+            <ScrollView>
+                <GoBackModule navigation={navigation}/>
+                {platformHandle()}
                 <Text>{errorMsg}</Text>
                 <View>
                     {userList.map(user => {
@@ -118,12 +131,10 @@ function ManageUsersScreen({ navigation, route }) {
                             <UserModule key={user[0]} userProps={user} setDataLoaded={setDataLoaded}/>
                         )
                     })}
-
                 </View>
             </ScrollView>
         )
-    }
-    else {
+    } else {
         return (
             <AppLoading
             startAsync={loadData()}
@@ -135,10 +146,13 @@ function ManageUsersScreen({ navigation, route }) {
 
 const styles = StyleSheet.create({
     inputContainer: {
+        textAlign:'center',
+        paddingTop : Platform.OS === "android" ? StatusBar.currentHeight : 0,
         width: '100%',
         flex: 1,
         flexBasis: 100,
-        gap: 10,
+        marginRight: 5,
+        marginLeft: 5,
         flexDirection: 'row',
         justifyContent:'center',
         marginTop: 20,
