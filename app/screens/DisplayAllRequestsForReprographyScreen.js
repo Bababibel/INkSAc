@@ -56,7 +56,7 @@ export default function DisplayAllRequestsForReprographyScreen({ navigation }){
                     data={requests}
                     keyExtractor={(item, index) => item + index}
                     renderItem={({item}) => (
-                        <TouchableOpacity onPress={ () => navigation.navigate('PrintElement', { item : item })}>
+                        <TouchableOpacity onPress={ () => navigation.navigate('ManageRequestForReprography', { item : item })}>
                             <Card>
                                 <Text style={globalStyles.modalText}>{ item.title }</Text>
                             </Card>

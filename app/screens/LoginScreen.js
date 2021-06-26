@@ -56,9 +56,11 @@ export default function LoginScreen({ navigation }){
             /*navigation.navigate("Choose", {
                 list: user.lists[0],
             });*/
-            navigation.navigate("DisplayMyRequests", {
-                id : 7
+            /*navigation.navigate("DisplayRequestsByList", {
+                list_name : 'GSI'
             });
+            }*/
+            navigation.navigate("DisplayAllRequestsForReprography");
             }
         }, [user]);
 

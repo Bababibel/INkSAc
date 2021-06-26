@@ -107,7 +107,7 @@ export default function RequestScreen({ route, navigation }) {
       <View style={globalStyles.backButton}>
         <Button title="Logout" onPress={navigation.goBack} />
       </View>
-        <MyModal setModalVisible={setModalVisible} modalVisible={modalVisible}/>
+        <MyModal page={'DisplayMyRequests'} setModalVisible={setModalVisible} modalVisible={modalVisible}/>
     </View>)
   } else {
     return (

@@ -8,25 +8,22 @@ import Request from '../assets/classes/Request';
 import File from '../assets/classes/File';
 import constants from '../assets/globals/constants';
 import Card from '../assets/shared/RequestCard';
+import MyModal from '../assets/modules/ModalModule';
 
 
 export default function DisplayRequestsByListScreen({ route, navigation }){
     const list_name = route.params;
-    console.log(list_name.list);
 
     const [dataLoaded, setDataLoaded] = useState(false);
-
-    const [selected, setSelected] = useState(
-        {author: '', comment: '', expiration_date: '', key: '', state: '', title: ''});
-
+    const [selected, setSelected] = useState();
     const [info, setList] = useState([]);
-
     const [modalOpen, setModalOpen] = useState(false);
 
     const dataLoad = () => {
         axios.get(constants.getRequestsForList, {params: {'list_name': list_name.list}})
         .then((request) => {
             request.data.data.map((item) => {
+                console.log(request.data.data)
                 axios.get(constants.getFilesFromRequest, {params: {'request_id': item.id}})
                 .then((file) => {
                     if (file.data.message == undefined){
@@ -53,59 +50,37 @@ export default function DisplayRequestsByListScreen({ route, navigation }){
         })        
     }
 
-    if (dataLoaded) {
+
+    const pressHandler = (item) => {
         if(Platform.OS === 'web'){
-            Alert.alert('Merci !', 'Grâce à vous, 504 polycopiés ont été économisés. Cela représente 1000000 tonnes de CO2');
-            return (
-                <View style={globalStymes.container}>
-                    <FlatList
-                        data={info}
-                        renderItem={({item}) => (
-                            <TouchableOpacity onPress={ () => navigation.navigate('ChooseElement', { item : item })}>
-                                <Card>
-                                    <Text style={globalStymes.modalText}>{ item.title }</Text>
-                                </Card>
-                            </TouchableOpacity>
-                        )}
-                    />
-                    <View style={globalStymes.backButton}>
-                        <Button title='Logout' onPress={navigation.goBack}/>
-                    </View>
-                </View>
-            )
+            navigation.navigate('ChooseElement', { item : item })
         } else {
-            return (
-                <View style={globalStymes.container}>
-                    <Modal visible={modalOpen} animationType='slide'>
-                        <TouchableOpacity onPress={() => setModalOpen(false)}>
-                            <Text style={globalStymes.closeText}>Close</Text>
-                        </TouchableOpacity>
-                        <View style={globalStymes.modalText}>
-                            <Text>Auteur : {selected.author_name}</Text>
-                            <Text>Titre : {selected.title}</Text>
-                            <Text>Pour le : {selected.deadline}</Text>
-                        </View>
-                        <View style={globalStymes.modalText}>
-                                <Button title='Accepter'  onPress={ () => setModalOpen(false)}/>
-                                <Button title='Refuser'  onPress={ () => setModalOpen(false)}/>
-                        </View>
-                    </Modal>
-                    <FlatList
-                        data={info}
-                        renderItem={({item}) => (
-                            <TouchableOpacity onPress={ () => {setModalOpen(true), setSelected(item)}}>
-                                <Card>
-                                    <Text style={globalStymes.modalText}>{ item.title }</Text>
-                                </Card>
-                            </TouchableOpacity>
-                        )}
-                    />
-                    <View style={globalStymes.backButton}>
-                        <Button title='Logout' onPress={navigation.goBack}/>
-                    </View>
-                </View>
-            )
+            setModalOpen(true), 
+            setSelected(item)
         }
+    }
+
+    if (dataLoaded) {
+        return (
+            <View style={globalStyles.container}>
+                <FlatList
+                    data={info}
+                    keyExtractor={(info, index) => info + index}
+                    renderItem={({item}) => (
+                        <TouchableOpacity onPress={ () => pressHandler(item)}>
+                            <Card>
+                                <Text style={globalStyles.modalText}>{ item.title }</Text>
+                                <MyModal page={'DisplayRequestsByList'}modalOpen={modalOpen} setModalOpen={setModalOpen} selected={item}/>
+                            </Card>
+                        </TouchableOpacity>
+                    )}
+                />
+                <View style={globalStyles.backButton}>
+                    <Button title='Logout' onPress={navigation.goBack}/>
+                </View>
+                
+            </View>
+        )
     } else {
         return (
             <AppLoading
