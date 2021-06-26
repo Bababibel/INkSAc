@@ -47,7 +47,7 @@ export default function ManageRequestForReprographyScreen({ route, navigation })
                 } else {
                     console.log('Internal error. Please try again or contact the support team');
                 }
-                navigation.push('Print')
+                navigation.push('DisplayAllRequestsForReprography')
             })
         } else {
             console.log("suppression des fichiers en cours ... "+item.item.request_id )
@@ -65,7 +65,7 @@ export default function ManageRequestForReprographyScreen({ route, navigation })
                 } else {
                     console.log('Internal error. Please try again or contact the support team');
                 }
-                navigation.push('PrintElement')
+                navigation.push('DisplayAllRequestsForReprography')
             })
         }
         
