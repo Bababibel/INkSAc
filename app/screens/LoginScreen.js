@@ -55,21 +55,14 @@ export default function LoginScreen({ navigation }){
         if (user != null) {
             navigation.navigate("Welcome", {
                 list: user.lists[0],
-<<<<<<< HEAD
             });
-            /*navigation.navigate("DisplayMyRequests", {
-                id : 7
-            });*/
-=======
-            });*/
             /*navigation.navigate("DisplayRequestsByList", {
                 list_name : 'GSI'
             });
             }*/
-            navigation.navigate("DisplayAllRequestsForReprography");
->>>>>>> 6272d23291740db0b3987a5f47c304c7c998b3fb
-            }
-        }, [user]);
+            /*navigation.navigate("DisplayAllRequestsForReprography");
+            }*/
+        }}, [user]);
 
     return (
         <TouchableWithoutFeedback onPress={dismissKeyboard}>

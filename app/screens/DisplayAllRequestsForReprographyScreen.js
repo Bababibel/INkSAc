@@ -1,10 +1,11 @@
 import React from 'react';
 import axios from 'axios';
-import {View, Text, Alert, Modal, TouchableOpacity, Button, FlatList, Platform} from 'react-native';
+import {View, Text, Alert, TouchableOpacity, FlatList, ScrollView} from 'react-native';
 import { useState } from 'react/cjs/react.development';
 import AppLoading from 'expo-app-loading';
 
 import Card from '../assets/shared/RequestCard';
+import GoBackModule from '../assets/modules/GoBackModule';
 import constants from '../assets/globals/constants';
 import Request from '../assets/classes/Request';
 import File from '../assets/classes/File';
@@ -51,6 +52,8 @@ export default function DisplayAllRequestsForReprographyScreen({ navigation }){
 
     if (dataLoaded) {
         return (
+            <ScrollView>
+      <GoBackModule navigation={navigation}/>
             <View style={globalStyles.container}>
                 <FlatList
                     data={requests}
@@ -63,10 +66,8 @@ export default function DisplayAllRequestsForReprographyScreen({ navigation }){
                         </TouchableOpacity>
                     )}
                 />
-                <View style={globalStyles.backButton}>
-                    <Button title='Logout' onPress={navigation.goBack}/>
-                </View>
             </View>
+            </ScrollView>
         )
     } else {
         return (

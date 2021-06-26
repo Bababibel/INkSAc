@@ -1,11 +1,10 @@
 import React from 'react'
-import { View, TouchableOpacity, Image, StyleSheet, Platform, Text } from 'react-native'
+import { View, TouchableOpacity, Image, StyleSheet, Platform, Text, Button, Dimensions, StatusBar } from 'react-native'
 import { globalColors } from '../globals/globalStyles'
 
 function GoBackModule({ navigation }) {
     if (Platform.OS === "web" && navigation.canGoBack()) {
         return (
-            console.log('coucou je suis la normalement'),
             <View styles={styles.container}>
                 <TouchableOpacity onPress={() => navigation.goBack()}>
                     <Image style={styles.icon}
@@ -17,9 +16,7 @@ function GoBackModule({ navigation }) {
         )
     }
     else {
-        console.log(navigation)
-        console.log(Platform.OS)
-        return null;
+        return(null)
     }
 }
 

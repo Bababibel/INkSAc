@@ -51,7 +51,7 @@ function WelcomeScreen({ navigation }) {
             <Button
                 title="Mes demandes"
                 style={globalStyles.welcomeButton}
-                onPress={() => navigation.push('DisplayMyRequests')}/>
+                onPress={() => navigation.navigate('DisplayMyRequests', { id : /*user.id*/ 3 })}/>
         )
     }
     function seeAllRequestsButton() {

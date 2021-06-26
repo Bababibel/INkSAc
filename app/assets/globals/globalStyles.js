@@ -18,13 +18,11 @@ export const globalStyles = StyleSheet.create({
     container: {
         flex: 1,
         flexGrow: 1,
-        backgroundColor: globalColors.bg_primary,
         paddingTop : Platform.OS === "android" ? StatusBar.currentHeight : 0,
         paddingLeft: 30,
         paddingRight : 30,
         justifyContent : "center",
         alignItems : "center",
-        borderRadius : 10000,
         minWidth : Platform.OS === "web" ? Dimensions.get('window').width / 4 : Dimensions.get('window').width,
     },
     modalText: {
