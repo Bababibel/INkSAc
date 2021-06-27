@@ -84,7 +84,7 @@ class UploadForm extends Component {
                 Alert.alert("Oups!", "Le serveur ne répond pas, ou a rencontré une erreur.", [{text: 'Ok'}])
             }
         })
-        return (<View></View>)
+        return null;
     }
 
     formSubmitted = () => {
@@ -151,7 +151,7 @@ class UploadForm extends Component {
         let createRequestFormData = new FormData();
         createRequestFormData.append('delivery_date', this.state.delivery);
         createRequestFormData.append('deadline', this.state.deadline);
-        createRequestFormData.append('author', 1);
+        createRequestFormData.append('author', constants.globalUser.id);
         createRequestFormData.append('title', this.state.title);
         createRequestFormData.append('comment', this.state.comment);
         createRequestFormData.append('hidden', this.state.hidden);

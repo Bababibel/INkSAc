@@ -32,22 +32,28 @@ export default function LoginScreen({ navigation }){
     const [user, setUser] = useState(null);
 
     function submitted(email) {
-        axios.get(constants.getUserByEmail, { params: { 'email': email } })
+        fetch(constants.getUserByEmail+"?email="+email)
         .then(response => {
-            if (response.data) { // server answered
-                if ('data' in response.data) { // there is data to collect
-                    let u = response.data.data[0]; // first object in the data array
-                    let tmpUser = new User(u.id, u.email, u.first_name, u.last_name, u.role, u.creation_date, u.last_login_date, u.location, u.list_names);
-                    constants.globalUser = tmpUser;
-                    setUser(tmpUser);
-                    axios.get(constants.loggedUser, { params: { 'id': u.id } })
+            response.json()
+            .then(response => {
+                if (response) { // server answered
+                    if ('data' in response) { // there is data to collect
+                        let u = response.data[0]; // first object in the data array
+                        console.log(u) // reçu en brut 
+                        let tmpUser = new User(u.id, u.email, u.first_name, u.last_name, u.role, u.creation_date, u.last_login_date, u.location, u.list_names);
+                        console.log(tmpUser) // une fois dans l'objet
+                        constants.globalUser = tmpUser;
+                        console.log(constants.globalUser) // check de l'affectation dans la var globale
+                        setUser(tmpUser);
+                        axios.get(constants.loggedUser, { params: { 'id': u.id } })
+                    }
+                    else if ('message' in response.data) { // no data but error message
+                        setErrorMsg("Erreur. Réponse du serveur: "+response.data.message);
+                    }
+                    else setErrorMsg("Le serveur a renvoyé une réponse inhabituelle");
                 }
-                else if ('message' in response.data) { // no data but error message
-                    setErrorMsg("Erreur. Réponse du serveur: "+response.data.message);
-                }
-                else setErrorMsg("Le serveur a renvoyé une réponse inhabituelle");
-            }
-            else setErrorMsg("Le serveur distant ne répond pas");
+                else setErrorMsg("Le serveur distant ne répond pas");
+            })
         })
     } 
 
@@ -55,9 +61,7 @@ export default function LoginScreen({ navigation }){
     // wait for full-update of the variable "user" before evaluating it
     useEffect(() => { 
         if (user != null) {
-            navigation.navigate("Welcome", {
-                list: user.lists[0],
-            });
+            navigation.navigate("Welcome");
         }
     }, [user]);
 
