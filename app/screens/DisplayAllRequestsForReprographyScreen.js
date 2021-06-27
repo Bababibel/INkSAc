@@ -61,7 +61,7 @@ export default function DisplayAllRequestsForReprographyScreen({ navigation }){
             <ScrollView>
             <View>
             <GoBackModule navigation={navigation}/>
-            <Text style={styles.inputContainer} >Liste de toutes les requètes</Text>
+            <Text style={styles.titleText} >Liste de toutes les requètes</Text>
                 {requests.map(request => {
                 return (
                   <RequestModule clickHandle={clickHandle} key={request.id} requestProps={request} navigation={navigation}/>
@@ -99,13 +99,19 @@ const styles = StyleSheet.create({
         marginTop: 20,
     },
     container: {
-      flex: 1,
-      flexGrow: 1,
-      paddingTop : Platform.OS === "android" ? StatusBar.currentHeight : 0,
-      paddingLeft: 30,
-      paddingRight : 30,
-      justifyContent : "center",
-      alignItems : "center",
-      minWidth : Platform.OS === "web" ? Dimensions.get('window').width / 4 : Dimensions.get('window').width,
-  },
+        flex: 1,
+        flexGrow: 1,
+        paddingTop : Platform.OS === "android" ? StatusBar.currentHeight : 0,
+        paddingLeft: 30,
+        paddingRight : 30,
+        justifyContent : "center",
+        alignItems : "center",
+        minWidth : Platform.OS === "web" ? Dimensions.get('window').width / 4 : Dimensions.get('window').width,
+    },
+    titleText: {
+        paddingTop : Platform.OS === "android" ? StatusBar.currentHeight : 0,
+        fontSize: 30,
+        textAlign: 'center',
+        marginBottom: 20,
+  }
   })
