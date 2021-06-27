@@ -40,7 +40,7 @@ export default function RequestScreen({ route, navigation }) {
       headers: { "Content-Type" : "application/json" }
     })
     .then((request) => {
-      console.log(request)
+      console.log("c'est passé")
       if ("data" in request.data){
         setIsData(true)
         let tmpRequete = []

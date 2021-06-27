@@ -39,11 +39,8 @@ export default function LoginScreen({ navigation }){
                 if (response) { // server answered
                     if ('data' in response) { // there is data to collect
                         let u = response.data[0]; // first object in the data array
-                        console.log(u) // reçu en brut 
                         let tmpUser = new User(u.id, u.email, u.first_name, u.last_name, u.role, u.creation_date, u.last_login_date, u.location, u.list_names);
-                        console.log(tmpUser) // une fois dans l'objet
                         constants.globalUser = tmpUser;
-                        console.log(constants.globalUser) // check de l'affectation dans la var globale
                         setUser(tmpUser);
                         axios.get(constants.loggedUser, { params: { 'id': u.id } })
                     }

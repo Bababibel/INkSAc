@@ -34,6 +34,9 @@ export default {
     getAllUsers : baseUrl+'api/user/getAllUsers.php',
     updateUser : baseUrl+'api/user/updateUser.php',
     deleteUser: baseUrl+'api/user/deleteUser.php',
+    // User in list
+    addUserToList : baseUrl+'api/userInList/addUserToList.php',
+    removeUserFromList : baseUrl+'api/userInList/removeUserFromList.php',
 
     // Global variables
     globalUser: null,
