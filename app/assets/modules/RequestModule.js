@@ -1,49 +1,35 @@
 import React, {useState, useEffect, useRef} from 'react';
-import { View, StyleSheet, Text, TouchableOpacity, Platform, StatusBar, Alert } from 'react-native';
-import { Select, FormControl, MenuItem, TextField } from '@material-ui/core';
+import { View, StyleSheet, Text, TouchableOpacity, Platform, Alert } from 'react-native';
 
-import AlertAskConfirmationOnListDeleteModule from './AlertAskConfirmationOnListDeleteModule';
 import Request from '../classes/Request';
+import { Select, FormControl, MenuItem } from '@material-ui/core';
+import AlertAskConfirmationOnUserDeleteModule from './AlertAskConfirmationOnUserDeleteModule';
 
 
+function RequestModule({requestProps, navigation}) {
+    // Check if property is a valid array to load a User class
+    //if (!Array.isArray(requestProps) || requestProps.length != 9) return (<Text>Given parameter is not a array or request's properties ({typeof(requestProps)}): {requestProps}</Text>);
 
-function RequestModule({requestProps}) {
-    // Check if property is a valid array to load a List class
-    //if (!Array.isArray(requestProps) || requestProps.length != 5) return (<Text>Given parameter is not a array or request's properties ({typeof(requestProps)}): {requestProps}</Text>);
-    
-    let request = new Request (requestProps.id, requestProps.author, requestProps.author_name, requestProps.deadline, requestProps.delivery_date, requestProps.expiration_date, requestProps.title, requestProps.comment, requestProps.hidden, requestProps.state)
+    const request = new Request (requestProps.request_id, requestProps.author, requestProps.author_name, requestProps.deadline, requestProps.delivery_date, requestProps.expiration_date, requestProps.title, requestProps.comment, requestProps.hidden, requestProps.state)
+    request.attachFile(requestProps.files)
+    const [role, setRole] = useState(request.role);
     const [isVisible, setIsVisible] = useState(true);
     const [isConfirmOpened, setIsConfirmOpen] = useState(false);
-    const [title, setLocation] = useState(request.title);
-    const [name, setName] = useState(request.title);
     
-    // Store the previous Location for the useEffect()
-    const prevLocationRef = useRef();
+
+    // Store the previous role for the useEffect()
+    const prevRoleRef = useRef();
     useEffect(() => {
-        prevLocationRef.current = title;
+        prevRoleRef.current = role;
     })
-    const prevLocation = prevLocationRef.current;
-    // Dont send an Update request if the previous title is the same or was undefined (class instanciation)
-    /*useEffect(() => {
-        if (prevLocation != title && prevLocation != undefined) {
-            request.title = title,
+    const prevRole = prevRoleRef.current;
+    // Dont send an Update request if the previous role is the same or was undefined (class instanciation)
+    useEffect(() => {
+        if (prevRole != role && prevRole != undefined) {
+            request.role = role,
             request.updateInDb()
         }
-    }, [title, prevLocation])*/
-
-
-    const prevNameRef = useRef();
-    useEffect(() => {
-        prevNameRef.current = name;
-    })
-    const prevName = prevNameRef.current;
-    useEffect(() => {
-        if (prevName != name && prevName != undefined) {
-            request.name = name,
-            console.log(request.name)
-            request.updateInDb()
-        }
-    }, [name, prevName])
+    }, [role, prevRole])
 
     let deleteFunction = () => {
         request.deleteInDb();
@@ -51,74 +37,78 @@ function RequestModule({requestProps}) {
     }
 
     let generateAlertConfirm = () => {
-        if(isConfirmOpened){
-            if (Platform.OS === 'web') {
-                return (<AlertAskConfirmationOnListDeleteModule deleteFunction={deleteFunction}/>)
-            } else {
-                Alert.alert('Supprimer une requeste', 'Etes-vous sûr de vouloir supprimer cette requeste ?', 
-                [
-                    {
-                        text : "Oui",
-                        onPress : () => deleteFunction()
-                    },
-                    {
-                        text : "Non",
-                        style : "cancel"    
-                    }
-                ])
+        if (isConfirmOpened){
+            if (Platform.OS === 'web'){
+                return (<AlertAskConfirmationOnUserDeleteModule deleteFunction={deleteFunction}/>)
+            }
+            else {
+                Alert.alert('Supprimer une liste', 'Etes-vous sûr de vouloir supprimer cette liste ?', 
+            [
+                {
+                    text : "Oui",
+                    onPress : () => deleteFunction()
+                },
+                {
+                    text : "Non",
+                    style : "cancel"    
+                }
+            ])
             }
         }
     }
 
     const platformHandle = () => {
         if(Platform.OS === 'web'){
-            return(
-                <View>
-                    <View style={styles.row}>
-                        <TextField value={name} 
-                                    onChange={e => setName(e.target.value)} 
-                                    label="Nom"/>
-                        <Text style={styles.biggerText}>Nombre théorique: {request.theoricalCount}</Text>
-                        <FormControl>
-                            <Select
-                                value={title}
-                                onChange={e => setLocation(e.target.value)}>
-                                    <MenuItem value={"Bourges"}>Bourges</MenuItem>
-                                <MenuItem value={"Blois"}>Blois</MenuItem>
-                            </Select>
-                        </FormControl>
-                    </View>
-                </View>
+            return (
+                <FormControl>
+                    <Select
+                        value={role}
+                        onChange={e => setRole(e.target.value)}>
+                        <MenuItem value={"student"}>Étudiant</MenuItem>
+                        <MenuItem value={"teacher"}>Enseignant</MenuItem>
+                        <MenuItem value={"reprography"}>Reprographie</MenuItem>
+                        <MenuItem value={"admin"}>Administrateur</MenuItem>
+                    </Select>
+                </FormControl>
             )
         } else {
             return (
-                <View>
-                    <View style={styles.row}>
-                        <Text style={styles.biggerText}>{request.title}</Text>
-                    </View>
-                    <View style={styles.row}>
-                        
-                        <Text>{request.deadline}</Text>
-                    </View>
-                    <View style={styles.row}>
-                    <Text>Etat : {request.state}</Text>
-                    </View>
-                </View>
+                <Text>{request.role}</Text>
             )
         }
+    }
+    
+    const pressHandle = () => {
+        console.log("je suis pressed")
+        console.log(request)
+        navigation.navigate("ShowFileDetails", { item: request })
     }
 
     if (isVisible) {
         return (
-            <View style={[styles.container, {backgroundColor: (request.id=="Bourges" ? 'ghostwhite' : 'gainsboro')}]}>
+        <TouchableOpacity onPress={() => pressHandle()}>
+            <Text style={styles.X}>X</Text>
+            <View onPress={() => console.log("je suis pressed")} style={[styles.container, {backgroundColor: (request.location=="Bourges" ? 'ghostwhite' : 'gainsboro')}]}>
                 {generateAlertConfirm()}
                 <TouchableOpacity
-                        onPress={() => {setIsConfirmOpen(true)}}
-                        style={styles.deleteButton}>
+                    onPress={() => {setIsConfirmOpen(true)}}
+                    style={styles.deleteButton}>
                     <Text style={styles.X}>X</Text>
                 </TouchableOpacity>
-                {platformHandle()}
+                <View style={styles.row}>
+                    <Text>{request.title}</Text>
+                    
+                    {/*platformHandle()*/}
+                </View>
+                <View style={styles.row}>
+                    { /*Ajouter ici la liste des listes de cette requete*/ }
+                </View>
+                <View style={styles.row}>
+                <Text>{request.state}</Text>
+                    <Text>{request.deadline}</Text>
+                </View>
             </View>
+        </TouchableOpacity>
         )
     }
     else return null;
@@ -136,8 +126,8 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         flexWrap: 'wrap',
         alignContent: 'center',
-        marginTop: 5,
-        width: '90%',
+        marginTop: -5,
+        width: '100%',
         marginHorizontal: 'auto',
         fontFamily: 'ubuntu-regular',
         borderRadius: 5,
@@ -167,7 +157,6 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'row',
         justifyContent: 'space-evenly',
-        
     }
 
 })

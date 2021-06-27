@@ -3,8 +3,9 @@ import constants from '../globals/constants';
 
 
 class Request {
-    constructor(request_id, author_id, author_name, deadline, delivery_date, expiration_date, title, comment, hidden, state, list) {
+    constructor(request_id, author_id, author_name, deadline, delivery_date, expiration_date, title, comment, hidden, state, list = 'none') {
         this.request_id = request_id
+        console.log(request_id)
         this.author_id = author_id
         this.author_name = author_name
         this.deadline = deadline
@@ -24,10 +25,10 @@ class Request {
     }
 
     deleteInDb() {
-        axios.get(constants.deleteRequest, { params: { 'id': this.request_id }})
+        axios.get(constants.deleteRequest, { params: { 'id' : this.request_id }})
         .then(response => {
             if ('message' in response.data) { 
-                console.log("From User class: "+response.data.message)
+                console.log("From Request class: "+response.data.message)
                 return true;
             }
             else {

@@ -85,6 +85,7 @@ export default function ManageRequestForReprographyScreen({ route, navigation })
             <Text>Partiel ? : {item.item.hidden}</Text>
             <Text>Lieux : {item.item.files.path}</Text>
             <Text>Etat : {item.item.state}</Text>
+            <Text>list : {item.item.list}</Text>
             <View style={globalStyles.backButton}>
                 <Button title={item.item.state}  onPress={ () => {
                     console.log('avant appel'),

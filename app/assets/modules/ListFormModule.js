@@ -77,15 +77,13 @@ function ListFormModule({reloadData}) {
                 </View>
             </View>
         )
-    } else {
-        return null;
-    }
+    } 
+    else return null;
 
 }
 
 const styles = StyleSheet.create({
     container: {
-        paddingTop : Platform.OS === "android" ? StatusBar.currentHeight : 0,
         flex: 1,
         justifyContent: 'center',
         alignContent: 'center',
