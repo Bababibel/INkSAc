@@ -24,6 +24,7 @@ export default {
     getList : baseUrl+'api/userList/getList.php',
     deleteList : baseUrl+'api/userList/deleteList.php',
     updateList : baseUrl+'api/userList/updateList.php',
+    createList : baseUrl+'api/userList/createList.php',
     // User
     loggedUser : baseUrl+'api/user/loggedUser.php',
     getUserByEmail : baseUrl+'api/user/getUserByEmail.php',

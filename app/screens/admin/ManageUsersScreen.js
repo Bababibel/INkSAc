@@ -9,7 +9,7 @@ import List from '../../assets/classes/List';
 import constants from '../../assets/globals/constants';
 import UserModule from '../../assets/modules/UserModule';
 import GoBackModule from '../../assets/modules/GoBackModule';
-import { globalStyles } from '../../assets/globals/globalStyles';
+import {globalColors} from '../../assets/globals/globalStyles'
 
 // Will contain all users, displayed or not
 
@@ -20,7 +20,6 @@ function ManageUsersScreen({ navigation, route }) {
     const [dataLoaded, setDataLoaded] = useState(false);
     const [errorMsg, setErrorMsg] = useState("");
     const [lists, setLists] = useState([]);
-
 
     const [listFilter, setListFilter] = useState("");
     const [emailFilter, setEmailFilter] = useState("");
@@ -72,43 +71,46 @@ function ManageUsersScreen({ navigation, route }) {
     const platformHandle = () => {
         if(Platform.OS === 'web'){
             return (
-                <View style={styles.inputContainer}>
-                    <TextField value={emailFilter} 
-                            onChange={e => setEmailFilter(e.target.value)} 
-                            label="Email"/>
-                    <FormControl >
-                        <InputLabel>Rôle</InputLabel>
-                        <Select
-                            value={roleFilter}
-                            onChange={e => setRoleFilter(e.target.value)}>
-                            <MenuItem value={""}></MenuItem>
-                            <MenuItem value={"student"}>Étudiant</MenuItem>
-                            <MenuItem value={"teacher"}>Enseignant</MenuItem>
-                            <MenuItem value={"reprography"}>Reprographie</MenuItem>
-                            <MenuItem value={"admin"}>Administrateur</MenuItem>
-                        </Select>
-                    </FormControl>
-                    <FormControl >
-                        <InputLabel>Liste</InputLabel>
-                        <Select
-                            value={listFilter}
-                            onChange={e => setListFilter(e.target.value)}>
-                            <MenuItem value={""}></MenuItem>
-                            {lists.map(l => {
-                                return <MenuItem key={Math.random} value={l.name}>{l.name}</MenuItem>
-                            })}
-                        </Select>
-                    </FormControl>
-                    <FormControl >
-                        <InputLabel>Campus</InputLabel>
-                        <Select
-                            value={locationFilter}
-                            onChange={e => setLocationFilter(e.target.value)}>
-                            <MenuItem value={""}></MenuItem>
-                            <MenuItem value={"Bourges"}>Bourges</MenuItem>
-                            <MenuItem value={"Blois"}>Blois</MenuItem>
-                        </Select>
-                    </FormControl>
+                <View style={styles.container}>
+                    <Text style={styles.title}>Chercher un utilisateur</Text>
+                    <View style={styles.row}>
+                        <TextField value={emailFilter} 
+                                onChange={e => setEmailFilter(e.target.value)} 
+                                label="Email"/>
+                        <FormControl >
+                            <InputLabel>Rôle</InputLabel>
+                            <Select
+                                value={roleFilter}
+                                onChange={e => setRoleFilter(e.target.value)}>
+                                <MenuItem value={""}></MenuItem>
+                                <MenuItem value={"student"}>Étudiant</MenuItem>
+                                <MenuItem value={"teacher"}>Enseignant</MenuItem>
+                                <MenuItem value={"reprography"}>Reprographie</MenuItem>
+                                <MenuItem value={"admin"}>Administrateur</MenuItem>
+                            </Select>
+                        </FormControl>
+                        <FormControl >
+                            <InputLabel>Liste</InputLabel>
+                            <Select
+                                value={listFilter}
+                                onChange={e => setListFilter(e.target.value)}>
+                                <MenuItem value={""}></MenuItem>
+                                {lists.map(l => {
+                                    return <MenuItem key={Math.random()*1000} value={l.name}>{l.name}</MenuItem>
+                                })}
+                            </Select>
+                        </FormControl>
+                        <FormControl>
+                            <InputLabel>Campus</InputLabel>
+                            <Select
+                                value={locationFilter}
+                                onChange={e => setLocationFilter(e.target.value)}>
+                                <MenuItem value={""}></MenuItem>
+                                <MenuItem value={"Bourges"}>Bourges</MenuItem>
+                                <MenuItem value={"Blois"}>Blois</MenuItem>
+                            </Select>
+                        </FormControl>
+                    </View>
                 </View>
             )
         } else {
@@ -144,18 +146,46 @@ function ManageUsersScreen({ navigation, route }) {
 }
 
 const styles = StyleSheet.create({
-    inputContainer: {
-        textAlign:'center',
+    container: {
         paddingTop : Platform.OS === "android" ? StatusBar.currentHeight : 0,
+        flex: 1,
+        justifyContent: 'center',
+        alignContent: 'center',
+        width: '100%',
+        marginHorizontal: 'auto',
+        fontFamily: 'ubuntu-regular',
+        borderRadius: 5,
+        minHeight: 60,
+        maxWidth: 700,
+        borderWidth: 1,
+        borderColor: 'black',
+        borderStyle: 'solid',
+        backgroundColor: globalColors.secondary,
+        marginBottom: 20,
+    },
+    errorMsg: {
+        color: 'red',
+    },
+    row: {
+        marginVertical: 10,
         width: '100%',
         flex: 1,
-        flexBasis: 100,
-        marginRight: 5,
-        marginLeft: 5,
         flexDirection: 'row',
-        justifyContent:'center',
-        marginTop: 20,
+        justifyContent: 'space-between',
+        paddingHorizontal: 20,
+        alignItems: 'center'
     },
+    title: {
+        fontSize: 22,
+        margin: 10,
+    },
+<<<<<<< HEAD
+=======
+    input: {
+        minWidth: 100,
+    }
+
+>>>>>>> 470c5b896e1ddd6259336914d9aff6e350a669b9
 })
 
 export default ManageUsersScreen;

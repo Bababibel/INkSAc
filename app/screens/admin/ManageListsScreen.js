@@ -8,6 +8,7 @@ import { TextField, Select, MenuItem, InputLabel, FormControl } from '@material-
 import constants from '../../assets/globals/constants';
 import ListModule from '../../assets/modules/ListModule';
 import GoBackModule from '../../assets/modules/GoBackModule';
+import ListFormModule from '../../assets/modules/ListFormModule';
 
 // Will contain all lists, displayed or not
 let globalLists = [];
@@ -40,13 +41,16 @@ function ManageListsScreen({ navigation }) {
     if (dataLoaded) {
         return (
             <ScrollView>
-                <Text style={styles.inputContainer} >Liste des Utilisateurs</Text>
                 <GoBackModule navigation={navigation}/>
+                <Text style={styles.titleText}>Gérer les listes</Text>
                 <Text>{errorMsg}</Text>
+
+                <ListFormModule reloadData={loadData}/>
+
                 <View>
                     {lists.map(list => {
                         return (
-                            <ListModule key={list[0]} listProps={list} setDataLoaded={setDataLoaded}/>
+                            <ListModule key={list[0]} listProps={list}/>
                         )
                     })}
                 </View>
@@ -75,6 +79,11 @@ const styles = StyleSheet.create({
         justifyContent:'center',
         marginTop: 20,
     },
+    titleText: {
+        fontSize: 30,
+        textAlign: 'center',
+        marginBottom: 20,
+    }
 
 })
 

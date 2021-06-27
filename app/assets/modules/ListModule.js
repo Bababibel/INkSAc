@@ -72,11 +72,9 @@ function ListModule({listProps}) {
     const platformHandle = () => {
         if(Platform.OS === 'web'){
             return(
-                <View>
                     <View style={styles.row}>
                         <TextField value={name} 
-                                    onChange={e => setName(e.target.value)} 
-                                    label="Nom"/>
+                                    onChange={e => setName(e.target.value)}/>
                         <Text style={styles.biggerText}>Nombre théorique: {list.theoricalCount}</Text>
                         <FormControl>
                             <Select
@@ -87,7 +85,6 @@ function ListModule({listProps}) {
                             </Select>
                         </FormControl>
                     </View>
-                </View>
             )
         } else {
             return (
@@ -117,11 +114,6 @@ function ListModule({listProps}) {
 }
 
 const styles = StyleSheet.create({
-    biggerText: {
-        fontSize: 20,
-        fontFamily: 'ubuntu-bold',
-        marginBottom: 5,
-    },
     container: {
         paddingTop : Platform.OS === "android" ? StatusBar.currentHeight : 0,
         position: 'relative',
@@ -159,8 +151,10 @@ const styles = StyleSheet.create({
         width: '100%',
         flex: 1,
         flexDirection: 'row',
-        justifyContent: 'space-evenly',
-        alignItems: 'center'
+        justifyContent: 'space-between',
+        paddingHorizontal: 20,
+        alignItems: 'center',
+        fontSize: 18,
     }
 
 })
