@@ -86,7 +86,7 @@ export default function RequestScreen({ route, navigation }) {
       <ScrollView>
         <View>
         <GoBackModule navigation={navigation}/>
-          <Text style={styles.inputContainer} >Liste de mes requètes</Text>
+          <Text style={styles.titleText} >Liste de mes requètes</Text>
           
           <View style={globalStyles.container}>
             <TouchableOpacity>
@@ -155,5 +155,11 @@ const styles = StyleSheet.create({
     justifyContent : "center",
     alignItems : "center",
     minWidth : Platform.OS === "web" ? Dimensions.get('window').width / 4 : Dimensions.get('window').width,
-},
+  },
+  titleText: {
+    paddingTop : Platform.OS === "android" ? StatusBar.currentHeight : 0,
+    fontSize: 30,
+    textAlign: 'center',
+    marginBottom: 20,
+  }
 })

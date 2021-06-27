@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { View, Text, Button, TextInput, Keyboard, TouchableWithoutFeedback, Platform, Alert } from 'react-native';
+import { View, Text, Button, TextInput, Keyboard, TouchableWithoutFeedback, Platform } from 'react-native';
 import { Formik } from 'formik';
 import * as yup from 'yup';
 import axios from 'axios';
