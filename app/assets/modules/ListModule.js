@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useRef} from 'react';
-import { View, StyleSheet, Text, TouchableOpacity, Platform, StatusBar } from 'react-native';
+import { View, StyleSheet, Text, TouchableOpacity, Platform, StatusBar, Alert } from 'react-native';
 import { Select, FormControl, MenuItem, TextField } from '@material-ui/core';
 
 import List from '../classes/List';
@@ -52,25 +52,43 @@ function ListModule({listProps}) {
     }
 
     let generateAlertConfirm = () => {
-        if (isConfirmOpened) return (<AlertAskConfirmationOnListDeleteModule deleteFunction={deleteFunction}/>)
+        if(isConfirmOpened){
+            if (Platform.OS === 'web') {
+                return (<AlertAskConfirmationOnListDeleteModule deleteFunction={deleteFunction}/>)
+            } else {
+                Alert.alert('Supprimer une liste', 'Etes-vous sûr de vouloir supprimer cette liste ?', 
+                [
+                    {
+                        text : "Oui",
+                        onPress : () => deleteFunction()
+                    },
+                    {
+                        text : "Non",
+                        style : "cancel"    
+                    }
+                ])
+            }
+        }
     }
 
     const platformHandle = () => {
         if(Platform.OS === 'web'){
             return(
-                <View style={styles.row}>
-                    <TextField value={name} 
-                                onChange={e => setName(e.target.value)} 
-                                label="Nom"/>
-                    <Text style={styles.biggerText}>Nombre théorique: {list.theoricalCount}</Text>
-                    <FormControl>
-                        <Select
-                            value={location}
-                            onChange={e => setLocation(e.target.value)}>
-                                <MenuItem value={"Bourges"}>Bourges</MenuItem>
-                            <MenuItem value={"Blois"}>Blois</MenuItem>
-                        </Select>
-                    </FormControl>
+                <View>
+                    <View style={styles.row}>
+                        <TextField value={name} 
+                                    onChange={e => setName(e.target.value)} 
+                                    label="Nom"/>
+                        <Text style={styles.biggerText}>Nombre théorique: {list.theoricalCount}</Text>
+                        <FormControl>
+                            <Select
+                                value={location}
+                                onChange={e => setLocation(e.target.value)}>
+                                    <MenuItem value={"Bourges"}>Bourges</MenuItem>
+                                <MenuItem value={"Blois"}>Blois</MenuItem>
+                            </Select>
+                        </FormControl>
+                    </View>
                 </View>
             )
         } else {
