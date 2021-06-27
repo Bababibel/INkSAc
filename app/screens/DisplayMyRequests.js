@@ -7,7 +7,8 @@ import {
   Alert,
   Platform,
   ScrollView,
-  StatusBar
+  StatusBar,
+  Dimensions
 } from "react-native";
 import axios from "axios";
 import { globalStyles, globalColors } from "../assets/globals/globalStyles";
@@ -68,10 +69,9 @@ export default function RequestScreen({ route, navigation }) {
   }
 
   const clickHandle = () => {
-    if(Platform.OS === 'web'){
+      console.log("je suis beau ")
       navigation.navigate("DisplayMyRequests", { item: item, modify: "just print" })
     } 
-  }
 
   const pressHandle = () => {
     if(Platform.OS === 'web'){
@@ -100,17 +100,17 @@ export default function RequestScreen({ route, navigation }) {
           </View>
               {requests.map(request => {
                 return (
-                  <RequestModule key={request.id} requestProps={request} setDataLoaded={setDataLoaded}/>
+                  <RequestModule clickHandle={clickHandle} key={request.id} requestProps={request} navigation={navigation}/>
                 )
               })}
-        <View>
-          <MyModal page={'DisplayMyRequests'} setModalVisible={setModalVisible} modalVisible={modalVisible}/>
+          <View>
+            <MyModal page={'DisplayMyRequests'} setModalVisible={setModalVisible} modalVisible={modalVisible}/>
+          </View>
         </View>
-      </View>
-    </ScrollView>)
+      </ScrollView>)
   } else {
     return (
-      <View style={globalStyles.container}>
+      <View style={styles.container}>
         <AppLoading
           startAsync={dataLoad}
           onError={(text) => Alert.alert("Échec du chargement :(", String(text), [{ text: "Ok" }])}
@@ -146,4 +146,14 @@ const styles = StyleSheet.create({
       justifyContent:'center',
       marginTop: 20,
   },
+  container: {
+    flex: 1,
+    flexGrow: 1,
+    paddingTop : Platform.OS === "android" ? StatusBar.currentHeight : 0,
+    paddingLeft: 30,
+    paddingRight : 30,
+    justifyContent : "center",
+    alignItems : "center",
+    minWidth : Platform.OS === "web" ? Dimensions.get('window').width / 4 : Dimensions.get('window').width,
+},
 })

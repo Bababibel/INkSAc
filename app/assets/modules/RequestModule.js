@@ -6,11 +6,12 @@ import { Select, FormControl, MenuItem } from '@material-ui/core';
 import AlertAskConfirmationOnUserDeleteModule from './AlertAskConfirmationOnUserDeleteModule';
 
 
-function RequestModule({requestProps}) {
+function RequestModule({requestProps, navigation}) {
     // Check if property is a valid array to load a User class
     //if (!Array.isArray(requestProps) || requestProps.length != 9) return (<Text>Given parameter is not a array or request's properties ({typeof(requestProps)}): {requestProps}</Text>);
 
     const request = new Request (requestProps.id, requestProps.author, requestProps.author_name, requestProps.deadline, requestProps.delivery_date, requestProps.expiration_date, requestProps.title, requestProps.comment, requestProps.hidden, requestProps.state)
+    request.attachFile(requestProps.files)
     const [role, setRole] = useState(request.role);
     const [isVisible, setIsVisible] = useState(true);
     const [isConfirmOpened, setIsConfirmOpen] = useState(false);
@@ -76,10 +77,18 @@ function RequestModule({requestProps}) {
             )
         }
     }
+    
+    const pressHandle = () => {
+        console.log("je suis pressed")
+        console.log(request)
+        navigation.navigate("ShowFileDetails", { item: request })
+    }
 
     if (isVisible) {
         return (
-            <View style={[styles.container, {backgroundColor: (request.location=="Bourges" ? 'ghostwhite' : 'gainsboro')}]}>
+        <TouchableOpacity onPress={() => pressHandle()}>
+            <Text style={styles.X}>X</Text>
+            <View onPress={() => console.log("je suis pressed")} style={[styles.container, {backgroundColor: (request.location=="Bourges" ? 'ghostwhite' : 'gainsboro')}]}>
                 {generateAlertConfirm()}
                 <TouchableOpacity
                     onPress={() => {setIsConfirmOpen(true)}}
@@ -99,6 +108,7 @@ function RequestModule({requestProps}) {
                     <Text>{request.deadline}</Text>
                 </View>
             </View>
+        </TouchableOpacity>
         )
     }
     else return null;
@@ -116,7 +126,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         flexWrap: 'wrap',
         alignContent: 'center',
-        marginTop: 5,
+        marginTop: -5,
         width: '100%',
         marginHorizontal: 'auto',
         fontFamily: 'ubuntu-regular',
