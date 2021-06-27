@@ -10,7 +10,7 @@ export default function CreateOrUpdateRequestScreen({ route, navigation }) {
   if (!route.params || !route.params.item || route.params.modify == 'no') {
     return (
       <ScrollView>
-        <UploadForm params={{route: route, navigation: navigation}}/>
+        <UploadForm route={route} navigation={navigation}/>
         <Button style={{top: 90}} title='Fermer sans enregistrer' onPress={() => navigation.goBack()}/>
       </ScrollView>
     );
@@ -19,7 +19,7 @@ export default function CreateOrUpdateRequestScreen({ route, navigation }) {
     if (route.params.modify == 'yes') { 
        return (
         <ScrollView>
-          <UpdateForm params={{item : route.params.item}}/>
+          <UpdateForm route={route} navigation={navigation}/>
           <Button style={{top: 90}} title='Fermer sans enregistrer' onPress={() => navigation.goBack()}/>
         </ScrollView>
         );

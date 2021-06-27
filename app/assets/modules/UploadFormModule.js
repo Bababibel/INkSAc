@@ -14,6 +14,7 @@ import { globalStyles } from "../globals/globalStyles";
 import { computeDateTimeForSql } from '../tools/dateConverter';
 import List from '../classes/List';
 import constants from '../globals/constants';
+import GoBackModule from '../modules/GoBackModule';
 
 
 const currDate = new Date();
@@ -335,6 +336,7 @@ class UploadForm extends Component {
         }
         return (
             <View style={globalStyles.container}>
+                <GoBackModule navigation={this.props.navigation} />
                 <form id="file" style={styles.form}>
                     <Text style={[globalStyles.titleText, styles.title]}>
                         Formulez une nouvelle demande

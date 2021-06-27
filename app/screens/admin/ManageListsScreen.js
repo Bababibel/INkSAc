@@ -40,8 +40,8 @@ function ManageListsScreen({ navigation }) {
     if (dataLoaded) {
         return (
             <ScrollView>
-                <Text style={styles.inputContainer} >Liste des Utilisateurs</Text>
                 <GoBackModule navigation={navigation}/>
+                <Text style={styles.titleText} >Gérer les listes</Text>
                 <Text>{errorMsg}</Text>
                 <View>
                     {lists.map(list => {
@@ -75,6 +75,11 @@ const styles = StyleSheet.create({
         justifyContent:'center',
         marginTop: 20,
     },
+    titleText: {
+        fontSize: 30,
+        textAlign: 'center',
+        marginBottom: 20,
+    }
 
 })
 
