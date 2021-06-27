@@ -17,7 +17,6 @@ function ListFormModule({reloadData}) {
     const [errorMsg, setErrorMsg] = useState("");
 
     function handleSubmit() {
-        console.log("coucou")
         // Verification
         if (!allowedChars.test(name)) {
             setErrorMsg("Les noms de listes ne peuvent contenirs que des lettres, des chiffres ou _, -");
@@ -48,6 +47,8 @@ function ListFormModule({reloadData}) {
         
     }
 
+    
+
 
     if(Platform.OS === 'web'){
         return(
@@ -77,13 +78,7 @@ function ListFormModule({reloadData}) {
             </View>
         )
     } else {
-        return (
-            <View style={styles.row}>
-                <Text>Nom : {list.name}</Text>
-                <Text>Nombre théorique: {list.theoricalCount}</Text>
-                <Text>{list.location}</Text>
-            </View>
-        )
+        return null;
     }
 
 }
