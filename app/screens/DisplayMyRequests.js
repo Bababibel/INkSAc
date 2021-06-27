@@ -69,7 +69,6 @@ export default function RequestScreen({ route, navigation }) {
   }
 
   const clickHandle = () => {
-      console.log("je suis beau ")
       navigation.navigate("DisplayMyRequests", { item: item, modify: "just print" })
     } 
 
@@ -86,8 +85,9 @@ export default function RequestScreen({ route, navigation }) {
     return(
       <ScrollView>
         <View>
+        <GoBackModule navigation={navigation}/>
           <Text style={styles.inputContainer} >Liste de mes requètes</Text>
-          <GoBackModule navigation={navigation}/>
+          
           <View style={globalStyles.container}>
             <TouchableOpacity>
               <Card>

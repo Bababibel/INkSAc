@@ -4,7 +4,7 @@ import {View, Text, Alert, TouchableOpacity, FlatList, ScrollView} from 'react-n
 import { useState } from 'react/cjs/react.development';
 import AppLoading from 'expo-app-loading';
 
-import Card from '../assets/shared/RequestCard';
+import RequestModule from '../assets/modules/RequestModule';
 import GoBackModule from '../assets/modules/GoBackModule';
 import constants from '../assets/globals/constants';
 import Request from '../assets/classes/Request';
@@ -52,24 +52,20 @@ export default function DisplayAllRequestsForReprographyScreen({ navigation }){
         })
     }
 
+    const clickHandle = () => {
+        navigation.navigate("DisplayMyRequests", { item: item, modify: "just print" })
+    } 
+
     if (dataLoaded && isData) {
         return (
-            <ScrollView>
+            <View>
             <GoBackModule navigation={navigation}/>
-            <View style={globalStyles.container}>
-                <FlatList
-                    data={requests}
-                    keyExtractor={(item, index) => item + index}
-                    renderItem={({item}) => (
-                        <TouchableOpacity onPress={ () => navigation.navigate('ManageRequestForReprography', { item : item })}>
-                            <Card>
-                                <Text style={globalStyles.modalText}>{ item.title }</Text>
-                            </Card>
-                        </TouchableOpacity>
-                    )}
-                />
+                {requests.map(request => {
+                return (
+                  <RequestModule clickHandle={clickHandle} key={request.id} requestProps={request} navigation={navigation}/>
+                )
+              })}
             </View>
-            </ScrollView>
         )
     } else {
         return (
