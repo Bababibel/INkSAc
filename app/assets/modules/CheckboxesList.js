@@ -1,4 +1,13 @@
 import React, { Component } from 'react';
+import { 
+    Alert, 
+    Image, 
+    Platform, 
+    StyleSheet, 
+    Text, 
+    TouchableHighlight, 
+    View 
+} from 'react-native';
 
 class CheckboxesList {
     constructor() {

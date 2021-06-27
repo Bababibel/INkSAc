@@ -15,10 +15,12 @@ import AppLoading from "expo-app-loading";
 import File from "../assets/classes/File";
 import constants from "../assets/globals/constants";
 import GoBackModule from "../assets/modules/GoBackModule";
-import CheckboxesList from "../assets/modules/CheckboxesList";
+import { CheckboxesList, Checkbox } from "../assets/modules/CheckboxesList";
 
 function SaveChoice(files, choice) {
-  
+  axios.post(constants.getFilesFromRequest , {params: {"request_id" : request_id}}, {
+    headers: {"Content-Type" : "application/json"}
+  })
 }
 
 export default function AnswerRequestScreen({ route, navigation }) {
@@ -33,7 +35,7 @@ export default function AnswerRequestScreen({ route, navigation }) {
       headers: {"Content-Type" : "application/json"}
     })
     .then((files) => {
-      if (typeof files.data != 'undefined'){
+      if (typeof files.data != 'undefined' && typeof files.data.data != 'undefined'){
         files.data.data.map((item2) => {
           if (typeof item2.message == 'undefined') {
             const newFile = new File(item2.id, item2.name, item2.path, item2.color, item2.stapple, item2.format, item2.recto_verso, item2.nb_per_page, item.id);
@@ -70,26 +72,16 @@ export default function AnswerRequestScreen({ route, navigation }) {
       <ScrollView>
       <GoBackModule navigation={navigation}/>
       <View style={globalStyles.container}>
-        <TouchableOpacity>
-          <Card>
-            <Text
-              onPress={() => pressHandle()}>
-              Formulez une nouvelle demande
-            </Text>
-          </Card>
-        </TouchableOpacity>
+        <Button title='Sauvegarder' onPress={() => SaveChoice(files, choice)}/>
         <FlatList
           data={files}
           keyExtractor={(info, index) => info + index}
           renderItem={({ item }) => (
             <TouchableOpacity onPress={() => clickHandle() }>
-              <EditCard item = {item}>
-                <Text style={globalStyles.cardIconText}>{item.title}</Text>
-              </EditCard>
+              <Checkbox item = {item}/>
             </TouchableOpacity>
           )}
         />
-        <Button title='Sauvegarder' onPress={() => SaveChoice(files, choice)}/>
       </View>
       
     </ScrollView>)

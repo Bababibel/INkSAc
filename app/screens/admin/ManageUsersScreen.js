@@ -179,13 +179,10 @@ const styles = StyleSheet.create({
         fontSize: 22,
         margin: 10,
     },
-<<<<<<< HEAD
-=======
     input: {
         minWidth: 100,
     }
 
->>>>>>> 470c5b896e1ddd6259336914d9aff6e350a669b9
 })
 
 export default ManageUsersScreen;
