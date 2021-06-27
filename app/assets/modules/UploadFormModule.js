@@ -6,23 +6,21 @@
 
 import axios from 'axios';
 import React,{Component, useState} from 'react';
-import { View, Text, Alert } from 'react-native';
+import { View, Text, Alert, Button } from 'react-native';
 import { MuiPickersUtilsProvider, KeyboardTimePicker, KeyboardDatePicker } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
 
-import { globalStyles } from "../globals/globalStyles";
+import { globalColors, globalStyles } from "../globals/globalStyles";
 import { computeDateTimeForSql } from '../tools/dateConverter';
 import List from '../classes/List';
 import constants from '../globals/constants';
+import GoBackModule from '../modules/GoBackModule';
 
 
 const currDate = new Date();
 const futDate = new Date(currDate.setDate(currDate.getDate() + 7));
 
 class UploadForm extends Component {
-
-    /*formSubmitted = () => {this.props.parentCallBack(true);}*/
-
 
 	state = {
 	    selectedFile: null,
@@ -284,9 +282,9 @@ class UploadForm extends Component {
     requestForm = () => {
         if (this.state.selectedFile) {
             return (
-                <div>
+                <View style={styles.requestForm}>
+                    <Text style={[globalStyles.titleText, styles.title]}>Formulez votre demande</Text>
                     <form id="requestData" style={styles.fileForm}>
-                        <h1>Demande une requête</h1>
                         
                         <label>Liste d'élèves concernée<br/>
                             <select type="text" name="userList" style={styles.smallInput}  onChange={this.handleListChange}>
@@ -317,10 +315,14 @@ class UploadForm extends Component {
                         <View>
                             {this.deadlinePicker()}
                         </View>
-                        <button type="button" onClick={this.onFileUpload}>Enregistrer la requête</button>
-
+                        <Button 
+                            type="button" 
+                            onPress={this.onFileUpload}
+                            title="Envoyer"
+                            color={globalColors.primary}
+                        />
                     </form>
-                </div>
+                </View>
             );
         }
     };
@@ -330,16 +332,17 @@ class UploadForm extends Component {
         if (this.state.userLists.length <= 0) {
             this.getLists();
             return (
-                <View><Text>Chargement des listes depuis le serveur distant...</Text></View>
+                <Text>Chargement des listes depuis le serveur distant...</Text>
             )
         }
         return (
             <View style={globalStyles.container}>
+                <GoBackModule navigation={this.props.navigation} />
                 <form id="file" style={styles.form}>
                     <Text style={[globalStyles.titleText, styles.title]}>
-                        Formulez une nouvelle demande
+                        Sélectionnez le fichier à joindre
                     </Text>
-                    <input type="file" onChange={this.onFileChange} style={styles.input}/>
+                    <input type="file" onChange={this.onFileChange} style={styles.fileInput}/>
                 </form>
                 {this.fileForm()}
                 {this.requestForm()}
@@ -363,7 +366,21 @@ const styles = {
         display: 'flex',
         flexDirection: 'column',
         marginVertical: 2.5,
+        gap: 10,
         fontFamily: 'ubuntu-regular',
+    },
+    requestForm: {
+        borderWidth: 1,
+        borderColor: 'darkgrey',
+        borderStyle: 'solid',
+        borderRadius: 5,
+        backgroundColor: globalColors.secondary,
+        display: 'flex',
+        flexDirection: 'column',
+        marginVertical: 20,
+        gap: 10,
+        fontFamily: 'ubuntu-regular',
+        padding: 15,
     },
     input: {
         width: '100%',
@@ -380,5 +397,9 @@ const styles = {
     },
     title: {
         fontSize: 35,
-    }
+        marginVertical: 10,
+    },
+    fileInput: {
+        marginBottom: 15,
+    },
 };

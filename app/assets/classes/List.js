@@ -49,7 +49,6 @@ class List {
         formData.append('new_name', this.name);
         formData.append('th_count', this.theoricalCount);
         formData.append('location', this.location)
-        console.log(...formData);
         axios.post(constants.updateList, formData)
         .then(response => {
             if ('message' in response.data) { 
@@ -62,6 +61,10 @@ class List {
                 return false;
             }
         })
+    }
+
+    uploadToDb() {
+        
     }
 
     deleteInDb() {
