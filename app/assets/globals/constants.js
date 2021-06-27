@@ -18,6 +18,8 @@ export default {
     updateRequest : baseUrl+'api/request/updateRequest.php',
     deleteRequest : baseUrl+'api/request/deleteRequest.php',
     getAllRequests : baseUrl+'api/request/getAllRequests.php',
+    getRequestsByAuthor : baseUrl+'api/request/getRequestsByAuthor.php',
+    getRequestsForUser : baseUrl+'api/request/getRequestsForUser.php',
     // List
     getRequestsForList : baseUrl+'api/shared/getRequestsForList.php',
     getAllLists : baseUrl+'api/userList/getAllLists.php',

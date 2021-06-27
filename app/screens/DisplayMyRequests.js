@@ -22,10 +22,11 @@ import Card from "../assets/shared/RequestCard";
 import constants from "../assets/globals/constants";
 import GoBackModule from "../assets/modules/GoBackModule";
 
-var percentage =  0
 
 export default function RequestScreen({ route, navigation }) {
   const id = route
+
+  let loadRequestsApiUrl = constants.globalUser.role == 'student' ? constants.getRequestsForUser : constants.getRequestsByAuthor;
 
   const [isData, setIsData] = useState(false);
   const [dataLoaded, setDataLoaded] = useState(false);
@@ -33,7 +34,7 @@ export default function RequestScreen({ route, navigation }) {
   const [requests, setRequests] = useState([]);
 
   const dataLoad = () => {
-    fetch(constants.getAllRequests)
+    fetch(loadRequestsApiUrl)
     .then(reponse => reponse.json())
     .then((request) => {
       if ('data' in request){

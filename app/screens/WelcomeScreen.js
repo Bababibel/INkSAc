@@ -1,6 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { ImageBackground, StyleSheet, View, Image, Text, Button, ScrollView } from 'react-native';
-import { useIsFocused } from '@react-navigation/core';
+import { ImageBackground, StyleSheet, View, Text, Button } from 'react-native';
 
 import constants from '../assets/globals/constants';
 import { globalColors } from '../assets/globals/globalStyles';
@@ -8,6 +7,7 @@ import { globalColors } from '../assets/globals/globalStyles';
 function WelcomeScreen({ navigation }) {
 
     const [user, setUser] = useState(constants.globalUser);
+    const [infoMsg, setInfoMsg] = useState("");
 
     // Refresh the page and grab globalUser to update the page
     useEffect(() => {
@@ -15,8 +15,14 @@ function WelcomeScreen({ navigation }) {
           setUser(constants.globalUser);
         });
         return unsubscribe;
-      }, [navigation]);
+    }, [navigation]);
+
+    useEffect(() => {
+        if (user != null && user.lists.length <= 0 ) setInfoMsg("Rejoingez une liste dans \"Mon profil\" pour voir les demandes en cours sur cette liste!")
+        else setInfoMsg("")
+    }, [user])
     
+
 
     function showUserInfo() {
         if (user != null) {
@@ -36,7 +42,8 @@ function WelcomeScreen({ navigation }) {
         ) 
     }
     function logoutButton() {
-        if (user != null) return (
+        if (user != null) {
+            return (
             <Button
                 title="Se déconnecter"
                 color={globalColors.secondary}
@@ -45,16 +52,20 @@ function WelcomeScreen({ navigation }) {
                     setUser(null);
                     constants.globalUser = null;
                 }}/>
-        )
+            )
+        }
     }
     function seeMyRequestsButton() {
-        if (user != null && ['admin', 'teacher'].includes(user.role)) return (
-            <Button
-                title="Mes demandes"
-                color={globalColors.primary}
-                style={styles.welcomeButton}
-                onPress={() => navigation.push('DisplayMyRequests', { id : /*user.id*/ 3 })}/>
-        )
+        if (user != null && ['student', 'admin', 'teacher', 'reprography'].includes(user.role)) {
+            if (user.lists.length > 0) {
+                return (
+                <Button
+                    title="Demandes en cours"
+                    color={globalColors.primary}
+                    style={styles.welcomeButton}
+                    onPress={() => navigation.push('DisplayMyRequests')}/>)
+            }
+        }
     }
     function seeAllRequestsButton() {
         if (user != null && ['admin', 'reprography'].includes(user.role)) return (
@@ -89,7 +100,7 @@ function WelcomeScreen({ navigation }) {
                 title="Mon profil"
                 color={globalColors.secondary}
                 style={styles.welcomeButton}
-                onPress={() => navigation.push('ManageUsers')}/>
+                onPress={() => navigation.push('MyProfile')}/>
         )
     }
 
@@ -102,6 +113,7 @@ function WelcomeScreen({ navigation }) {
                 <View style={{textAlign: 'center'}}>
                     <Text style={styles.title}>Bienvenue sur INkSAc</Text>
                     {showUserInfo()}
+                    <Text>{infoMsg}</Text>
                 </View>
                 <View style={styles.buttonContainer}>
                     {loginButton()}

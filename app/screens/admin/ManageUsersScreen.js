@@ -115,14 +115,14 @@ function ManageUsersScreen({ navigation, route }) {
             )
         } else {
             return (
-                <Text style={styles.input} >Liste des Utilisateurs</Text>
+                <Text style={styles.title}>Liste des utilisateurs</Text>
             )
         }
     }
 
     if (dataLoaded) {
         return (
-            <ScrollView>
+            <ScrollView style={styles.scrollView}>
                 <GoBackModule navigation={navigation}/>
                 {platformHandle()}
                 <Text>{errorMsg}</Text>
@@ -178,12 +178,6 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 22,
         margin: 10,
-    },
-    input: {
-        paddingTop : Platform.OS === "android" ? StatusBar.currentHeight : 0,
-        fontSize: 30,
-        textAlign: 'center',
-        marginBottom: 20,
     },
 })
 

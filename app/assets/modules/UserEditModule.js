@@ -6,7 +6,8 @@ import { Select, FormControl, MenuItem } from '@material-ui/core';
 import AlertAskConfirmationOnUserDeleteModule from './AlertAskConfirmationOnUserDeleteModule';
 
 
-function UserModule({userProps}) {
+
+function UserEditModule({userProps}) {
     
     // Check if property is a valid array to load a User class
     if (!Array.isArray(userProps) || userProps.length != 9) return (<Text>Given parameter is not a array or user's properties ({typeof(userProps)}): {userProps}</Text>);
@@ -72,7 +73,7 @@ function UserModule({userProps}) {
             )
         } else {
             return (
-                <Text>{role}</Text>
+                <Text>{user.role}</Text>
             )
         }
     }
@@ -156,4 +157,4 @@ const styles = StyleSheet.create({
 
 })
 
-export default UserModule;
+export default UserEditModule;
