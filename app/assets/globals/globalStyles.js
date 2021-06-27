@@ -15,6 +15,17 @@ export const globalColors = {
 };
 
 export const globalStyles = StyleSheet.create({
+    inputContainer: {
+        textAlign:'center',
+        paddingTop : Platform.OS === "android" ? StatusBar.currentHeight : 0,
+        width: '100%',
+        flex: 1,
+        flexBasis: 100,
+        marginVertical: 5,
+        flexDirection: 'row',
+        justifyContent:'center',
+        marginTop: 20,
+    },
     container: {
         flex: 1,
         flexGrow: 1,
