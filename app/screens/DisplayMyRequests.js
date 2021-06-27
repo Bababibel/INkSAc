@@ -3,10 +3,11 @@ import {
   View,
   Text,
   TouchableOpacity,
-  FlatList,
+  StyleSheet,
   Alert,
   Platform,
-  ScrollView
+  ScrollView,
+  StatusBar
 } from "react-native";
 import axios from "axios";
 import { globalStyles, globalColors } from "../assets/globals/globalStyles";
@@ -15,7 +16,7 @@ import AppLoading from "expo-app-loading";
 import Request from "../assets/classes/Request";
 import File from "../assets/classes/File";
 import MyModal from "../assets/modules/ModalModule";
-import EditCard from "../assets/shared/EditCard";
+import RequestModule from "../assets/modules/RequestModule";
 import Card from "../assets/shared/RequestCard";
 import constants from "../assets/globals/constants";
 import GoBackModule from "../assets/modules/GoBackModule";
@@ -34,11 +35,10 @@ export default function RequestScreen({ route, navigation }) {
     fetch(constants.getAllRequests)
     .then(reponse => reponse.json())
     .then((request) => {
-      if ('data' in request.data){
+      if ('data' in request){
         setIsData(true)
         let tmpRequete = []
         request.data.map((item) => {
-          console.log("route.id : "+id.params.id+'et item.id'+item.author)
           if(id.params.id == item.author){
             axios.get(constants.getFilesFromRequest , {params: {'request_id' : item.id}}, {
                         headers: { "Content-Type" : "application/json" }
@@ -85,30 +85,26 @@ export default function RequestScreen({ route, navigation }) {
   if (dataLoaded && isData) {
     return(
       <ScrollView>
-      <GoBackModule navigation={navigation}/>
-      <View style={globalStyles.container}>
-        <TouchableOpacity>
-          <Card>
-            <Text
-              onPress={() => pressHandle()}>
-              Formulez une nouvelle demande
-            </Text>
-          </Card>
-        </TouchableOpacity>
-        <FlatList
-          data={requests}
-          keyExtractor={(info, index) => info + index}
-          renderItem={({ item }) => (
-            <TouchableOpacity onPress={() => clickHandle() }>
-              <EditCard item = {item}>
-                <Text style={globalStyles.cardIconText}>{item.title}</Text>
-              </EditCard>
-            </TouchableOpacity>
-          )}
-        />
-          <MyModal page={'DisplayMyRequests'} navigation={navigation} setModalVisible={setModalVisible} modalVisible={modalVisible}/>
+        <Text style={styles.inputContainer} >Liste de mes requètes</Text>
+        <GoBackModule navigation={navigation}/>
+        <View style={globalStyles.container}>
+          <TouchableOpacity>
+            <Card>
+              <Text
+                onPress={() => pressHandle()}>
+                Formulez une nouvelle demande
+              </Text>
+            </Card>
+          </TouchableOpacity>
+        <View>
+          {requests.map(request => {
+            return (
+              <RequestModule key={request.id} requestProps={request} setDataLoaded={setDataLoaded}/>
+            )
+          })}
+        </View>
+        <MyModal page={'DisplayMyRequests'} setModalVisible={setModalVisible} modalVisible={modalVisible}/>
       </View>
-      
     </ScrollView>)
   } else {
     return (
@@ -135,3 +131,17 @@ export default function RequestScreen({ route, navigation }) {
 }
 
 
+const styles = StyleSheet.create({
+  inputContainer: {
+      textAlign:'center',
+      paddingTop : Platform.OS === "android" ? StatusBar.currentHeight : 0,
+      width: '100%',
+      flex: 1,
+      flexBasis: 100,
+      marginRight: 5,
+      marginLeft: 5,
+      flexDirection: 'row',
+      justifyContent:'center',
+      marginTop: 20,
+  },
+})

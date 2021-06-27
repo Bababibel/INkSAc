@@ -6,7 +6,6 @@ import { Select, FormControl, MenuItem } from '@material-ui/core';
 import AlertAskConfirmationOnUserDeleteModule from './AlertAskConfirmationOnUserDeleteModule';
 
 
-
 function UserModule({userProps}) {
     
     // Check if property is a valid array to load a User class

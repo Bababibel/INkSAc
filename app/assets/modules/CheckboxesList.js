@@ -1,3 +1,5 @@
+import React, { Component } from 'react';
+
 class CheckboxesList {
     constructor() {
         checkboxesList = [];
@@ -70,7 +72,7 @@ class Checkbox extends Component {
                         (this.state.checked)
                         ?
                         (<View style={styles.selectedUI}>
-                        <Image source={require('./assets/tick.png')} style={styles.checkboxTickImg} />
+                        <Image source={require('../tick.png')} style={styles.checkboxTickImg} />
                         </View>)
                         :
                         (<View style={styles.uncheckedCheckbox} />)
