@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-import {View, Text, Alert, TouchableOpacity, FlatList, ScrollView} from 'react-native';
+import { View, Text, Alert, StyleSheet, StatusBar, ScrollView, Dimensions, Platform } from 'react-native';
 import { useState } from 'react/cjs/react.development';
 import AppLoading from 'expo-app-loading';
 
@@ -58,14 +58,17 @@ export default function DisplayAllRequestsForReprographyScreen({ navigation }){
 
     if (dataLoaded && isData) {
         return (
+            <ScrollView>
             <View>
             <GoBackModule navigation={navigation}/>
+            <Text style={styles.inputContainer} >Liste de toutes les requètes</Text>
                 {requests.map(request => {
                 return (
                   <RequestModule clickHandle={clickHandle} key={request.id} requestProps={request} navigation={navigation}/>
                 )
               })}
             </View>
+            </ScrollView>
         )
     } else {
         return (
@@ -81,3 +84,28 @@ export default function DisplayAllRequestsForReprographyScreen({ navigation }){
         ) 
     }
 }
+
+const styles = StyleSheet.create({
+    inputContainer: {
+        textAlign:'center',
+        paddingTop : Platform.OS === "android" ? StatusBar.currentHeight : 0,
+        width: '100%',
+        flex: 1,
+        flexBasis: 100,
+        marginRight: 5,
+        marginLeft: 5,
+        flexDirection: 'row',
+        justifyContent:'center',
+        marginTop: 20,
+    },
+    container: {
+      flex: 1,
+      flexGrow: 1,
+      paddingTop : Platform.OS === "android" ? StatusBar.currentHeight : 0,
+      paddingLeft: 30,
+      paddingRight : 30,
+      justifyContent : "center",
+      alignItems : "center",
+      minWidth : Platform.OS === "web" ? Dimensions.get('window').width / 4 : Dimensions.get('window').width,
+  },
+  })

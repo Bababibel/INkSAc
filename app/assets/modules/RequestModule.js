@@ -10,7 +10,7 @@ function RequestModule({requestProps, navigation}) {
     // Check if property is a valid array to load a User class
     //if (!Array.isArray(requestProps) || requestProps.length != 9) return (<Text>Given parameter is not a array or request's properties ({typeof(requestProps)}): {requestProps}</Text>);
 
-    const request = new Request (requestProps.id, requestProps.author, requestProps.author_name, requestProps.deadline, requestProps.delivery_date, requestProps.expiration_date, requestProps.title, requestProps.comment, requestProps.hidden, requestProps.state)
+    const request = new Request (requestProps.request_id, requestProps.author, requestProps.author_name, requestProps.deadline, requestProps.delivery_date, requestProps.expiration_date, requestProps.title, requestProps.comment, requestProps.hidden, requestProps.state)
     request.attachFile(requestProps.files)
     const [role, setRole] = useState(request.role);
     const [isVisible, setIsVisible] = useState(true);

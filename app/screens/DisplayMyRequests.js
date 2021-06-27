@@ -100,7 +100,7 @@ export default function RequestScreen({ route, navigation }) {
           </View>
               {requests.map(request => {
                 return (
-                  <RequestModule clickHandle={clickHandle} key={request.id} requestProps={request} navigation={navigation}/>
+                  <RequestModule clickHandle={clickHandle} key={request.request_id} requestProps={request} navigation={navigation}/>
                 )
               })}
           <View>
