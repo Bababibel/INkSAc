@@ -128,6 +128,7 @@ export default function RequestScreen({ route, navigation }) {
             </Text>
           </Card>
         </TouchableOpacity>
+        <MyModal page={'DisplayMyRequests'} setModalVisible={setModalVisible} modalVisible={modalVisible}/>
       </View>
     )
   }

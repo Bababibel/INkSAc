@@ -21,7 +21,7 @@ function WelcomeScreen({ navigation }) {
     function showUserInfo() {
         if (user != null) {
             return (
-               <Text>Connecté en tant que:<br/>
+               <Text>Connecté en tant que:{"\n"}
                    {user.first_name + " " + user.last_name}</Text>
            ) 
         }
@@ -126,7 +126,7 @@ const styles = StyleSheet.create({
     buttonContainer: {
         flex :0.5,
         justifyContent: 'center',
-        gap: 5
+        marginVertical: 2.5
     },
     container: {
         fontFamily: 'ubuntu-light',

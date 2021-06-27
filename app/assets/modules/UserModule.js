@@ -40,6 +40,27 @@ function UserModule({userProps}) {
         if (isConfirmOpened) return (<AlertAskConfirmationOnUserDeleteModule deleteFunction={deleteFunction}/>)
     }
 
+    const platformHandle = () => {
+        if(Platform.OS === 'web'){
+            return (
+                <FormControl>
+                    <Select
+                        value={role}
+                        onChange={e => setRole(e.target.value)}>
+                        <MenuItem value={"student"}>Étudiant</MenuItem>
+                        <MenuItem value={"teacher"}>Enseignant</MenuItem>
+                        <MenuItem value={"reprography"}>Reprographie</MenuItem>
+                        <MenuItem value={"admin"}>Administrateur</MenuItem>
+                    </Select>
+                </FormControl>
+            )
+        } else {
+            return (
+                <Text>{user.role}</Text>
+            )
+        }
+    }
+
     if (isVisible) {
         return (
             <View style={[styles.container, {backgroundColor: (user.location=="Bourges" ? 'ghostwhite' : 'gainsboro')}]}>
@@ -52,16 +73,7 @@ function UserModule({userProps}) {
                 <View style={styles.row}>
                     <Text style={styles.biggerText}>{user.first_name}</Text>
                     <Text style={styles.biggerText}>{user.last_name}</Text>
-                    <FormControl>
-                        <Select
-                            value={role}
-                            onChange={e => setRole(e.target.value)}>
-                            <MenuItem value={"student"}>Étudiant</MenuItem>
-                            <MenuItem value={"teacher"}>Enseignant</MenuItem>
-                            <MenuItem value={"reprography"}>Reprographie</MenuItem>
-                            <MenuItem value={"admin"}>Administrateur</MenuItem>
-                        </Select>
-                    </FormControl>
+                    {platformHandle()}
                 </View>
                 <View style={styles.row}>
                     <Text>Liste(s): </Text>

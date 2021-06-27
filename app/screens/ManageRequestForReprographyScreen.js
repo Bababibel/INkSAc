@@ -32,7 +32,6 @@ export default function ManageRequestForReprographyScreen({ route, navigation })
             formData.append('id', item.item.request_id);
             formData.append('author', item.item.author_id);
             formData.append('deadline', item.item.deadline);
-            console.log(item.item.delivery_date);
             formData.append('delivery_date', item.item.deadline); // delivery_date a un probleme
             formData.append('title', item.item.title);
             formData.append('comment', item.item.comment);

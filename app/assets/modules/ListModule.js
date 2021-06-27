@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useRef} from 'react';
-import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, Text, TouchableOpacity, Platform, StatusBar } from 'react-native';
 import { Select, FormControl, MenuItem, TextField } from '@material-ui/core';
 
 import List from '../classes/List';
@@ -55,15 +55,9 @@ function ListModule({listProps}) {
         if (isConfirmOpened) return (<AlertAskConfirmationOnListDeleteModule deleteFunction={deleteFunction}/>)
     }
 
-    if (isVisible) {
-        return (
-            <View style={[styles.container, {backgroundColor: (list.location=="Bourges" ? 'ghostwhite' : 'gainsboro')}]}>
-                {generateAlertConfirm()}
-                <TouchableOpacity
-                        onPress={() => {setIsConfirmOpen(true)}}
-                        style={styles.deleteButton}>
-                    <Text style={styles.X}>X</Text>
-                </TouchableOpacity>
+    const platformHandle = () => {
+        if(Platform.OS === 'web'){
+            return(
                 <View style={styles.row}>
                     <TextField value={name} 
                                 onChange={e => setName(e.target.value)} 
@@ -78,6 +72,28 @@ function ListModule({listProps}) {
                         </Select>
                     </FormControl>
                 </View>
+            )
+        } else {
+            return (
+                <View style={styles.row}>
+                    <Text>Nom : {list.name}</Text>
+                    <Text>Nombre théorique: {list.theoricalCount}</Text>
+                    <Text>{list.location}</Text>
+                </View>
+            )
+        }
+    }
+
+    if (isVisible) {
+        return (
+            <View style={[styles.container, {backgroundColor: (list.location=="Bourges" ? 'ghostwhite' : 'gainsboro')}]}>
+                {generateAlertConfirm()}
+                <TouchableOpacity
+                        onPress={() => {setIsConfirmOpen(true)}}
+                        style={styles.deleteButton}>
+                    <Text style={styles.X}>X</Text>
+                </TouchableOpacity>
+                {platformHandle()}
             </View>
         )
     }
@@ -91,6 +107,7 @@ const styles = StyleSheet.create({
         marginBottom: 5,
     },
     container: {
+        paddingTop : Platform.OS === "android" ? StatusBar.currentHeight : 0,
         position: 'relative',
         flex: 1,
         justifyContent: 'center',

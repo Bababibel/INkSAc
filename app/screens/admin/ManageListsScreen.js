@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, {useState, useEffect} from 'react';
 import { ScrollView } from 'react-native-gesture-handler';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, StatusBar, Platform } from 'react-native';
 import AppLoading from 'expo-app-loading';
 import { TextField, Select, MenuItem, InputLabel, FormControl } from '@material-ui/core';
 
@@ -40,6 +40,7 @@ function ManageListsScreen({ navigation }) {
     if (dataLoaded) {
         return (
             <ScrollView>
+                <Text style={styles.inputContainer} >Liste des Utilisateurs</Text>
                 <GoBackModule navigation={navigation}/>
                 <Text>{errorMsg}</Text>
                 <View>
@@ -64,10 +65,12 @@ function ManageListsScreen({ navigation }) {
 
 const styles = StyleSheet.create({
     inputContainer: {
+        textAlign:'center',
+        paddingTop : Platform.OS === "android" ? StatusBar.currentHeight : 0,
         width: '100%',
         flex: 1,
         flexBasis: 100,
-        gap: 10,
+        marginVertical: 5,
         flexDirection: 'row',
         justifyContent:'center',
         marginTop: 20,
