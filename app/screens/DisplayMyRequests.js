@@ -85,25 +85,27 @@ export default function RequestScreen({ route, navigation }) {
   if (dataLoaded && isData) {
     return(
       <ScrollView>
-        <Text style={styles.inputContainer} >Liste de mes requètes</Text>
-        <GoBackModule navigation={navigation}/>
-        <View style={globalStyles.container}>
-          <TouchableOpacity>
-            <Card>
-              <Text
-                onPress={() => pressHandle()}>
-                Formulez une nouvelle demande
-              </Text>
-            </Card>
-          </TouchableOpacity>
         <View>
-          {requests.map(request => {
-            return (
-              <RequestModule key={request.id} requestProps={request} setDataLoaded={setDataLoaded}/>
-            )
-          })}
+          <Text style={styles.inputContainer} >Liste de mes requètes</Text>
+          <GoBackModule navigation={navigation}/>
+          <View style={globalStyles.container}>
+            <TouchableOpacity>
+              <Card>
+                <Text
+                  onPress={() => pressHandle()}>
+                  Formulez une nouvelle demande
+                </Text>
+              </Card>
+            </TouchableOpacity>
+          </View>
+              {requests.map(request => {
+                return (
+                  <RequestModule key={request.id} requestProps={request} setDataLoaded={setDataLoaded}/>
+                )
+              })}
+        <View>
+          <MyModal page={'DisplayMyRequests'} setModalVisible={setModalVisible} modalVisible={modalVisible}/>
         </View>
-        <MyModal page={'DisplayMyRequests'} setModalVisible={setModalVisible} modalVisible={modalVisible}/>
       </View>
     </ScrollView>)
   } else {
