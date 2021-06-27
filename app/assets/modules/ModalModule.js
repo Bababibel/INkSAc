@@ -5,9 +5,12 @@ import { Text, Platform, TouchableOpacity, Modal, View } from 'react-native';
 import RequestForm from '../shared/RequestForm';
 import { globalStyles } from "../globals/globalStyles";
 
+function OpenAnswerRequestScreen(nav, request_id) {
+    nav.navigate("AnswerRequestScreen", {request_id: request_id});
+}
 
 class MyModal extends Component {
-    render () {
+    render() {
         console.log(this.props)
         if (Platform.OS === 'android' || Platform.OS === 'ios'){
             if (this.props.page == 'DisplayMyRequests'){
@@ -39,8 +42,7 @@ class MyModal extends Component {
                             <Text>Pour le : {this.props.selected.deadline}</Text>
                         </View>
                         <View style={globalStyles.modalText}>
-                                <Button title='Accepter'  onPress={ () => this.props.setModalOpen(false)}/>
-                                <Button title='Refuser'  onPress={ () => this.props.setModalOpen(false)}/>
+                            <Button title='Choisir mes impressions' onPress={() => OpenAnswerRequestScreen(this.props.navigation, this.props.selected.id)}/>
                         </View>
                     </Modal>
                 )

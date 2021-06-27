@@ -20,49 +20,39 @@ import Card from "../assets/shared/RequestCard";
 import constants from "../assets/globals/constants";
 import GoBackModule from "../assets/modules/GoBackModule";
 
-var percentage =  0
+function SaveChoice(files, choice) {
+  
+}
 
-export default function RequestScreen({ route, navigation }) {
-  const id = route
+export default function AnswerRequestScreen({ route, navigation }) {
+  const request_id = route.params.id;
 
   const [isData, setIsData] = useState(false);
   const [dataLoaded, setDataLoaded] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
-  const [requests, setRequests] = useState([]);
+  const [files, setFiles] = useState([]);
 
   const dataLoad = () => {
-    fetch(constants.getAllRequests)
-    .then(reponse => reponse.json())
-    .then((request) => {
-      if ('data' in request.data){
-        setIsData(true)
-        let tmpRequete = []
-        request.data.map((item) => {
-          console.log("route.id : "+id.params.id+'et item.id'+item.author)
-          if(id.params.id == item.author){
-            axios.get(constants.getFilesFromRequest , {params: {'request_id' : item.id}}, {
-                        headers: { "Content-Type" : "application/json" }
-                      })
-            .then((files) => {
-              if (typeof files.data != 'undefined'){
-                files.data.data.map((item2) => {
-                  if (typeof item2.message == 'undefined') {
-                    const newFile = new File(item2.id, item2.name, item2.path, item2.color, item2.stapple, item2.format, item2.recto_verso, item2.nb_per_page, item.id)
-                    const newRequete = new Request(item.id, item.author, item.author_name, item.deadline, item.delivery_date, item.expiration_date, item.title, item.comment, item.hidden, item.state)
-                    newRequete.attachFile(newFile)
-                    tmpRequete.push(newRequete)
-                    setRequests((prevItem) => {
-                        return [newRequete ,...prevItem];
-                    })
-                  }
-                })
-              }
+    axios.get(constants.getFilesFromRequest , {params: {"request_id" : request_id}}, {
+      headers: {"Content-Type" : "application/json"}
+    })
+    .then((files) => {
+      if (typeof files.data != 'undefined'){
+        files.data.data.map((item2) => {
+          if (typeof item2.message == 'undefined') {
+            const newFile = new File(item2.id, item2.name, item2.path, item2.color, item2.stapple, item2.format, item2.recto_verso, item2.nb_per_page, item.id);
+            const newRequete = new Request(item.id, item.author, item.author_name, item.deadline, item.delivery_date, item.expiration_date, item.title, item.comment, item.hidden, item.state);
+            newRequete.attachFile(newFile);
+            tmpRequete.push(newRequete);
+            setRequests((prevItem) => {
+                return [newRequete ,...prevItem];
             })
           }
-        })}
+        })
+      }
     })
     .catch(() => {
-        console.log("erreur");
+        console.log("Error while loading files from request!");
     })
     .done()
   }
@@ -96,7 +86,7 @@ export default function RequestScreen({ route, navigation }) {
           </Card>
         </TouchableOpacity>
         <FlatList
-          data={requests}
+          data={files}
           keyExtractor={(info, index) => info + index}
           renderItem={({ item }) => (
             <TouchableOpacity onPress={() => clickHandle() }>
@@ -106,7 +96,7 @@ export default function RequestScreen({ route, navigation }) {
             </TouchableOpacity>
           )}
         />
-          <MyModal page={'DisplayMyRequests'} navigation={navigation} setModalVisible={setModalVisible} modalVisible={modalVisible}/>
+        <Button title='Sauvegarder' onPress={() => SaveChoice(files, choice)}/>
       </View>
       
     </ScrollView>)
@@ -119,12 +109,12 @@ export default function RequestScreen({ route, navigation }) {
           onFinish={() => setDataLoaded(true)}
         />
         <GoBackModule navigation={navigation}/>
-        <Text style={globalStyles.modalText}> Vous n'avez aucune requète</Text>
+        <Text style={globalStyles.modalText}>Aucun fichier dans la requête !</Text>
         <TouchableOpacity>
           <Card>
             <Text
               onPress={() => pressHandle()}>
-              Formulez une nouvelle demande
+              Actualiser
             </Text>
           </Card>
         </TouchableOpacity>
@@ -133,5 +123,3 @@ export default function RequestScreen({ route, navigation }) {
     )
   }
 }
-
-

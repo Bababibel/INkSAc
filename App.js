@@ -26,7 +26,7 @@ export default function App() {
     return (
       <AppLoading
         startAsync={getFonts} 
-        onError={(text) => Alert.alert('Éched du chargement :(', String(text), [{text: 'Ok'}])}
+        onError={(text) => Alert.alert('Échec du chargement :(', String(text), [{text: 'Ok'}])}
         onFinish={() => {setFontsLoaded(true)}}
       />
     )
