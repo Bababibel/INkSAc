@@ -25,6 +25,7 @@ var percentage =  0
 export default function RequestScreen({ route, navigation }) {
   const id = route
 
+  const [isData, setIsData] = useState(false);
   const [dataLoaded, setDataLoaded] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [requests, setRequests] = useState([]);
@@ -33,30 +34,32 @@ export default function RequestScreen({ route, navigation }) {
     fetch(constants.getAllRequests)
     .then(reponse => reponse.json())
     .then((request) => {
-      let tmpRequete = []
-      request.data.map((item) => {
-        console.log("route.id : "+id.params.id+'et item.id'+item.author)
-        if(id.params.id == item.author){
-          axios.get(constants.getFilesFromRequest , {params: {'request_id' : item.id}}, {
-                      headers: { "Content-Type" : "application/json" }
+      if ('data' in request.data){
+        setIsData(true)
+        let tmpRequete = []
+        request.data.map((item) => {
+          console.log("route.id : "+id.params.id+'et item.id'+item.author)
+          if(id.params.id == item.author){
+            axios.get(constants.getFilesFromRequest , {params: {'request_id' : item.id}}, {
+                        headers: { "Content-Type" : "application/json" }
+                      })
+            .then((files) => {
+              if (typeof files.data != 'undefined'){
+                files.data.data.map((item2) => {
+                  if (typeof item2.message == 'undefined') {
+                    const newFile = new File(item2.id, item2.name, item2.path, item2.color, item2.stapple, item2.format, item2.recto_verso, item2.nb_per_page, item.id)
+                    const newRequete = new Request(item.id, item.author, item.author_name, item.deadline, item.delivery_date, item.expiration_date, item.title, item.comment, item.hidden, item.state)
+                    newRequete.attachFile(newFile)
+                    tmpRequete.push(newRequete)
+                    setRequests((prevItem) => {
+                        return [newRequete ,...prevItem];
                     })
-          .then((files) => {
-            if (typeof files.data != 'undefined'){
-              files.data.data.map((item2) => {
-                if (typeof item2.message == 'undefined') {
-                  const newFile = new File(item2.id, item2.name, item2.path, item2.color, item2.stapple, item2.format, item2.recto_verso, item2.nb_per_page, item.id)
-                  const newRequete = new Request(item.id, item.author, item.author_name, item.deadline, item.delivery_date, item.expiration_date, item.title, item.comment, item.hidden, item.state)
-                  newRequete.attachFile(newFile)
-                  tmpRequete.push(newRequete)
-                  setRequests((prevItem) => {
-                      return [newRequete ,...prevItem];
-                  })
-                }
-              })
-            }
-          })
-        }
-      })
+                  }
+                })
+              }
+            })
+          }
+        })}
     })
     .catch(() => {
         console.log("erreur");
@@ -79,7 +82,7 @@ export default function RequestScreen({ route, navigation }) {
     }
   }
 
-  if (dataLoaded && requests.lenght) {
+  if (dataLoaded && isData) {
     return(
       <ScrollView>
       <GoBackModule navigation={navigation}/>

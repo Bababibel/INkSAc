@@ -14,18 +14,19 @@ import { globalStyles } from '../assets/globals/globalStyles';
 
 export default function DisplayAllRequestsForReprographyScreen({ navigation }){
     const [dataLoaded, setDataLoaded] = useState(false);
-
+    const [isData, setIsData] = useState(false);
     const [requests, setRequests] = useState([]);
 
     const dataLoad = () => {
         axios.get(constants.getAllRequests)
         .then((request) => {
-            if (request.data.message == undefined){
+            if ('data' in request.data){
+                setIsData(true)
                 let tmpRequete = []
                 request.data.data.map((item) => {
                     axios.get(constants.getFilesFromRequest, {params: {'request_id': item.id}})
                     .then((file) => {
-                        if (file.data.message == undefined){
+                        if ('data' in file.data){
                             file.data.data.map((item2) => {
                                 const newFile = new File(item2.id, item2.name, item2.path, item2.color, item2.stapple, item2.format, item2.recto_verso, item2.nb_per_page, item.id)
                                 const newRequete = new Request(item.id, item.author, item.author_name, item.deadline, item.delivery_date, item.expiration_date, item.title, item.comment, item.hidden, item.state)
@@ -51,10 +52,10 @@ export default function DisplayAllRequestsForReprographyScreen({ navigation }){
         })
     }
 
-    if (dataLoaded && requests.lenght) {
+    if (dataLoaded && isData) {
         return (
             <ScrollView>
-      <GoBackModule navigation={navigation}/>
+            <GoBackModule navigation={navigation}/>
             <View style={globalStyles.container}>
                 <FlatList
                     data={requests}
