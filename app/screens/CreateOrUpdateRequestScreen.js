@@ -11,7 +11,6 @@ export default function CreateOrUpdateRequestScreen({ route, navigation }) {
     return (
       <ScrollView>
         <UploadForm route={route} navigation={navigation}/>
-        <Button style={{top: 90}} title='Fermer sans enregistrer' onPress={() => navigation.goBack()}/>
       </ScrollView>
     );
   }
@@ -20,7 +19,6 @@ export default function CreateOrUpdateRequestScreen({ route, navigation }) {
        return (
         <ScrollView>
           <UpdateForm route={route} navigation={navigation}/>
-          <Button style={{top: 90}} title='Fermer sans enregistrer' onPress={() => navigation.goBack()}/>
         </ScrollView>
         );
     }
