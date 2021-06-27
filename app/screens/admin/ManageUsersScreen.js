@@ -71,7 +71,6 @@ function ManageUsersScreen({ navigation, route }) {
 
     const platformHandle = () => {
         if(Platform.OS === 'web'){
-            console.log("web")
             return (
                 <View style={styles.inputContainer}>
                     <TextField value={emailFilter} 
@@ -157,7 +156,6 @@ const styles = StyleSheet.create({
         justifyContent:'center',
         marginTop: 20,
     },
-
 })
 
 export default ManageUsersScreen;

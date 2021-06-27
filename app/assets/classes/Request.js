@@ -21,6 +21,21 @@ class Request {
         file.request_id = this.request_id
         this.files = file
     }
+
+    deleteInDb() {
+        axios.get(constants.deleteRequest, { params: { 'id': this.request_id }})
+        .then(response => {
+            if ('message' in response.data) { 
+                console.log("From User class: "+response.data.message)
+                return true;
+            }
+            else {
+                console.log("From User class: ERROR NO ANSWER");
+                console.log(response);
+                return false;
+            }
+        })
+    }
 }
 
 

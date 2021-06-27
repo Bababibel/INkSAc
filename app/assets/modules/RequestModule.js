@@ -2,34 +2,34 @@ import React, {useState, useEffect, useRef} from 'react';
 import { View, StyleSheet, Text, TouchableOpacity, Platform, StatusBar, Alert } from 'react-native';
 import { Select, FormControl, MenuItem, TextField } from '@material-ui/core';
 
-import List from '../classes/List';
 import AlertAskConfirmationOnListDeleteModule from './AlertAskConfirmationOnListDeleteModule';
+import Request from '../classes/Request';
 
 
 
-function ListModule({listProps}) {
+function RequestModule({requestProps}) {
     // Check if property is a valid array to load a List class
-    if (!Array.isArray(listProps) || listProps.length != 5) return (<Text>Given parameter is not a array or list's properties ({typeof(listProps)}): {listProps}</Text>);
+    //if (!Array.isArray(requestProps) || requestProps.length != 5) return (<Text>Given parameter is not a array or request's properties ({typeof(requestProps)}): {requestProps}</Text>);
     
-    let list = new List(listProps[0], listProps[1], listProps[2], listProps[3], listProps[4]);
+    let request = new Request (requestProps.id, requestProps.author, requestProps.author_name, requestProps.deadline, requestProps.delivery_date, requestProps.expiration_date, requestProps.title, requestProps.comment, requestProps.hidden, requestProps.state)
     const [isVisible, setIsVisible] = useState(true);
     const [isConfirmOpened, setIsConfirmOpen] = useState(false);
-    const [location, setLocation] = useState(list.location);
-    const [name, setName] = useState(list.name);
+    const [title, setLocation] = useState(request.title);
+    const [name, setName] = useState(request.title);
     
     // Store the previous Location for the useEffect()
     const prevLocationRef = useRef();
     useEffect(() => {
-        prevLocationRef.current = location;
+        prevLocationRef.current = title;
     })
     const prevLocation = prevLocationRef.current;
-    // Dont send an Update request if the previous location is the same or was undefined (class instanciation)
-    useEffect(() => {
-        if (prevLocation != location && prevLocation != undefined) {
-            list.location = location,
-            list.updateInDb()
+    // Dont send an Update request if the previous title is the same or was undefined (class instanciation)
+    /*useEffect(() => {
+        if (prevLocation != title && prevLocation != undefined) {
+            request.title = title,
+            request.updateInDb()
         }
-    }, [location, prevLocation])
+    }, [title, prevLocation])*/
 
 
     const prevNameRef = useRef();
@@ -39,13 +39,14 @@ function ListModule({listProps}) {
     const prevName = prevNameRef.current;
     useEffect(() => {
         if (prevName != name && prevName != undefined) {
-            list.name = name,
-            list.updateInDb()
+            request.name = name,
+            console.log(request.name)
+            request.updateInDb()
         }
     }, [name, prevName])
 
     let deleteFunction = () => {
-        list.deleteInDb();
+        request.deleteInDb();
         setIsVisible(false);
     }
 
@@ -54,7 +55,7 @@ function ListModule({listProps}) {
             if (Platform.OS === 'web') {
                 return (<AlertAskConfirmationOnListDeleteModule deleteFunction={deleteFunction}/>)
             } else {
-                Alert.alert('Supprimer une liste', 'Etes-vous sûr de vouloir supprimer cette liste ?', 
+                Alert.alert('Supprimer une requeste', 'Etes-vous sûr de vouloir supprimer cette requeste ?', 
                 [
                     {
                         text : "Oui",
@@ -77,10 +78,10 @@ function ListModule({listProps}) {
                         <TextField value={name} 
                                     onChange={e => setName(e.target.value)} 
                                     label="Nom"/>
-                        <Text style={styles.biggerText}>Nombre théorique: {list.theoricalCount}</Text>
+                        <Text style={styles.biggerText}>Nombre théorique: {request.theoricalCount}</Text>
                         <FormControl>
                             <Select
-                                value={location}
+                                value={title}
                                 onChange={e => setLocation(e.target.value)}>
                                     <MenuItem value={"Bourges"}>Bourges</MenuItem>
                                 <MenuItem value={"Blois"}>Blois</MenuItem>
@@ -91,10 +92,17 @@ function ListModule({listProps}) {
             )
         } else {
             return (
-                <View style={styles.row}>
-                    <Text>Nom : {list.name}</Text>
-                    <Text>Nombre théorique: {list.theoricalCount}</Text>
-                    <Text>{list.location}</Text>
+                <View>
+                    <View style={styles.row}>
+                        <Text style={styles.biggerText}>{request.title}</Text>
+                    </View>
+                    <View style={styles.row}>
+                        
+                        <Text>{request.deadline}</Text>
+                    </View>
+                    <View style={styles.row}>
+                    <Text>Etat : {request.state}</Text>
+                    </View>
                 </View>
             )
         }
@@ -102,7 +110,7 @@ function ListModule({listProps}) {
 
     if (isVisible) {
         return (
-            <View style={[styles.container, {backgroundColor: (list.location=="Bourges" ? 'ghostwhite' : 'gainsboro')}]}>
+            <View style={[styles.container, {backgroundColor: (request.id=="Bourges" ? 'ghostwhite' : 'gainsboro')}]}>
                 {generateAlertConfirm()}
                 <TouchableOpacity
                         onPress={() => {setIsConfirmOpen(true)}}
@@ -123,14 +131,13 @@ const styles = StyleSheet.create({
         marginBottom: 5,
     },
     container: {
-        paddingTop : Platform.OS === "android" ? StatusBar.currentHeight : 0,
         position: 'relative',
         flex: 1,
         justifyContent: 'center',
         flexWrap: 'wrap',
         alignContent: 'center',
         marginTop: 5,
-        width: '100%',
+        width: '90%',
         marginHorizontal: 'auto',
         fontFamily: 'ubuntu-regular',
         borderRadius: 5,
@@ -160,9 +167,9 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'row',
         justifyContent: 'space-evenly',
-        alignItems: 'center'
+        
     }
 
 })
 
-export default ListModule;
+export default RequestModule;
