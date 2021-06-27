@@ -26,6 +26,8 @@ const styles = StyleSheet.create({
         position: 'absolute',
         top: 30,
         left: 30,
+        height: 50,
+        width: 50,
         backgroundColor: globalColors.bg_secondary,
         borderRadius: 15,
         flex: 1,

@@ -12,8 +12,8 @@ import GoBackModule from '../../assets/modules/GoBackModule';
 import { globalStyles } from '../../assets/globals/globalStyles';
 
 // Will contain all users, displayed or not
-let globalUserList = [];
 
+let globalUserList = [];
 function ManageUsersScreen({ navigation, route }) {
 
     const [userList, setUserList] = useState([]);
@@ -21,12 +21,16 @@ function ManageUsersScreen({ navigation, route }) {
     const [errorMsg, setErrorMsg] = useState("");
     const [lists, setLists] = useState([]);
 
+
     const [listFilter, setListFilter] = useState("");
     const [emailFilter, setEmailFilter] = useState("");
     const [roleFilter, setRoleFilter] = useState("");
     const [locationFilter, setLocationFilter] = useState("");
 
+
     const loadData = () => {
+        setUserList([]);
+        globalUserList = [];
         axios.get(constants.getAllUsers)
         .then(response => {
             if ('data' in response.data) {
@@ -124,7 +128,7 @@ function ManageUsersScreen({ navigation, route }) {
                 <View>
                     {userList.map(user => {
                         return (
-                            <UserModule key={user[0]} userProps={user}/>
+                            <UserModule key={user[0]} userProps={user} setDataLoaded={setDataLoaded}/>
                         )
                     })}
                 </View>

@@ -1,9 +1,9 @@
 import React, {useState, useEffect} from 'react';
-import { ImageBackground, StyleSheet, View, Image, Text, Button } from 'react-native';
+import { ImageBackground, StyleSheet, View, Image, Text, Button, ScrollView } from 'react-native';
 import { useIsFocused } from '@react-navigation/core';
 
-import { globalStyles } from '../assets/globals/globalStyles';
 import constants from '../assets/globals/constants';
+import { globalColors } from '../assets/globals/globalStyles';
 
 function WelcomeScreen({ navigation }) {
 
@@ -16,14 +16,13 @@ function WelcomeScreen({ navigation }) {
         });
         return unsubscribe;
       }, [navigation]);
-
-
     
 
     function showUserInfo() {
         if (user != null) {
             return (
-               <Text>Bonjour {user.first_name + " " + user.last_name}</Text>
+               <Text>Connecté en tant que:<br/>
+                   {user.first_name + " " + user.last_name}</Text>
            ) 
         }
     }
@@ -31,15 +30,17 @@ function WelcomeScreen({ navigation }) {
         if (user == null) return (
             <Button
                 title="Login"
-                style={globalStyles.welcomeButton}
+                color={globalColors.primary}
+                style={styles.welcomeButton}
                 onPress={() => navigation.push('Login')}/>
         ) 
     }
     function logoutButton() {
         if (user != null) return (
             <Button
-                title="Logout"
-                style={globalStyles.welcomeButton}
+                title="Se déconnecter"
+                color={globalColors.secondary}
+                style={styles.welcomeButton}
                 onPress={() => {
                     setUser(null);
                     constants.globalUser = null;
@@ -50,15 +51,17 @@ function WelcomeScreen({ navigation }) {
         if (user != null && ['admin', 'teacher'].includes(user.role)) return (
             <Button
                 title="Mes demandes"
-                style={globalStyles.welcomeButton}
-                onPress={() => navigation.navigate('DisplayMyRequests', { id : /*user.id*/ 3 })}/>
+                color={globalColors.primary}
+                style={styles.welcomeButton}
+                onPress={() => navigation.push('DisplayMyRequests', { id : /*user.id*/ 3 })}/>
         )
     }
     function seeAllRequestsButton() {
         if (user != null && ['admin', 'reprography'].includes(user.role)) return (
             <Button
                 title="Toutes les demandes"
-                style={globalStyles.welcomeButton}
+                color={globalColors.primary}
+                style={styles.welcomeButton}
                 onPress={() => navigation.push('DisplayAllRequestsForReprography')}/>
         )
     }
@@ -66,7 +69,8 @@ function WelcomeScreen({ navigation }) {
         if (user != null && ['admin'].includes(user.role)) return (
             <Button
                 title="Gérer les listes"
-                style={globalStyles.welcomeButton}
+                color={globalColors.primary}
+                style={styles.welcomeButton}
                 onPress={() => navigation.push('ManageLists')}/>
         )
     }
@@ -74,7 +78,8 @@ function WelcomeScreen({ navigation }) {
         if (user != null && ['admin'].includes(user.role)) return (
             <Button
                 title="Gérer les utilisateurs"
-                style={globalStyles.welcomeButton}
+                color={globalColors.primary}
+                style={styles.welcomeButton}
                 onPress={() => navigation.push('ManageUsers')}/>
         )
     }
@@ -82,7 +87,8 @@ function WelcomeScreen({ navigation }) {
         if (user != null) return (
             <Button
                 title="Mon profil"
-                style={globalStyles.welcomeButton}
+                color={globalColors.secondary}
+                style={styles.welcomeButton}
                 onPress={() => navigation.push('ManageUsers')}/>
         )
     }
@@ -92,15 +98,21 @@ function WelcomeScreen({ navigation }) {
             style={styles.background}
             source={require('../assets/background.png')}>
 
-            <Text>Bienvenue sur INkSAc</Text>
-            {showUserInfo()}
-            {loginButton()}
-            {seeMyRequestsButton()}
-            {seeAllRequestsButton()}
-            {seeListManagerButton()}
-            {seeUserManagerButton()}
-            {ManageMyProfileButton()}
-            {logoutButton()}
+            <View style={styles.container}>
+                <View style={{textAlign: 'center'}}>
+                    <Text style={styles.title}>Bienvenue sur INkSAc</Text>
+                    {showUserInfo()}
+                </View>
+                <View style={styles.buttonContainer}>
+                    {loginButton()}
+                    {seeMyRequestsButton()}
+                    {seeAllRequestsButton()}
+                    {seeListManagerButton()}
+                    {seeUserManagerButton()}
+                    {ManageMyProfileButton()}
+                    {logoutButton()}
+                </View>
+            </View>
 
         </ImageBackground>
     );
@@ -109,31 +121,27 @@ function WelcomeScreen({ navigation }) {
 const styles = StyleSheet.create({
     background: {
         flex: 1,
-        justifyContent: 'flex-end',
         alignItems: 'center',
     },
-    logoContainer: {
-        position: 'absolute',
-        alignItems:'center',
-        top: 70,
+    buttonContainer: {
+        flex :0.5,
+        justifyContent: 'center',
+        gap: 5
     },
-    logo: {
-        width: 100,
-        height: 100,
-    },
-    loginButton: {
-        width: '100%',
-        height: 70,
-        backgroundColor: 'tomato',
-    },
-    registerButton: {
-        width: '100%',
-        height: 70,
-        backgroundColor: 'dodgerblue',
+    container: {
+        fontFamily: 'ubuntu-light',
+        flex: 1,
+        justifyContent: 'space-evenly',
+        height: '100%',
     },
     title: {
-        fontFamily: 'ubuntu-light',
+        fontSize: 30,
+        marginBottom: 50,
+        textAlign: 'center',
     },
+    welcomeButton: {
+        height: 100,
+    }
 })
 
 export default WelcomeScreen;
