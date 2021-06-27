@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useRef} from 'react';
-import { View, StyleSheet, Text, TouchableOpacity, Platform } from 'react-native';
+import { View, StyleSheet, Text, TouchableOpacity, Platform, Alert } from 'react-native';
 
 import User from '../classes/User';
 import { Select, FormControl, MenuItem } from '@material-ui/core';
@@ -37,7 +37,24 @@ function UserModule({userProps}) {
     }
 
     let generateAlertConfirm = () => {
-        if (isConfirmOpened) return (<AlertAskConfirmationOnUserDeleteModule deleteFunction={deleteFunction}/>)
+        if (isConfirmOpened){
+            if (Platform.OS === 'web'){
+                return (<AlertAskConfirmationOnUserDeleteModule deleteFunction={deleteFunction}/>)
+            }
+            else {
+                Alert.alert('Supprimer une liste', 'Etes-vous sûr de vouloir supprimer cette liste ?', 
+            [
+                {
+                    text : "Oui",
+                    onPress : () => deleteFunction()
+                },
+                {
+                    text : "Non",
+                    style : "cancel"    
+                }
+            ])
+            }
+        }
     }
 
     const platformHandle = () => {
