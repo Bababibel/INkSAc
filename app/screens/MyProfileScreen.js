@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import { ScrollView, View, Text, Platform, StyleSheet, TextInput } from 'react-native';
+import { ScrollView, View, Text, Platform, StyleSheet, TextInput, StatusBar } from 'react-native';
 import { FormControl, Select, MenuItem } from '@material-ui/core';
 import axios from 'axios';
 

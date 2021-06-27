@@ -32,6 +32,7 @@ function ManageUsersScreen({ navigation, route }) {
         globalUserList = [];
         axios.get(constants.getAllUsers)
         .then(response => {
+            console.log(response.data.data)
             if ('data' in response.data) {
                 response.data.data.map(u => {
                     if (u.id == constants.globalUser.id) return; // dont show myself in the list
@@ -178,6 +179,8 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 22,
         margin: 10,
+        paddingTop : Platform.OS === "android" ? StatusBar.currentHeight : 0,
+        textAlign : 'center'
     },
 })
 

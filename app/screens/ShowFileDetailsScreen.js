@@ -5,7 +5,16 @@ import GoBackModule from '../assets/modules/GoBackModule';
 
 export default function ShowFileDetailsScreen({ route, navigation }){
     const item = route.params.item;
-    console.log(item.files)
+
+    const displayList = () => {
+        console.log(item.list)
+        item.list.map(liste => {
+            return (
+                <Text>Liste(s) : {liste} </Text>
+            )
+        })
+    }
+
     return(
         <ScrollView>
             <GoBackModule navigation={navigation}/>
@@ -13,7 +22,7 @@ export default function ShowFileDetailsScreen({ route, navigation }){
             <ScrollView>
                 <View style={styles.container}>
                     <Text style={styles.titleContainer}>Requete</Text>
-                    <Text style={styles.row}>Auteur : {item.author}</Text>
+                    <Text style={styles.row}>Auteur : {item.author_name}</Text>
                     <Text style={styles.row}>Titre : {item.title}</Text>
                     <Text style={styles.row}>Deadline : {item.deadline}</Text>
                     <Text style={styles.row}>Pour le : {item.delivery_date}</Text>
@@ -21,6 +30,8 @@ export default function ShowFileDetailsScreen({ route, navigation }){
                     <Text style={styles.row}>Commentaire : {item.comment}</Text>
                     <Text style={styles.row}>Partiel : {item.hidden}</Text>
                     <Text style={styles.row}>Etat : {item.state}</Text>
+                    {displayList()}
+                    <Text style={styles.row}>Liste(s) : {item.list}</Text>
                     <Text style={styles.titleContainer}>Fichier</Text>
                     <Text style={styles.row}>Nom : {item.files.name}</Text>
                     <Text style={styles.row}>Couleur : {item.files.color}</Text>

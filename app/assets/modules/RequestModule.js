@@ -10,7 +10,8 @@ function RequestModule({requestProps, navigation}) {
     // Check if property is a valid array to load a User class
     //if (!Array.isArray(requestProps) || requestProps.length != 9) return (<Text>Given parameter is not a array or request's properties ({typeof(requestProps)}): {requestProps}</Text>);
 
-    const request = new Request (requestProps.request_id, requestProps.author, requestProps.author_name, requestProps.deadline, requestProps.delivery_date, requestProps.expiration_date, requestProps.title, requestProps.comment, requestProps.hidden, requestProps.state)
+        console.log(request)
+    const request = new Request (requestProps.request_id, requestProps.author, requestProps.author_name, requestProps.deadline, requestProps.delivery_date, requestProps.expiration_date, requestProps.title, requestProps.comment, requestProps.hidden, requestProps.state, requestProps.list)
     request.attachFile(requestProps.files)
     const [role, setRole] = useState(request.role);
     const [isVisible, setIsVisible] = useState(true);
@@ -56,31 +57,8 @@ function RequestModule({requestProps, navigation}) {
             }
         }
     }
-
-    const platformHandle = () => {
-        if(Platform.OS === 'web'){
-            return (
-                <FormControl>
-                    <Select
-                        value={role}
-                        onChange={e => setRole(e.target.value)}>
-                        <MenuItem value={"student"}>Étudiant</MenuItem>
-                        <MenuItem value={"teacher"}>Enseignant</MenuItem>
-                        <MenuItem value={"reprography"}>Reprographie</MenuItem>
-                        <MenuItem value={"admin"}>Administrateur</MenuItem>
-                    </Select>
-                </FormControl>
-            )
-        } else {
-            return (
-                <Text>{request.role}</Text>
-            )
-        }
-    }
     
     const pressHandle = () => {
-        console.log("je suis pressed")
-        console.log(request)
         navigation.navigate("ShowFileDetails", { item: request })
     }
 
@@ -88,7 +66,7 @@ function RequestModule({requestProps, navigation}) {
         return (
         <TouchableOpacity onPress={() => pressHandle()}>
             <Text style={styles.X}>X</Text>
-            <View onPress={() => console.log("je suis pressed")} style={[styles.container, {backgroundColor: (request.location=="Bourges" ? 'ghostwhite' : 'gainsboro')}]}>
+            <View style={[styles.container, {backgroundColor: (request.location=="Bourges" ? 'ghostwhite' : 'gainsboro')}]}>
                 {generateAlertConfirm()}
                 <TouchableOpacity
                     onPress={() => {setIsConfirmOpen(true)}}
@@ -97,11 +75,8 @@ function RequestModule({requestProps, navigation}) {
                 </TouchableOpacity>
                 <View style={styles.row}>
                     <Text>{request.title}</Text>
-                    
-                    {/*platformHandle()*/}
                 </View>
                 <View style={styles.row}>
-                    { /*Ajouter ici la liste des listes de cette requete*/ }
                 </View>
                 <View style={styles.row}>
                 <Text>{request.state}</Text>

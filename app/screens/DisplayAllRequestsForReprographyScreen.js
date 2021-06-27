@@ -21,15 +21,18 @@ export default function DisplayAllRequestsForReprographyScreen({ navigation }){
         axios.get(constants.getAllRequests)
         .then((request) => {
             if ('data' in request.data){
+                console.log(request.data.data)
                 setIsData(true)
+                console.log(request.data)
                 let tmpRequete = []
                 request.data.data.map((item) => {
                     axios.get(constants.getFilesFromRequest, {params: {'request_id': item.id}})
                     .then((file) => {
                         if ('data' in file.data){
                             file.data.data.map((item2) => {
+                                console.log(item.list_names)
                                 const newFile = new File(item2.id, item2.name, item2.path, item2.color, item2.stapple, item2.format, item2.recto_verso, item2.nb_per_page, item.id)
-                                const newRequete = new Request(item.id, item.author, item.author_name, item.deadline, item.delivery_date, item.expiration_date, item.title, item.comment, item.hidden, item.state)
+                                const newRequete = new Request(item.id, item.author, item.author_name, item.deadline, item.delivery_date, item.expiration_date, item.title, item.comment, item.hidden, item.state, item.list_names)
                                 newRequete.attachFile(newFile)
                                 tmpRequete.push(newRequete)
                                 setRequests((prevItem) => {
