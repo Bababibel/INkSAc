@@ -78,11 +78,7 @@ function ListFormModule({reloadData}) {
         )
     } else {
         return (
-            <View style={styles.row}>
-                <Text>Nom : {list.name}</Text>
-                <Text>Nombre théorique: {list.theoricalCount}</Text>
-                <Text>{list.location}</Text>
-            </View>
+            (null)
         )
     }
 
@@ -90,7 +86,6 @@ function ListFormModule({reloadData}) {
 
 const styles = StyleSheet.create({
     container: {
-        paddingTop : Platform.OS === "android" ? StatusBar.currentHeight : 0,
         flex: 1,
         justifyContent: 'center',
         alignContent: 'center',

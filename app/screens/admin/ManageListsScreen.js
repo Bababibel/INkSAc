@@ -70,7 +70,6 @@ function ManageListsScreen({ navigation }) {
 const styles = StyleSheet.create({
     inputContainer: {
         textAlign:'center',
-        paddingTop : Platform.OS === "android" ? StatusBar.currentHeight : 0,
         width: '100%',
         flex: 1,
         flexBasis: 100,
@@ -80,6 +79,7 @@ const styles = StyleSheet.create({
         marginTop: 20,
     },
     titleText: {
+        paddingTop : Platform.OS === "android" ? StatusBar.currentHeight : 0,
         fontSize: 30,
         textAlign: 'center',
         marginBottom: 20,

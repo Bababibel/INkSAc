@@ -115,7 +115,7 @@ function ManageUsersScreen({ navigation, route }) {
             )
         } else {
             return (
-                <Text style={styles.inputContainer} >Liste des Utilisateurs</Text>
+                <Text style={styles.input} >Liste des Utilisateurs</Text>
             )
         }
     }
@@ -180,9 +180,11 @@ const styles = StyleSheet.create({
         margin: 10,
     },
     input: {
-        minWidth: 100,
-    }
-
+        paddingTop : Platform.OS === "android" ? StatusBar.currentHeight : 0,
+        fontSize: 30,
+        textAlign: 'center',
+        marginBottom: 20,
+    },
 })
 
 export default ManageUsersScreen;
