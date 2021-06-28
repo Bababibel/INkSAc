@@ -36,7 +36,7 @@ export default function LoginScreen({ navigation }){
         .then(response => {
             response.json()
             .then(response => {
-                if (response) { // server answered
+                if (response !== undefined) { // server answered
                     if ('data' in response) { // there is data to collect
                         let u = response.data[0]; // first object in the data array
                         let tmpUser = new User(u.id, u.email, u.first_name, u.last_name, u.role, u.creation_date, u.last_login_date, u.location, u.list_names);
@@ -44,8 +44,8 @@ export default function LoginScreen({ navigation }){
                         setUser(tmpUser);
                         axios.get(constants.loggedUser, { params: { 'id': u.id } })
                     }
-                    else if ('message' in response.data) { // no data but error message
-                        setErrorMsg("Erreur. Réponse du serveur: "+response.data.message);
+                    else if ('message' in response) { // no data but error message
+                        setErrorMsg("Erreur. Réponse du serveur: "+response.message);
                     }
                     else setErrorMsg("Le serveur a renvoyé une réponse inhabituelle");
                 }

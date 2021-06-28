@@ -24,8 +24,8 @@ function MyProfileScreen({ navigation, route }) {
       }, [null]);
 
     useEffect(() => {
-        if (!user.lists) setTextInput(lists[0]);
-        else setTextInput(user.lists[0]);
+        if (user.lists.length > 0) setTextInput(user.lists[0])
+        else setTextInput("")
     }, [lists]);
 
     const getLists = () => {
@@ -53,7 +53,7 @@ function MyProfileScreen({ navigation, route }) {
 
     const handleSubmit = () => {
         if (!textInput) return;
-        let founded = false;
+        //let founded = false;
         lists.map(list => {
             if (list.name === textInput) { // if textInput correspond to a "real" list
                 if (!user.lists.includes(textInput)) { // and is not contained in user's lists
@@ -63,7 +63,7 @@ function MyProfileScreen({ navigation, route }) {
                         console.log(msg);
                         getLists();
                         console.log("List "+list.name+" added!");
-                        founded = true;
+                        //founded = true;
                     })
                 }
                 else setErrorMsg("Vous êtes déjà dans cette liste.")

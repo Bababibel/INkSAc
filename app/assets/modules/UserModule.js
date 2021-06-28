@@ -92,8 +92,7 @@ function UserModule({userProps}) {
                     {platformHandle()}
                 </View>
                 <View style={styles.row}>
-                    <Text>Liste(s): </Text>
-                    {user.lists.map(list => {return <Text key={Math.random()*1000} style={styles.list}>{list}</Text>})}
+                    <Text style={{textAlign: 'center'}}>Liste(s): {user.lists.map(list => {return <Text key={Math.random()*1000} style={styles.list}>{list}</Text>})}</Text>
                 </View>
                 <View style={styles.row}>
                     <Text>{user.location}</Text>
