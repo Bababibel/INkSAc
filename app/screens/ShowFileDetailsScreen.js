@@ -89,7 +89,7 @@ export default function ShowFileDetailsScreen({ route, navigation }){
     return(
         <ScrollView>
             <GoBackModule navigation={navigation}/>
-            <Text style={styles.titleContainer}> Détail de la requète</Text>
+            <Text style={styles.titleContainer}> Détail de la requête</Text>
                 <View style={styles.container}>
                     <Text style={styles.titleContainer}>Requete</Text>
                     <Text style={styles.row}>Auteur : {item.author_name}</Text>

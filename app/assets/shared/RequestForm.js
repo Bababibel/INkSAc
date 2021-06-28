@@ -8,8 +8,6 @@ export default function RequestForm(props) {
   const dateToday = new Date();
 
   function onFormSubmit(values) {
-    //console.log('close 2')
-    //console.log(values);
   }
 
   const [show, setShow] = useState(false);
@@ -45,7 +43,6 @@ export default function RequestForm(props) {
           file1: "",
         }}
         onSubmit={values => {
-          //console.log('close 1.5')
           onFormSubmit(values)
         }}
       >
@@ -144,7 +141,6 @@ export default function RequestForm(props) {
               title="Proposer ces fichiers"
               color={globalColors.primary} 
               onPress={() => {
-                //console.log('close 1')
                 handleSubmit;
               }}
             />

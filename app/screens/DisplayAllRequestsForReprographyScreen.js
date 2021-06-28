@@ -62,7 +62,7 @@ export default function DisplayAllRequestsForReprographyScreen({ navigation }){
             <ScrollView>
             <View>
             <GoBackModule navigation={navigation}/>
-            <Text style={styles.titleText} >Liste de toutes les requètes</Text>
+            <Text style={styles.titleText} >Liste de toutes les requêtes</Text>
                 {requests.map(request => {
                 return (
                   <RequestModule clickHandle={clickHandle} key={request.id} requestProps={request} navigation={navigation}/>
@@ -80,7 +80,7 @@ export default function DisplayAllRequestsForReprographyScreen({ navigation }){
             onError={(text) => Alert.alert('Échec du chargement :(', String(text), [{text: 'Ok'}])}
             onFinish={() => setDataLoaded(true)}
             />
-            <Text style={globalStyles.modalText}>Il n'y a aucune requète pour le moment</Text>
+            <Text style={globalStyles.modalText}>Il n'y a aucune requête pour le moment</Text>
             </View>
         ) 
     }

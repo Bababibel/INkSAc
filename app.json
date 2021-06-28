@@ -1,12 +1,12 @@
 {
   "expo": {
-    "name": "DoneWithIt",
-    "slug": "DoneWithIt",
+    "name": "INksAC",
+    "slug": "INkSAc",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./app/assets/icon.png",
+    "icon": "./app/assets/INkSAc_logo.png",
     "splash": {
-      "image": "./app/assets/splash.png",
+      "image": "./app/assets/INkSAc_logo.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -21,13 +21,13 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./app/assets/adaptive-icon.png",
+        "foregroundImage": "./app/assets/INkSAc_logo.png",
         "backgroundColor": "#FFFFFF"
       }
     },
     "web": {
-      "favicon": "./app/assets/favicon.png"
+      "favicon": "./app/assets/INkSAc_logo.png"
     },
-    "description": "First test of React Native"
+    "description": "Reprography oriented application, developped for the INSA Centre Val-de-Loire, by 4 students."
   }
 }

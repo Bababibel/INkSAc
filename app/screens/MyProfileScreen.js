@@ -7,12 +7,13 @@ import constants from '../assets/globals/constants';
 import { globalColors } from '../assets/globals/globalStyles';
 import List from '../assets/classes/List';
 import GoBackModule from '../assets/modules/GoBackModule';
-import { red } from '@material-ui/core/colors';
+
+let allLists = [];
 
 function MyProfileScreen({ navigation, route }) {
 
-    let user = constants.globalUser; // for shorter name...
-    let allLists = [];
+    //let user = constants.globalUser; // for shorter name...
+    const [user, setUser] = useState(constants.globalUser);
 
     const [lists, setLists] = useState([]);
     const [textInput, setTextInput] = useState("");
@@ -32,7 +33,7 @@ function MyProfileScreen({ navigation, route }) {
         .then(response => {
             if ('data' in response.data) {
                 let tmpLists = [];
-                let allLists = [];
+                allLists = [];
                 let data = response.data.data;
                 data.map(e => {
                     let tmpList = new List(e.id, e.name, e.theorical_count, e.creation_date, e.location);
@@ -40,6 +41,7 @@ function MyProfileScreen({ navigation, route }) {
                     if (!user.lists.includes(e.name)) tmpLists.push(tmpList);
                 });
                 setLists(tmpLists);
+                tmpLists.length > 0 ? setTextInput(tmpLists[0].name) : setTextInput("");
             }
             else {
                 Alert.alert("Oups!", "Le serveur ne répond pas, ou a rencontré une erreur.", [{text: 'Ok'}])
@@ -48,34 +50,41 @@ function MyProfileScreen({ navigation, route }) {
         return null;
     }
 
+
     const handleSubmit = () => {
+        if (!textInput) return;
         let founded = false;
         lists.map(list => {
             if (list.name === textInput) { // if textInput correspond to a "real" list
                 if (!user.lists.includes(textInput)) { // and is not contained in user's lists
                     // adding to list
-                    user.addToList(list.id, list.name);
-                    console.log("List "+list.name+" added!");
-                    founded = true;
-                    return;
+                    user.addToList(list.id, list.name)
+                    .then(msg => {
+                        console.log(msg);
+                        getLists();
+                        console.log("List "+list.name+" added!");
+                        founded = true;
+                    })
                 }
-                setErrorMsg("Vous êtes déjà dans cette liste.")
-                return;
+                else setErrorMsg("Vous êtes déjà dans cette liste.")
             }
         })
-        if (!founded) setErrorMsg("Cette liste n'existe pas. Vous pouvez cependant contacter un membre du support pour la créer.")
+        // async trouble : inscruction is executed BEFORE the psoting request, and will always show the error msg.
+        //if (!founded) setErrorMsg("Cette liste n'existe pas. Vous pouvez cependant contacter un membre du support pour la créer.")
     }
 
     const handleDelete = (list_name) => {
-        user.lists.map(list => {
-            if (list === list_name) {
-                user.removeFromList(list.id, list.name);
-                console.log("Removed from list: ", list.name);
-                getLists(); // reload data
-                return;
+        if (!list_name) return;
+        allLists.map(list => {
+            if (list.name === list_name) {
+                user.removeFromList(list.id, list.name)
+                .then(msg => {
+                    console.log(msg);
+                    getLists()
+                    console.log("Removed from list: ", list.name, "id:", list.id);
+                })
             }
         })
-        setErrorMsg("Vous semblez ne plus appartenir à la liste "+list_name+"...");
     }
 
     const inputList = () => {
@@ -86,7 +95,8 @@ function MyProfileScreen({ navigation, route }) {
                     <FormControl>
                         <Select
                             value={textInput}
-                            onChange={e => setTextInput(e.target.value)}>
+                            onChange={e => setTextInput(e.target.value)}
+                            >
                             {lists.map(l => {
                                 return <MenuItem key={l.id} value={l.name}>{l.name}</MenuItem>
                             })}
@@ -153,8 +163,13 @@ function MyProfileScreen({ navigation, route }) {
 const styles = StyleSheet.create({
     scrollView: {
         flex: 1,
+        height: '100%',
         justifyContent: 'center',
         alignItems: 'center',
+    },
+    bigText: {
+        textAlign: 'center',
+        fontSize: 24,
     },
     container: {
         position: 'relative',
@@ -206,6 +221,10 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
         alignItems: 'center',
         fontSize: 18,
+    },
+    text: {
+        textAlign: 'center',
+        fontSize: 20,
     },
     scrollView: {
         paddingTop : Platform.OS === "android" ? StatusBar.currentHeight : 0,

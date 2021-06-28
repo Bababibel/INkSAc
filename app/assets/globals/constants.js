@@ -40,4 +40,10 @@ export default {
 
     // Global variables
     globalUser: null,
+    roles: {
+        'admin': 'Administrateur',
+        'teacher': 'Enseignant',
+        'reprography': 'Reprographie',
+        'student': 'Étudiant',
+    }
 }

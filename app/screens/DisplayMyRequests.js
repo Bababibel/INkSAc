@@ -99,7 +99,7 @@ export default function RequestScreen({ route, navigation }) {
       <ScrollView>
         <View>
         <GoBackModule navigation={navigation}/>
-          <Text style={styles.titleText} >Liste de mes requètes</Text>
+          <Text style={styles.titleText} >Liste de mes requêtes</Text>
           <View style={globalStyles.container}>
             {roleHandle()}
           </View>
@@ -119,7 +119,7 @@ export default function RequestScreen({ route, navigation }) {
           onFinish={() => setDataLoaded(true)}
         />
         <GoBackModule navigation={navigation}/>
-        <Text style={globalStyles.modalText}> Vous n'avez aucune requète</Text>
+        <Text style={globalStyles.modalText}> Vous n'avez aucune requête</Text>
         {roleHandle()}
       </View>
     )

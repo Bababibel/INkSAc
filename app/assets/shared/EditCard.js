@@ -14,10 +14,6 @@ import constants from "../globals/constants";
 
 export default class EditCard extends Component {
   render(){
-    console.log('Je rentre item : item et je recois dans this.props : ')
-    console.log(this.props)
-    console.log('et décompose this.props.item : ')
-    console.log(this.props.item)
     return (
       <View style={globalStyles.card}>
         <View style={globalStyles.cardIconContainer}>
@@ -40,7 +36,7 @@ export default class EditCard extends Component {
                         onPress:()=>{ console.log('file id: '+this.props.item.files.id) ,console.log('request id : '+this.props.item.request_id)}
                       },
                       {
-                        text: "Je suis sûr de moi",
+                        text: "Confirmer",
                         onPress: () => {
                           console.log("suppresion du fichier " + this.props.item.files.id)
                           axios.get(constants.deleteFile , {params: {'id' : this.props.item.files.id}}, {
