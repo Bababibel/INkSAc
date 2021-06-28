@@ -68,7 +68,7 @@ export default function LoginScreen({ navigation }){
             <TouchableWithoutFeedback onPress={dismissKeyboard}>
                 <View style={globalStyles.container}>
                     <Formik
-                        initialValues={{ email : 'admin@insacvl.fr', password : 'e'}}
+                        initialValues={{ email : 'admin@insa-cvl.fr', password : 'e'}}
                         validationSchema={LoginSchema}
                         onSubmit={(values) => submitted(values.email)}>
                         {(props) => (
