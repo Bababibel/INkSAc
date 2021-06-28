@@ -37,7 +37,7 @@ export default function ShowFileDetailsScreen({ route, navigation }){
         if (item.state == 'pending'){
             title = 'Imprimer' 
         } else if (item.state == 'waitingForPrint'){
-            title = 'Pret'
+            title = 'Prêt'
         }
         return (title)
     }

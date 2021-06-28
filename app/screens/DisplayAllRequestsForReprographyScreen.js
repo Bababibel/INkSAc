@@ -87,7 +87,7 @@ export default function DisplayAllRequestsForReprographyScreen({ navigation }){
             <View>
             <GoBackModule navigation={navigation}/>
             <Text style={styles.titleText} >Liste de toutes les requêtes</Text>
-            <Text style={styles.titleSecond}>En cours</Text>
+            {(() => {if (pendingRequests.length > 0) return <Text style={styles.titleSecond}>En cours</Text>})()}
               { pendingRequests.map(request => {
                   return (
                     <RequestModule clickHandle={clickHandle} key={request.request_id} goBack={'DisplayMyRequests'} requestProps={request} navigation={navigation}/>
@@ -101,7 +101,7 @@ export default function DisplayAllRequestsForReprographyScreen({ navigation }){
                 )
               })
             }
-          <Text style={styles.titleSecond}>Pret</Text>
+          {(() => {if (readyRequests.length > 0) return <Text style={styles.titleSecond}>Prêtes</Text>})()}
           { readyRequests.map(request => {
               return (
                 <RequestModule clickHandle={clickHandle} key={request.request_id} goBack={'DisplayMyRequests'} requestProps={request} navigation={navigation}/>

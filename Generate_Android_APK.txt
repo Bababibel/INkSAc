@@ -1,0 +1,7 @@
+cd to root directory of the project
+Run:
+react-native bundle --dev false --platform android --entry-file App.js --bundle-output ./android/app/src/main/assets/index.android --assets-dest ./android/app/src/main/res/
+If error (SHA-1 for request.js not computed), force reinstall of react-native-cli:
+> Run: npm install -g react-native-cli --force
+Cd to android/
+SA MARCH PAS
