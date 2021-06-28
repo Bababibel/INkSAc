@@ -61,20 +61,20 @@ export default function ShowFileDetailsScreen({ route, navigation }){
                 <View>
                     <Text style={styles.row}>Pour le : {item.delivery_date}</Text>
                     <Text style={styles.row}>Commentaire : {item.comment}</Text>
-                    <Text style={styles.row}>Partiel : {item.hidden}</Text>
-                    <Text style={styles.row}>Etat : {item.state}</Text>
+                    <Text style={styles.row}>Partiel : {item.hidden==1 ? 'Oui' : 'Non'}</Text>
+                    <Text style={[styles.row, { color: constants.states.color[item.state]}]}>État : {constants.states.msg[item.state]}</Text>
                     <Text style={styles.row}>Supprimé le : {item.expiration_date}</Text>
                     {displayList()}
-                    <Text style={styles.row}>Liste(s) : {item.list}</Text>
+                    <Text style={styles.row}>Liste : {item.list}</Text>
                     <Text style={styles.titleContainer}>Fichier</Text>
                     <Text style={styles.row}>Nom : {item.files.name}</Text>
                     <HyperLink linkDefault={true} linkStyle={ { color: '#2980b9'} }>
                         <Text style={styles.row}>Lien : {item.files.getDownloadUrl()}</Text>
                     </HyperLink>
-                    <Text style={styles.row}>Couleur : {item.files.color}</Text>
+                    <Text style={styles.row}>Couleur : {item.files.color==1 ? 'Oui' : 'Non'}</Text>
                     <Text style={styles.row}>Agrafes : {item.files.stapple}</Text>
                     <Text style={styles.row}>Format : {item.files.format}</Text>
-                    <Text style={styles.row}>Recto-verso : {item.files.recto_verso}</Text>
+                    <Text style={styles.row}>Recto-verso : {item.files.recto_verso==1 ? 'Oui' : 'Non'}</Text>
                     <Text style={styles.row}>Nombre d'élements par Page : {item.files.nb_per_page}</Text>
                 </View>
             )

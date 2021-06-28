@@ -10,7 +10,6 @@ import constants from '../globals/constants';
 function RequestModule({requestProps, goBack, navigation}) {
     // Check if property is a valid array to load a User class
     //if (!Array.isArray(requestProps) || requestProps.length != 9) return (<Text>Given parameter is not a array or request's properties ({typeof(requestProps)}): {requestProps}</Text>);
-    console.log(requestProps)
     const request = new Request (requestProps.request_id, requestProps.author_id, requestProps.author_name, requestProps.deadline, requestProps.delivery_date, requestProps.expiration_date, requestProps.title, requestProps.comment, requestProps.hidden, requestProps.state, requestProps.list)
     request.attachFile(requestProps.files)
     const [role, setRole] = useState(request.role);
@@ -84,11 +83,10 @@ function RequestModule({requestProps, goBack, navigation}) {
                 <View style={styles.row}>
                     <Text>{request.title}</Text>
                 </View>
+                <View style={styles.row}></View>
                 <View style={styles.row}>
-                </View>
-                <View style={styles.row}>
-                <Text>{request.state}</Text>
-                    <Text>{request.deadline}</Text>
+                    <Text style={{color: constants.states.color[request.state]}}>État: {constants.states.msg[request.state]}</Text>
+                    <Text>Deadline de vote: {request.deadline}</Text>
                 </View>
             </View>
         </TouchableOpacity>

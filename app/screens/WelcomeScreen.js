@@ -13,14 +13,11 @@ function WelcomeScreen({ navigation }) {
     useEffect(() => {
         const unsubscribe = navigation.addListener('focus', () => {
           setUser(constants.globalUser);
+          if (constants.globalUser != null && (constants.globalUser.lists.length <= 0 && constants.globalUser.role === 'student')) setInfoMsg("Rejoingez une liste dans \"Mon profil\" pour voir\nles demandes en cours sur cette liste!")
+          else setInfoMsg("")
         });
         return unsubscribe;
     }, [navigation]);
-
-    useEffect(() => {
-        if (user != null && user.lists.length <= 0 ) setInfoMsg("Rejoingez une liste dans \"Mon profil\" pour voir les demandes en cours sur cette liste!")
-        else setInfoMsg("")
-    }, [user])
     
 
 
@@ -57,7 +54,7 @@ function WelcomeScreen({ navigation }) {
     }
     function seeMyRequestsButton() {
         if (user != null && ['student', 'admin', 'teacher', 'reprography'].includes(user.role)) {
-            if (user.lists.length > 0) {
+            if (user.lists.length > 0 || user.role['student']) {
                 return (
                 <Button
                     title="Demandes en cours"
@@ -138,7 +135,8 @@ const styles = StyleSheet.create({
     buttonContainer: {
         flex :0.5,
         justifyContent: 'center',
-        marginVertical: 2.5
+        marginVertical: 2.5,
+        justifyContent: 'space-evenly',
     },
     container: {
         fontFamily: 'ubuntu-light',
@@ -152,7 +150,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
     },
     welcomeButton: {
-        height: 100,
+        margin: 10,
     }
 })
 

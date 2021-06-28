@@ -5,8 +5,9 @@
 */
 
 import axios from 'axios';
-import React,{Component, useState} from 'react';
+import React,{useState, useEffect} from 'react';
 import { View, Text, Alert, Button } from 'react-native';
+import AppLoading from 'expo-app-loading';
 import { MuiPickersUtilsProvider, KeyboardTimePicker, KeyboardDatePicker } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
 
@@ -20,65 +21,51 @@ import GoBackModule from '../modules/GoBackModule';
 const currDate = new Date();
 const futDate = new Date(currDate.setDate(currDate.getDate() + 7));
 
-class UploadForm extends Component {
+function UploadForm({navigation}) {
 
-	state = {
-	    selectedFile: null,
-        userLists: [],
-        fileName: "Fichier",
-        color: 0,
-        stapple: 0,
-        recto_verso: 1,
-        format: "A4",
-        nb_per_page: 1,
+    let deadline = computeDateTimeForSql(currDate, currDate); // computed with date + time
+    let delivery = computeDateTimeForSql(futDate, futDate); // computed with date + time
 
-        userList: "",
-        deadline: computeDateTimeForSql(currDate, currDate), // computed with date + time
-        deadline_date: currDate,
-        deadline_time: currDate,
-        delivery: computeDateTimeForSql(futDate, futDate), // computed with date + time
-        delivery_date: futDate,
-        delivery_time: futDate,
-        comment: "",
-        title: "",
-        hidden: 0,
+    // File Form
+    const [selectedFile, setSelectedFile] = useState(null);
+    const [userLists, setUserLists] = useState([]);
+    const [fileName, setFileName] = useState("Fichier");
+    const [color, handleColorChange] = useState(0);
+    const [stapple, handleStappleChange] = useState(0);
+    const [recto_verso, handleR_VChange] = useState(1);
+    const [format, handleFormatChange] = useState("A4");
+    const [nb_per_page, handleNbPerPageChange] = useState(1);
+    // Request Form
+    const [userList, handleListChange] = useState("");
+    const [deadline_date, handleDeadlineDateChange] = useState(currDate);
+    const [deadline_time, handleDeadlineTimeChange] = useState(currDate);
+    const [delivery_date, handleDeliveryDateChange] = useState(futDate);
+    const [delivery_time, handleDeliveryTimeChange] = useState(futDate);
+    const [comment, handleCommentChange] = useState("Commentaire publique");
+    const [title, handleTitleChange] = useState("Titre");
+    const [hidden, handleHiddenChange] = useState(0);
+    // Others
+    const [dataLoaded, setDataLoaded] = useState(false);
+    const [error, setError] = useState("");
 
-        error: "",
-	};
-    // File form properties
-    handleColorChange = (e) => { this.setState({color: e.target.value});}
-    handleStappleChange = (e) => { this.setState({stapple: e.target.value});}
-    handleR_VChange = (e) => { this.setState({recto_verso: e.target.value});}
-    handleFormatChange = (e) => { this.setState({format: e.target.value});}
-    handleNbPerPageChange = (e) => { this.setState({nb_per_page: e.target.value});}
-    // Request form properties
-    handleListChange = (e) => { this.setState({userList: e.target.value}); console.log(this.state.userList)}
-    handleDeadlineDateChange = (e) => { this.setState({deadline_date: e}); this.state.deadline = computeDateTimeForSql(this.state.deadline_date, this.state.deadline_time);}
-    handleDeadlineTimeChange = (e) => { this.setState({deadline_time: e}); this.state.deadline = computeDateTimeForSql(this.state.deadline_date, this.state.deadline_time);}
-    handleDeliveryDateChange = (e) => { this.setState({delivery_date: e}); this.state.delivery = computeDateTimeForSql(this.state.delivery_date, this.state.delivery_time);}
-    handleDeliveryTimeChange = (e) => { this.setState({delivery_time: e}); this.state.delivery = computeDateTimeForSql(this.state.delivery_date, this.state.delivery_time);}
-    handleCommentChange = (e) => { this.setState({comment: e.target.value});}
-    handleTitleChange = (e) => { this.setState({title: e.target.value});}
-    handleHiddenChange = (e) => { this.setState({hidden: e.target.value});}
-    setFileName = (e) => { this.setState({ fileName: e.target.value });}
-    setError = (msg) => { this.setState({ error: msg }) }
+    
+    useEffect(() => {
+        deadline = computeDateTimeForSql(deadline_date, deadline_time);
+        delivery = computeDateTimeForSql(delivery_date, delivery_time);
+        console.log("deadline:",deadline)
+        console.log("delivery:",delivery)
+    }, [deadline_date, deadline_time, delivery_date, delivery_time]);
 
-
-    useGetLists = () => (() => {
-        this.getLists();
-      }, [null]);
-
-    getLists = () => {
+    const getLists = () => {
         axios.get(constants.getAllLists)
         .then(response => {
             if ('data' in response.data) {
-                let lists = [];
                 let data = response.data.data;
-                lists.push(new List(0, 'Selectionnez une liste',0 , computeDateTimeForSql(currDate, currDate), ""));
+                setUserLists(userList => [...userList, new List(0, 'Selectionnez une liste',0 , computeDateTimeForSql(currDate, currDate), "")])
                 data.forEach(e => {
-                    lists.push(new List(e.id, e.name, e.theorical_count, e.creation_date, e.location));
+                    let tmpList = new List(e.id, e.name, e.theorical_count, e.creation_date, e.location);
+                    setUserLists(userList => [...userList, tmpList]);
                 });
-                this.setState({ userLists : lists })
             }
             else {
                 Alert.alert("Oups!", "Le serveur ne répond pas, ou a rencontré une erreur.", [{text: 'Ok'}])
@@ -87,25 +74,41 @@ class UploadForm extends Component {
         return null;
     }
 
-    formSubmitted = () => {
-        if (this.state.error == "") this.props.navigation.goBack();
-        else this.setError("Coucou Baptiste, tu as oublié ton cerveau entre deux lignes de Javascript. Si un utilisateur voit ça, vous avez le droit de l'insulter. Cordialement, Baptiste, le 25/06/2021.");
+    const formSubmitted = () => {
+        /*if (error == "") */navigation.goBack();
+        /*else {
+            console.log(error)
+            setError("Coucou Baptiste, tu as oublié ton cerveau entre deux lignes de Javascript. Si un utilisateur voit ça, vous avez le droit de l'insulter. Cordialement, Baptiste, le 25/06/2021.");
+        }*/
+        /* No joke, cet easter egg que je m'étais laissé a faillit pop le jour de la soutenance...
+        Big up au courageux qui me relit, force à toi
+        Ce code est tellement dégueux que j'ai plus envie d'y toucher
+        Bisous
+        */
     }
 
-	onFileChange = event => {
-	    this.setState({ selectedFile: event.target.files[0] });
-	    this.setState({ fileName: event.target.files[0].name });
+	const onFileChange = event => {
+	    setSelectedFile(event.target.files[0]);
+	    setFileName(event.target.files[0].name);
 	};
 
     
 	
-	onFileUpload = async () => {
-        this.setError("");
+	const onFileUpload = async () => {
+        setError("");
+        if (userList === "") {
+            setError("Vous n'avez pas sélectionné de liste à affilier à votre demande.")
+            return;
+        }
+        if (computeDateTimeForSql(new Date(), new Date()) >= deadline || deadline > delivery) {
+            setError("L'ordre chronologique n'est pas respecté (maintenant -> deadline -> livraison).")
+            return;
+        }
         const fileFormData = new FormData();
         // Create the post request to grab data from $_POST['file] in the php server
         fileFormData.append("file",
-            this.state.selectedFile,
-            this.state.selectedFile.name,   
+            selectedFile,
+            selectedFile.name,   
         );
         axios.post(constants.uploadUrl, fileFormData, {
             headers: {'Content-Type': 'multipart/form-data'},
@@ -117,13 +120,13 @@ class UploadForm extends Component {
                 let myForm = document.getElementById('fileData');
                 let createFileFormData = new FormData();
                 // UPLOADING FILE
-                createFileFormData.append('name', this.state.selectedFile.name);
+                createFileFormData.append('name', selectedFile.name);
                 createFileFormData.append('path', path);
-                createFileFormData.append('color', this.state.color);
-                createFileFormData.append('stapple', this.state.stapple);
-                createFileFormData.append('format', this.state.format);
-                createFileFormData.append('recto_verso', this.state.recto_verso);
-                createFileFormData.append('nb_per_page', this.state.nb_per_page);
+                createFileFormData.append('color', color);
+                createFileFormData.append('stapple', stapple);
+                createFileFormData.append('format', format);
+                createFileFormData.append('recto_verso', recto_verso);
+                createFileFormData.append('nb_per_page', nb_per_page);
                 // Use API to create the File in database with the path
                 axios.post(constants.postFile, createFileFormData, {
                     headers: {'Content-Type': 'multipart/form-data'},
@@ -131,7 +134,7 @@ class UploadForm extends Component {
                 .then(response => {
                     if ('message' in response.data) {
                         console.log("File creating request: " + response.data.message);
-                        this.uploadRequest(path);
+                        uploadRequest(path);
                     }
                     else {
                         Alert.alert("Oups!", "Le serveur ne répond pas, ou a rencontré une erreur.", [{text: 'Ok'}])
@@ -139,7 +142,7 @@ class UploadForm extends Component {
                 })
             }
             else if ('message' in response.data) {
-                this.setError(response.data.message);
+                setError(response.data.message);
             }
             else {
                 Alert.alert("Oups!", "Le serveur ne répond pas, ou a rencontré une erreur.", [{text: 'Ok'}])
@@ -147,14 +150,15 @@ class UploadForm extends Component {
         });
 	};
 
-    uploadRequest = async (file_path) => {
+    const uploadRequest = async (file_path) => {
         let createRequestFormData = new FormData();
-        createRequestFormData.append('delivery_date', this.state.delivery);
-        createRequestFormData.append('deadline', this.state.deadline);
+        createRequestFormData.append('delivery_date', delivery);
+        createRequestFormData.append('deadline', deadline);
         createRequestFormData.append('author', constants.globalUser.id);
-        createRequestFormData.append('title', this.state.title);
-        createRequestFormData.append('comment', this.state.comment);
-        createRequestFormData.append('hidden', this.state.hidden);
+        createRequestFormData.append('title', title);
+        createRequestFormData.append('comment', comment);
+        createRequestFormData.append('hidden', hidden);
+        console.log([...createRequestFormData])
         // POSTING REQUEST
         axios.post(constants.postRequest, createRequestFormData, {
             headers: {'Content-Type': 'multipart/form-data'},
@@ -173,25 +177,28 @@ class UploadForm extends Component {
                 .then(response => {
                     console.log("Link between file and request: " + response.data.message);
                     if ('message' in response.data) {
-                        this.linkListToRequest(request_id);
+                        linkListToRequest(request_id);
                     }
                     else {
-                        this.setError('Internal error. Please try again or contact the support team.');
-                        this.setError("Oups!", "Le serveur ne répond pas, ou a rencontré une erreur.")
-
+                        setError('Internal error. Please try again or contact the support team.');
+                        axios.get(constants.deleteRequest, { params: { 'id': request_id }})
+                        .then(response => {
+                            console.log(response.data)
+                        })
+                        
                     }
                 })
             }
             else {
-                this.setError('Unable to post request and get its id: '+ response.data.message);
+                setError('Unable to post request and get its id: '+ response.data.message);
             }
         })
     };
 
-    linkListToRequest = async (request_id) => {
+    const linkListToRequest = async (request_id) => {
         let myForm = document.getElementById('requestData');
         let createRequestFormData = new FormData(myForm);
-        createRequestFormData.append('list_name', this.state.userList);
+        createRequestFormData.append('list_name', userList);
         createRequestFormData.append('request_id', request_id);
         // POSTING LINK BETWEEN LIST AND REQUEST
         axios.post(constants.addListToRequest, createRequestFormData, {
@@ -200,52 +207,56 @@ class UploadForm extends Component {
         .then(response => {
             if ('error' in response.data) {
                 if (!response.data.error) {
-                    this.formSubmitted()
+                    formSubmitted()
                 }
                 else {
                     console.log('Request to link the list sent: ' + response.data.message);
-                    this.setError(response.data.message)
-                    console.log(this.state.error);
+                    setError(response.data.message);
+                    console.log(error);
+                    axios.get(constants.deleteRequest, { params: { 'id': request_id }})
+                    .then(response => {
+                        console.log(response.data)
+                    })
                 }
             }
             else {
-                this.setError('Internal error during the link between the file and the request.');
+                setError('Internal error during the link between the file and the request.');
             }
         })
     };
 
 
-    fileForm = () => {
-        if (this.state.selectedFile) {
+    const fileForm = () => {
+        if (selectedFile) {
             return (
                 <div>
                     <form id="fileData" style={styles.fileForm}>
                         <label>Titre du fichier<br/>
-                            <input type="text" name="fileName" value={this.state.fileName} onChange={this.setFileName} style={styles.input}/> <br/>
+                            <input type="text" name="fileName" value={fileName} onChange={e => setFileName(e.target.value)} style={styles.input}/> <br/>
                         </label>
                         <label>Couleur
-                            <input type="radio" name="color" value="0" onChange={this.handleColorChange} checked={this.state.color==0} style={styles.smallInput}/><label>Non</label>
-                            <input type="radio" name="color" value="1" onChange={this.handleColorChange} checked={this.state.color==1}style={styles.smallInput}/><label>Oui</label>
+                            <input type="radio" name="color" value="0" onChange={e => handleColorChange(e.target.value)} checked={color==0} style={styles.smallInput}/><label>Non</label>
+                            <input type="radio" name="color" value="1" onChange={e => handleColorChange(e.target.value)} checked={color==1}style={styles.smallInput}/><label>Oui</label>
                         </label><br/>
 
                         <label>Recto verso
-                            <input type="radio" name="recto_verso" value="0" onChange={this.handleR_VChange} checked={this.state.recto_verso==0} style={styles.smallInput}/><label>Non</label>
-                            <input type="radio" name="recto_verso" value="1" onChange={this.handleR_VChange} checked={this.state.recto_verso==1} style={styles.smallInput}/><label>Oui</label>
+                            <input type="radio" name="recto_verso" value="0" onChange={e => handleR_VChange(e.target.value)} checked={recto_verso==0} style={styles.smallInput}/><label>Non</label>
+                            <input type="radio" name="recto_verso" value="1" onChange={e => handleR_VChange(e.target.value)} checked={recto_verso==1} style={styles.smallInput}/><label>Oui</label>
                         </label><br/>
                         <label>Format 
-                            <select type="text" name="format" list="nbList" style={styles.smallInput} onChange={this.handleFormatChange}>
+                            <select type="text" name="format" list="nbList" style={styles.smallInput} onChange={e => handleFormatChange(e.target.value)}>
                                 <option value="A4">A4</option>
                                 <option value="A3">A3</option>
                                 <option value="A2">A2</option>
                             </select>
                         </label><br/>
                         <label>Agrafes
-                            <input type="radio" name="stapple" value="0" onChange={this.handleStappleChange} checked={this.state.stapple==0} style={styles.smallInput}/><label>0</label>
-                            <input type="radio" name="stapple" value="1" onChange={this.handleStappleChange} checked={this.state.stapple==1} style={styles.smallInput}/><label>1</label>
-                            <input type="radio" name="stapple" value="2" onChange={this.handleStappleChange} checked={this.state.stapple==2} style={styles.smallInput}/><label>2</label>
+                            <input type="radio" name="stapple" value="0" onChange={e => handleStappleChange(e.target.value)} checked={stapple==0} style={styles.smallInput}/><label>0</label>
+                            <input type="radio" name="stapple" value="1" onChange={e => handleStappleChange(e.target.value)} checked={stapple==1} style={styles.smallInput}/><label>1</label>
+                            <input type="radio" name="stapple" value="2" onChange={e => handleStappleChange(e.target.value)} checked={stapple==2} style={styles.smallInput}/><label>2</label>
                         </label><br/>
-                        <label>Nombre d'éléments par page (exemple: 4 diapositives par page)<br/>
-                            <select type="text" name="nb_per_page" style={styles.smallInput} onChange={this.handleNbPerPageChange}>
+                        <label>Nombre d'éléments par page (ex: 4 diapos par page) 
+                            <select type="text" name="nb_per_page" style={styles.smallInput} onChange={e => handleNbPerPageChange(e.target.value)}>
                                 <option value="1">1</option>
                                 <option value="2">2</option>
                                 <option value="4">4</option>
@@ -259,18 +270,18 @@ class UploadForm extends Component {
         }
     };
 
-    deadlinePicker = () => {
-        if (this.state.hidden==0) {
+    const deadlinePicker = () => {
+        if (hidden==0) {
             return (
                 <div>
                     <label>Deadline souhaitée (fin de vote pour les élèves)<br/>
                         <MuiPickersUtilsProvider utils={DateFnsUtils}>
                             <KeyboardDatePicker disableToolbar variant="inline" format="yyyy/MM/dd"
-                                margin="normal" id="date-picker-inline" label="Date picker inline" value={this.state.delivery_date}
-                                onChange={this.handleDeliveryDateChange} KeyboardButtonProps={{'aria-label': 'change date'}}/>
+                                margin="normal" id="date-picker-inline" label="Date picker inline" value={delivery_date}
+                                onChange={handleDeadlineDateChange} KeyboardButtonProps={{'aria-label': 'change date'}}/>
                             <KeyboardTimePicker
-                                margin="normal" id="time-picker" label="Time picker" value={this.state.delivery_time} 
-                                onChange={this.handleDeliveryTimeChange} KeyboardButtonProps={{'aria-label': 'change time'}}/>
+                                margin="normal" id="time-picker" label="Time picker" value={delivery_time} 
+                                onChange={handleDeadlineTimeChange} KeyboardButtonProps={{'aria-label': 'change time'}}/>
                         </MuiPickersUtilsProvider>
                     </label>
                 </div>
@@ -279,45 +290,47 @@ class UploadForm extends Component {
         
     }
 
-    requestForm = () => {
-        if (this.state.selectedFile) {
+    const requestForm = () => {
+        if (selectedFile) {
             return (
                 <View style={styles.requestForm}>
                     <Text style={[globalStyles.titleText, styles.title]}>Formulez votre demande</Text>
                     <form id="requestData" style={styles.fileForm}>
                         
                         <label>Liste d'élèves concernée<br/>
-                            <select type="text" name="userList" style={styles.smallInput}  onChange={this.handleListChange}>
-                                {this.state.userLists.map(l => <option key={l.id} value={l.name}>{l.name}</option>)}
+                            <select type="text" name="userList" style={styles.smallInput}  onChange={e => handleListChange(e.target.value)}>
+                                {userLists.map(l => <option key={l.id} value={l.name}>{l.name}</option>)}
                             </select>
                         </label>
                         
                         <label>Date de livraison attendue<br/>
                         <MuiPickersUtilsProvider utils={DateFnsUtils}>
                             <KeyboardDatePicker disableToolbar variant="inline" format="yyyy/MM/dd"
-                                margin="normal" id="date-picker-inline" label="Date picker inline" value={this.state.deadline_date}
-                                onChange={this.handleDeadlineDateChange} KeyboardButtonProps={{'aria-label': 'change date'}}/>
+                                margin="normal" id="date-picker-inline" label="Date picker inline" value={deadline_date}
+                                onChange={handleDeliveryDateChange} KeyboardButtonProps={{'aria-label': 'change date'}}/>
                             <KeyboardTimePicker
-                                margin="normal" id="time-picker" label="Time picker" value={this.state.deadline_time} 
-                                onChange={this.handleDeadlineTimeChange} KeyboardButtonProps={{'aria-label': 'change time'}}/>
+                                margin="normal" id="time-picker" label="Time picker" value={deadline_time} 
+                                onChange={handleDeliveryTimeChange} KeyboardButtonProps={{'aria-label': 'change time'}}/>
                         </MuiPickersUtilsProvider>
                         </label>
                         <label>Titre de la requête<br/>
-                            <input type="text" name="title" value={this.state.title} onChange={this.handleTitleChange} style={styles.smallInput}/> <br/>
+                            <input type="text" name="title" value={title} onChange={e => handleTitleChange(e.target.value)} style={styles.smallInput}/> <br/>
                         </label>
                         <label>Commentaire (visible de tous)<br/>
-                            <input type="text" name="comment" value={this.state.comment} onChange={this.handleCommentChange} style={styles.largeInput}/> <br/>
+                            <input type="text" name="comment" value={comment} onChange={e => handleCommentChange(e.target.value)} style={styles.largeInput}/> <br/>
                         </label>
                         <label>Requête cachée aux élèves
-                            <input type="radio" name="hidden" value="0" checked={this.state.hidden==0} onChange={this.handleHiddenChange} style={styles.smallInput}/><label>Non</label>
-                            <input type="radio" name="hidden" value="1" checked={this.state.hidden==1} onChange={this.handleHiddenChange} style={styles.smallInput}/><label>Oui</label>
+                            <input type="radio" name="hidden" value="0" checked={hidden==0} onChange={e => handleHiddenChange(e.target.value)} style={styles.smallInput}/><label>Non</label>
+                            <input type="radio" name="hidden" value="1" checked={hidden==1} onChange={e => handleHiddenChange(e.target.value)} style={styles.smallInput}/><label>Oui</label>
                         </label><br/>
                         <View>
-                            {this.deadlinePicker()}
+                            {deadlinePicker()}
                         </View>
+                        <Text style={{color: 'red', fontSize: 20, marginVertical: 10}}>{error}</Text>
+
                         <Button 
                             type="button" 
-                            onPress={this.onFileUpload}
+                            onPress={onFileUpload}
                             title="Envoyer"
                             color={globalColors.primary}
                         />
@@ -328,29 +341,27 @@ class UploadForm extends Component {
     };
 
 
-    render() {
-        if (this.state.userLists.length <= 0) {
-            this.getLists();
-            return (
-                <Text>Chargement des listes depuis le serveur distant...</Text>
-            )
-        }
-        return (
-            <View style={globalStyles.container}>
-                <GoBackModule navigation={this.props.navigation} />
-                <form id="file" style={styles.form}>
-                    <Text style={[globalStyles.titleText, styles.title]}>
-                        Sélectionnez le fichier à joindre
-                    </Text>
-                    <input type="file" onChange={this.onFileChange} style={styles.fileInput}/>
-                </form>
-                {this.fileForm()}
-                {this.requestForm()}
 
-                <Text style={{color: 'red', fontSize: 20, marginVertical: 10}}>{this.state.error}</Text>
-            </View>
-            );
+    if (!dataLoaded) {
+        <AppLoading
+            startAsync={getLists()}
+            onFinish={setDataLoaded(true)}
+            />
     }
+    return (
+        <View style={globalStyles.container}>
+            <GoBackModule navigation={navigation} />
+            <form id="file" style={styles.form}>
+                <Text style={[globalStyles.titleText, styles.title]}>
+                    Sélectionnez le fichier à joindre
+                </Text>
+                <input type="file" onChange={onFileChange} style={styles.fileInput}/>
+            </form>
+            {fileForm()}
+            {requestForm()}
+
+        </View>
+    );
 }   
 
 export default UploadForm;
