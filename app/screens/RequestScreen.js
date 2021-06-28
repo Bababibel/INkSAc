@@ -24,7 +24,6 @@ var percentage =  0
 
 export default function RequestScreen({ route, navigation }) {
   const id = route
-  console.log(id)
   const [dataLoaded, setDataLoaded] = useState(false);
 
   const [modalVisible, setModalVisible] = useState(false);
@@ -38,7 +37,6 @@ export default function RequestScreen({ route, navigation }) {
     .then((request) => {
       let tmpRequete = []
         request.data.map((item) => {
-          console.log("route.id : "+id.params.id+'et item.id'+item.author)
           if(id.param.id == item.author){
             print('pass')
           fetch(constants.getFilesFromRequest + "?request_id=" + item.id)
@@ -69,7 +67,6 @@ export default function RequestScreen({ route, navigation }) {
   if (dataLoaded) {
     if (Platform.OS === "web") {
       return (
-        //console.log(requests),
         <View style={globalStyles.container}>
           <TouchableOpacity>
             <Card>
@@ -89,8 +86,7 @@ export default function RequestScreen({ route, navigation }) {
             renderItem={({ item }) => (
                   <TouchableOpacity
                     onPress={() =>
-                      {console.log('bite'),
-                      navigation.navigate("RequestElement", {
+                      {navigation.navigate("RequestElement", {
                         item: item,
                         modify: "just print",
                       })}

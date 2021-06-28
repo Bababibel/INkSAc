@@ -8,7 +8,6 @@ import { globalStyles } from "../globals/globalStyles";
 
 class MyModal extends Component {
     render () {
-        console.log(this.props)
         if (Platform.OS === 'android' || Platform.OS === 'ios'){
             if (this.props.page == 'DisplayMyRequests'){
                 return(
@@ -27,7 +26,6 @@ class MyModal extends Component {
                 )
             }
             else if (this.props.page == 'DisplayRequestsByList'){
-                console.log(this.props.selected)
                 return(
                     <Modal visible={this.props.modalOpen} animationType='slide'>
                         <TouchableOpacity onPress={() => this.props.setModalOpen(false)}>

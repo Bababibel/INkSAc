@@ -79,8 +79,6 @@ function RequestModule({requestProps, navigation}) {
     }
     
     const pressHandle = () => {
-        console.log("je suis pressed")
-        console.log(request)
         navigation.navigate("ShowFileDetails", { item: request })
     }
 
@@ -88,7 +86,7 @@ function RequestModule({requestProps, navigation}) {
         return (
         <TouchableOpacity onPress={() => pressHandle()}>
             <Text style={styles.X}>X</Text>
-            <View onPress={() => console.log("je suis pressed")} style={[styles.container, {backgroundColor: (request.location=="Bourges" ? 'ghostwhite' : 'gainsboro')}]}>
+            <View style={[styles.container, {backgroundColor: (request.location=="Bourges" ? 'ghostwhite' : 'gainsboro')}]}>
                 {generateAlertConfirm()}
                 <TouchableOpacity
                     onPress={() => {setIsConfirmOpen(true)}}

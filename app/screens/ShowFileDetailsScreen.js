@@ -5,7 +5,6 @@ import GoBackModule from '../assets/modules/GoBackModule';
 
 export default function ShowFileDetailsScreen({ route, navigation }){
     const item = route.params.item;
-    console.log(item.files)
     return(
         <ScrollView>
             <GoBackModule navigation={navigation}/>

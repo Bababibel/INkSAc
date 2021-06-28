@@ -5,7 +5,6 @@ import constants from '../globals/constants';
 class Request {
     constructor(request_id, author_id, author_name, deadline, delivery_date, expiration_date, title, comment, hidden, state, list = 'none') {
         this.request_id = request_id
-        console.log(request_id)
         this.author_id = author_id
         this.author_name = author_name
         this.deadline = deadline

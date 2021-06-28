@@ -32,7 +32,6 @@ function ListFormModule({reloadData}) {
         formData.append('name', name);
         formData.append('th_count', tmpNum);
         formData.append('location', location)
-        console.log(...formData);
         axios.post(constants.createList, formData)
         .then(response => {
             if ('message' in response.data) {
