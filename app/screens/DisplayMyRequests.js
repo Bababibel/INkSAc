@@ -30,41 +30,40 @@ export default function RequestScreen({ route, navigation }) {
 
   const [isData, setIsData] = useState(false);
   const [dataLoaded, setDataLoaded] = useState(false);
-  const [modalVisible, setModalVisible] = useState(false);
   const [requests, setRequests] = useState([]);
 
   const dataLoad = () => {
-    fetch(loadRequestsApiUrl)
-    .then(reponse => reponse.json())
+    console.log("id : "+constants.globalUser.id)
+    console.log("role : "+constants.globalUser.role)
+    console.log("url : "+loadRequestsApiUrl)
+    axios.get(loadRequestsApiUrl , {params: {'id' : constants.globalUser.id}}, {
+      headers: { "Content-Type" : "application/json" }
+    })
     .then((request) => {
-      if ('data' in request){
+      console.log("c'est passé")
+      if ("data" in request.data){
         setIsData(true)
         let tmpRequete = []
-        request.data.map((item) => {
-          if(id.params.id == item.author){
-            axios.get(constants.getFilesFromRequest , {params: {'request_id' : item.id}}, {
-                        headers: { "Content-Type" : "application/json" }
-                      })
-            .then((files) => {
-              if (typeof files.data != 'undefined'){
-                files.data.data.map((item2) => {
-                  if (typeof item2.message == 'undefined') {
-                    const newFile = new File(item2.id, item2.name, item2.path, item2.color, item2.stapple, item2.format, item2.recto_verso, item2.nb_per_page, item.id)
-                    const newRequete = new Request(item.id, item.author, item.author_name, item.deadline, item.delivery_date, item.expiration_date, item.title, item.comment, item.hidden, item.state)
-                    newRequete.attachFile(newFile)
-                    tmpRequete.push(newRequete)
-                    setRequests((prevItem) => {
-                        return [newRequete ,...prevItem];
+        request.data.data.map((item) => {
+          axios.get(constants.getFilesFromRequest , {params: {'request_id' : item.id}}, {
+                      headers: { "Content-Type" : "application/json" }
                     })
-                  }
-                })
-              }
-            })
-          }
+          .then((files) => {
+            if (typeof files.data != 'undefined'){
+              files.data.data.map((item2) => {
+                if (typeof item2.message == 'undefined') {
+                  const newFile = new File(item2.id, item2.name, item2.path, item2.color, item2.stapple, item2.format, item2.recto_verso, item2.nb_per_page, item.id)
+                  const newRequete = new Request(item.id, item.author, item.author_name, item.deadline, item.delivery_date, item.expiration_date, item.title, item.comment, item.hidden, item.state, item.list_names)
+                  newRequete.attachFile(newFile)
+                  tmpRequete.push(newRequete)
+                  setRequests((prevItem) => {
+                      return [newRequete ,...prevItem];
+                  })
+                }
+              })
+            }
+          })
         })}
-    })
-    .catch(() => {
-        console.log("erreur");
     })
     .done()
   }
@@ -78,7 +77,23 @@ export default function RequestScreen({ route, navigation }) {
       navigation.navigate("CreateOrUpdateRequest", { 
         modify: "no" });
     } else {
-      setModalVisible(true);
+      Alert.alert('Fonctionnalité indisponnible', 'Cette fonctionalité n\'est pas disponible pour cette platformne, utilisez un ordinateur afin de formuler une nouvelle demande')
+    }
+  }
+
+  const roleHandle = () => {
+    if(constants.globalUser.role == 'student') return (null)
+    else {
+      return(
+      <TouchableOpacity>
+        <Card>
+          <Text
+            onPress={() => pressHandle()}>
+            Formulez une nouvelle demande
+          </Text>
+        </Card>
+      </TouchableOpacity>
+      )
     }
   }
 
@@ -87,26 +102,15 @@ export default function RequestScreen({ route, navigation }) {
       <ScrollView>
         <View>
         <GoBackModule navigation={navigation}/>
-          <Text style={styles.titleText} >Liste de mes requètes</Text>
-          
+          <Text style={styles.titleText} >Liste de mes requêtes</Text>
           <View style={globalStyles.container}>
-            <TouchableOpacity>
-              <Card>
-                <Text
-                  onPress={() => pressHandle()}>
-                  Formulez une nouvelle demande
-                </Text>
-              </Card>
-            </TouchableOpacity>
+            {roleHandle()}
           </View>
               {requests.map(request => {
                 return (
                   <RequestModule clickHandle={clickHandle} key={request.request_id} requestProps={request} navigation={navigation}/>
                 )
               })}
-          <View>
-            <MyModal page={'DisplayMyRequests'} setModalVisible={setModalVisible} modalVisible={modalVisible}/>
-          </View>
         </View>
       </ScrollView>)
   } else {
@@ -118,16 +122,8 @@ export default function RequestScreen({ route, navigation }) {
           onFinish={() => setDataLoaded(true)}
         />
         <GoBackModule navigation={navigation}/>
-        <Text style={globalStyles.modalText}> Vous n'avez aucune requète</Text>
-        <TouchableOpacity>
-          <Card>
-            <Text
-              onPress={() => pressHandle()}>
-              Formulez une nouvelle demande
-            </Text>
-          </Card>
-        </TouchableOpacity>
-        <MyModal page={'DisplayMyRequests'} setModalVisible={setModalVisible} modalVisible={modalVisible}/>
+        <Text style={globalStyles.modalText}> Vous n'avez aucune requête</Text>
+        {roleHandle()}
       </View>
     )
   }

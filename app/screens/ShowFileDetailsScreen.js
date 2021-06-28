@@ -1,25 +1,78 @@
 import React from 'react';
-import {View, Text, ScrollView, StyleSheet, StatusBar, Platform} from 'react-native';
+import {View, Text, ScrollView, StatusBar, Button, Platform, StyleSheet} from 'react-native';
 import { globalColors } from '../assets/globals/globalStyles';
+import constants from '../assets/globals/constants'
 import GoBackModule from '../assets/modules/GoBackModule';
+import axios from 'axios';
 
 export default function ShowFileDetailsScreen({ route, navigation }){
     const item = route.params.item;
-    return(
-        <ScrollView>
-            <GoBackModule navigation={navigation}/>
-            <Text style={styles.titleContainer}> Détail de la requète</Text>
-            <ScrollView>
-                <View style={styles.container}>
-                    <Text style={styles.titleContainer}>Requete</Text>
-                    <Text style={styles.row}>Auteur : {item.author}</Text>
-                    <Text style={styles.row}>Titre : {item.title}</Text>
-                    <Text style={styles.row}>Deadline : {item.deadline}</Text>
+
+    const displayList = () => {
+        item.list.map(liste => {
+            return (
+                <Text>Liste(s) : {liste} </Text>
+            )
+        })
+    }
+
+    const stateHandle = () => {
+        console.log(item)
+        let state = ''
+        if (item.state == 'pending'){
+            state = 'Imprimer' 
+        } else if (item.state == 'Imprimer'){
+            state = 'Pret'
+        } else if (item.state == 'Pret') {
+            state = 'Archiver'
+        } else if (item.state == 'Archiver') {
+            state = 'Supprimer'
+        } 
+        item.updateInDb(state)
+        navigation.push('DisplayAllRequestsForReprography')
+    }
+
+    axios.get(constants.getFilesFromRequest, {params: {'request_id': item.id}})
+
+    const titleHandle = () => {
+        let title = ''
+        if (item.state == 'pending'){
+            title = 'Imprimer' 
+        } else if (item.state == 'Imprimer'){
+            title = 'Pret'
+        } else if (item.state == 'Pret') {
+            title = 'Archiver'
+        } else if (item.state == 'Archiver') {
+            title = 'Supprimer'
+        } 
+        return (title)
+    }
+
+    const roleHandle = () => {
+        if (constants.globalUser.role == 'reprography'){
+            return(<Button onPress={() => stateHandle()} title={titleHandle()}/>)
+        }
+        else if (constants.globalUser.role == 'student'){
+            return (
+                <View>
+                <Button onPress={() => stateHandle()} title={"Oui"}/>
+                <Button onPress={() => stateHandle()} title={"Non"}/>
+                </View>
+            )
+        }
+    }
+
+    const displayHandle = () => {
+        if (constants.globalUser.role != 'student'){
+            return(
+                <View>
                     <Text style={styles.row}>Pour le : {item.delivery_date}</Text>
                     <Text style={styles.row}>Supprimé le : {item.expiration_date}</Text>
                     <Text style={styles.row}>Commentaire : {item.comment}</Text>
                     <Text style={styles.row}>Partiel : {item.hidden}</Text>
                     <Text style={styles.row}>Etat : {item.state}</Text>
+                    {displayList()}
+                    <Text style={styles.row}>Liste(s) : {item.list}</Text>
                     <Text style={styles.titleContainer}>Fichier</Text>
                     <Text style={styles.row}>Nom : {item.files.name}</Text>
                     <Text style={styles.row}>Couleur : {item.files.color}</Text>
@@ -28,7 +81,22 @@ export default function ShowFileDetailsScreen({ route, navigation }){
                     <Text style={styles.row}>Recto-Verso : {item.files.recto_verso}</Text>
                     <Text style={styles.row}>Nombre de diapo par Page : {item.files.nb_per_page}</Text>
                 </View>
-            </ScrollView>
+            )
+        }
+    }
+
+    return(
+        <ScrollView>
+            <GoBackModule navigation={navigation}/>
+            <Text style={styles.titleContainer}> Détail de la requête</Text>
+                <View style={styles.container}>
+                    <Text style={styles.titleContainer}>Requete</Text>
+                    <Text style={styles.row}>Auteur : {item.author_name}</Text>
+                    <Text style={styles.row}>Titre : {item.title}</Text>
+                    <Text style={styles.row}>Deadline : {item.deadline}</Text>
+                    {displayHandle()}
+                </View>
+                {roleHandle()}
         </ScrollView>
     )
 }
