@@ -60,13 +60,13 @@ export default function RequestScreen({ route, navigation }) {
                     })
                   } 
                   else if (newRequete.state != 'ready') { //To be printed requests
-                    if (constants.globalUser.role != 'student') {setIsData(true), setIsDataPrinted(true)}
+                    if (constants.globalUser.role != 'student') {setIsData(true)}
                     setToPrintRequests((prevItem) => {
                       return [newRequete ,...prevItem];
                     })
                   }
                   else { //Ready requests
-                    if (constants.globalUser.role != 'student') {setIsData(true), setIsDataReady(true)}
+                    if (constants.globalUser.role != 'student') {setIsData(true)}
                     setReadyRequests((prevItem) => {
                       return [newRequete ,...prevItem];
                     })
