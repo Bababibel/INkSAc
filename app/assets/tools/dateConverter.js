@@ -15,8 +15,7 @@ function toSqlFormatTime(time) {
     stringTime += String(time.getHours()) + ':';
     if (time.getMinutes() < 10) stringTime += "0";
     stringTime += String(time.getMinutes()) + ':';
-    if (time.getSeconds() < 10) stringTime += "0";
-    stringTime += String(time.getSeconds());
+    stringTime += "00"; // 0 second
 
     return stringTime;
 }

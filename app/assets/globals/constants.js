@@ -1,3 +1,4 @@
+import { globalColors, globalStyles } from "./globalStyles";
 
 const baseUrl = 'https://bgauthier.fr/inksac/';
 
@@ -47,5 +48,17 @@ export default {
         'teacher': 'Enseignant',
         'reprography': 'Reprographie',
         'student': 'Étudiant',
+    },
+    states: {
+        msg: {
+            'pending': 'Vote des élèves',
+            'waitForPrint': 'En attente de traitement',
+            'ready': 'Prêt à être récupéré',
+        },
+        color: {
+            'pending': globalColors.darkGrey,
+            'waitForPrint': globalColors.red,
+            'ready': globalColors.ready,
+        }
     }
 }
