@@ -35,7 +35,7 @@ export default function RequestScreen({ route, navigation }) {
     fetch(constants.getAllRequests)
     .then(reponse => reponse.json())
     .then((request) => {
-      if ('data' in request){
+      if ('data' in request) {
         setIsData(true)
         let tmpRequete = []
         request.data.map((item) => {
