@@ -35,6 +35,7 @@ export default function LoginScreen({ navigation }){
         axios.get(constants.getUserByEmail, { params: { 'email': email } })
         .then(response => {
             if (response.data) { // server answered
+                console.log(response.data);
                 if ('data' in response.data) { // there is data to collect
                     let u = response.data.data[0]; // first object in the data array
                     let tmpUser = new User(u.id, u.email, u.first_name, u.last_name, u.role, u.creation_date, u.last_login_date, u.location, u.list_names);
@@ -49,7 +50,7 @@ export default function LoginScreen({ navigation }){
             }
             else setErrorMsg("Le serveur distant ne répond pas");
         })
-    } 
+    }
 
     // REDIRECTION
     // wait for full-update of the variable "user" before evaluating it

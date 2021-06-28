@@ -40,7 +40,7 @@ function ManageListsScreen({ navigation }) {
 
     if (dataLoaded) {
         return (
-            <ScrollView>
+            <ScrollView style={styles.scrollView}>
                 <GoBackModule navigation={navigation}/>
                 <Text style={styles.titleText}>Gérer les listes</Text>
                 <Text>{errorMsg}</Text>
@@ -83,6 +83,9 @@ const styles = StyleSheet.create({
         fontSize: 30,
         textAlign: 'center',
         marginBottom: 20,
+    },
+    scrollView: {
+        paddingTop : Platform.OS === "android" ? StatusBar.currentHeight : 0,
     }
 
 })

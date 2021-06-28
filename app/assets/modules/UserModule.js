@@ -72,7 +72,7 @@ function UserModule({userProps}) {
             )
         } else {
             return (
-                <Text>{user.role}</Text>
+                <Text>{role}</Text>
             )
         }
     }

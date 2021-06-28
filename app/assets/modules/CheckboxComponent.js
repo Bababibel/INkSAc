@@ -24,7 +24,7 @@ class CheckboxesList {
 }
 
 class Checkbox extends Component {
-    constructor() {
+    constructor(file) {
         super();
         this.state = {
             checked: null

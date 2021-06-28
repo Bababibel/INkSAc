@@ -17,7 +17,6 @@ function ListFormModule({reloadData}) {
     const [errorMsg, setErrorMsg] = useState("");
 
     function handleSubmit() {
-        console.log("coucou")
         // Verification
         if (!allowedChars.test(name)) {
             setErrorMsg("Les noms de listes ne peuvent contenirs que des lettres, des chiffres ou _, -");
@@ -33,7 +32,6 @@ function ListFormModule({reloadData}) {
         formData.append('name', name);
         formData.append('th_count', tmpNum);
         formData.append('location', location)
-        console.log(...formData);
         axios.post(constants.createList, formData)
         .then(response => {
             if ('message' in response.data) {
@@ -47,6 +45,8 @@ function ListFormModule({reloadData}) {
         })
         
     }
+
+    
 
 
     if(Platform.OS === 'web'){
@@ -76,11 +76,8 @@ function ListFormModule({reloadData}) {
                 </View>
             </View>
         )
-    } else {
-        return (
-            (null)
-        )
-    }
+    } 
+    else return null;
 
 }
 

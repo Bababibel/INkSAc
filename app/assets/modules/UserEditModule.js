@@ -1,22 +1,22 @@
 import React, {useState, useEffect, useRef} from 'react';
 import { View, StyleSheet, Text, TouchableOpacity, Platform, Alert } from 'react-native';
 
-import Request from '../classes/Request';
+import User from '../classes/User';
 import { Select, FormControl, MenuItem } from '@material-ui/core';
 import AlertAskConfirmationOnUserDeleteModule from './AlertAskConfirmationOnUserDeleteModule';
 
 
-function RequestModule({requestProps, goBack, navigation}) {
-    // Check if property is a valid array to load a User class
-    //if (!Array.isArray(requestProps) || requestProps.length != 9) return (<Text>Given parameter is not a array or request's properties ({typeof(requestProps)}): {requestProps}</Text>);
 
-    const request = new Request (requestProps.request_id, requestProps.author_id, requestProps.author_name, requestProps.deadline, requestProps.delivery_date, requestProps.expiration_date, requestProps.title, requestProps.comment, requestProps.hidden, requestProps.state, requestProps.list)
-    request.attachFile(requestProps.files)
-    const [role, setRole] = useState(request.role);
+function UserEditModule({userProps}) {
+    
+    // Check if property is a valid array to load a User class
+    if (!Array.isArray(userProps) || userProps.length != 9) return (<Text>Given parameter is not a array or user's properties ({typeof(userProps)}): {userProps}</Text>);
+    
+    let user = new User(userProps[0], userProps[1], userProps[2], userProps[3], userProps[4], userProps[5], userProps[6], userProps[7], userProps[8]);
+    const [role, setRole] = useState(user.role);
     const [isVisible, setIsVisible] = useState(true);
     const [isConfirmOpened, setIsConfirmOpen] = useState(false);
     
-
     // Store the previous role for the useEffect()
     const prevRoleRef = useRef();
     useEffect(() => {
@@ -26,13 +26,13 @@ function RequestModule({requestProps, goBack, navigation}) {
     // Dont send an Update request if the previous role is the same or was undefined (class instanciation)
     useEffect(() => {
         if (prevRole != role && prevRole != undefined) {
-            request.role = role,
-            request.updateInDb()
+            user.role = role,
+            user.updateInDb()
         }
     }, [role, prevRole])
 
     let deleteFunction = () => {
-        request.deleteInDb();
+        user.deleteInDb();
         setIsVisible(false);
     }
 
@@ -56,33 +56,55 @@ function RequestModule({requestProps, goBack, navigation}) {
             }
         }
     }
-    
-    const pressHandle = () => {
-        navigation.navigate("ShowFileDetails", { item: request, goBack : goBack })
+
+    const platformHandle = () => {
+        if(Platform.OS === 'web'){
+            return (
+                <FormControl>
+                    <Select
+                        value={role}
+                        onChange={e => setRole(e.target.value)}>
+                        <MenuItem value={"student"}>Étudiant</MenuItem>
+                        <MenuItem value={"teacher"}>Enseignant</MenuItem>
+                        <MenuItem value={"reprography"}>Reprographie</MenuItem>
+                        <MenuItem value={"admin"}>Administrateur</MenuItem>
+                    </Select>
+                </FormControl>
+            )
+        } else {
+            return (
+                <Text>{user.role}</Text>
+            )
+        }
     }
 
     if (isVisible) {
         return (
-        <TouchableOpacity onPress={() => pressHandle()}>
-            <Text style={styles.X}>X</Text>
-            <View style={[styles.container, {backgroundColor: (request.location=="Bourges" ? 'ghostwhite' : 'gainsboro')}]}>
+            <View style={[styles.container, {backgroundColor: (user.location=="Bourges" ? 'ghostwhite' : 'gainsboro')}]}>
                 {generateAlertConfirm()}
                 <TouchableOpacity
-                    onPress={() => {setIsConfirmOpen(true)}}
-                    style={styles.deleteButton}>
+                        onPress={() => {setIsConfirmOpen(true)}}
+                        style={styles.deleteButton}>
                     <Text style={styles.X}>X</Text>
                 </TouchableOpacity>
                 <View style={styles.row}>
-                    <Text>{request.title}</Text>
+                    <Text style={styles.biggerText}>{user.first_name}</Text>
+                    <Text style={styles.biggerText}>{user.last_name}</Text>
+                    {platformHandle()}
                 </View>
                 <View style={styles.row}>
+                    <Text>Liste(s): </Text>
+                    {user.lists.map(list => {return <Text key={Math.random()*1000} style={styles.list}>{list}</Text>})}
                 </View>
                 <View style={styles.row}>
-                <Text>{request.state}</Text>
-                    <Text>{request.deadline}</Text>
+                    <Text>{user.location}</Text>
+                    <Text>{user.email}</Text>
+                </View>
+                <View style={styles.row}>
+                    <Text>{user.last_login_date}</Text>
+                    <Text>{user.creation_date}</Text>
                 </View>
             </View>
-        </TouchableOpacity>
         )
     }
     else return null;
@@ -100,7 +122,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         flexWrap: 'wrap',
         alignContent: 'center',
-        marginTop: -5,
+        marginTop: 5,
         width: '100%',
         marginHorizontal: 'auto',
         fontFamily: 'ubuntu-regular',
@@ -135,4 +157,4 @@ const styles = StyleSheet.create({
 
 })
 
-export default RequestModule;
+export default UserEditModule;

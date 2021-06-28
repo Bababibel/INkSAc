@@ -34,19 +34,19 @@ class UpdateForm extends Component {
         title: "",
         hidden: (this.props.params.item.hidden) ? this.props.params.item.hidden : 0,
 	};
-    handleColorChange = (e) => { this.setState({color: e.target.value}); console.log("Color: " + thisthis.state.color) }
-    handleStappleChange = (e) => { this.setState({stapple: e.target.value}); console.log("State: " + this.state.stapple) }
-    handleR_VChange = (e) => { this.setState({recto_verso: e.target.value}); console.log("Recto_verso: " + this.state.recto_verso) }
-    handleFormatChange = (e) => { this.setState({format: e.target.value}); console.log("Format: " + this.state.format) }
-    handleNbPerPageChange = (e) => { this.setState({nb_per_page: e.target.value}); console.log("Nb_per_page: " + this.state.nb_per_page) }
+    handleColorChange = (e) => { this.setState({color: e.target.value}) }
+    handleStappleChange = (e) => { this.setState({stapple: e.target.value}) }
+    handleR_VChange = (e) => { this.setState({recto_verso: e.target.value}) }
+    handleFormatChange = (e) => { this.setState({format: e.target.value}) }
+    handleNbPerPageChange = (e) => { this.setState({nb_per_page: e.target.value}) }
 
-    handleListChange = (e) => { this.setState({userList: e.target.value}); console.log("List: " + this.state.userList) }
-    handleDeadlineChange = (e) => { this.setState({deadline: e.target.value}); console.log("Deadline: " + this.state.deadline) }
-    handleDeliveryDateChange = (e) => { this.setState({delivery_date: e.target.value}); console.log("Delivery_date: " + this.state.delivery_date) }
-    handleCommentChange = (e) => { this.setState({comment: e.target.value}); console.log("Comment: " + this.state.comment) }
-    handleTitleChange = (e) => { this.setState({title: e.target.value}); console.log("title: " + this.state.Title) }
-    handleHiddenChange = (e) => { this.setState({hidden: e.target.value}); console.log("Hidden: " + this.state.hidden) }
-    setFileName = (e) => { this.setState({ fileName: e.target.value }); console.log("File name: " + this.state.fileName)}
+    handleListChange = (e) => { this.setState({userList: e.target.value}) }
+    handleDeadlineChange = (e) => { this.setState({deadline: e.target.value}) }
+    handleDeliveryDateChange = (e) => { this.setState({delivery_date: e.target.value}) }
+    handleCommentChange = (e) => { this.setState({comment: e.target.value}) }
+    handleTitleChange = (e) => { this.setState({title: e.target.value}) }
+    handleHiddenChange = (e) => { this.setState({hidden: e.target.value}) }
+    setFileName = (e) => { this.setState({ fileName: e.target.value }) }
 
     getLists = () => {
         axios.get(constants.getAllLists)
@@ -54,7 +54,6 @@ class UpdateForm extends Component {
             if ('data' in response.data) {
                 let lists = [];
                 let data = response.data.data;
-                let key=1;
                 data.forEach(e => {
                     lists.push(new List(e.id, e.name, e.theorical_count, e.creation_date, e.location));
                 });
@@ -135,17 +134,14 @@ class UpdateForm extends Component {
             headers: {'Content-Type': 'multipart/form-data'},
         })
         .then(response => {
-            console.log(response.data)
             if ('id' in response.data) {
                 let createLinkToFileData = new FormData();
                 createLinkToFileData.append('request_id', response.data.id);
                 createLinkToFileData.append('file_path', file_path);
-                console.log(file_path);
                 axios.post(constants.addFileToRequest, createLinkToFileData, {
                     headers: {'Content-Type': 'multipart/form-data'},
                 })
                 .then(response => {
-                    console.log(response.data);
                     navigation.goBack();
                 })
             }

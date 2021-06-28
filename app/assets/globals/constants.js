@@ -15,9 +15,11 @@ export default {
     addListToRequest: baseUrl+'api/link/addListToRequest.php',
     // Request
     postRequest: baseUrl+'api/request/createRequest.php',
-    updateRequest: baseUrl+'api/request/updateRequest.php',
-    deleteRequest: baseUrl+'api/request/deleteRequest.php',
-    getAllRequests: baseUrl+'api/request/getAllRequests.php',
+    updateRequest : baseUrl+'api/request/updateRequest.php',
+    deleteRequest : baseUrl+'api/request/deleteRequest.php',
+    getAllRequests : baseUrl+'api/request/getAllRequests.php',
+    getRequestsByAuthor : baseUrl+'api/request/getRequestsByAuthor.php',
+    getRequestsForUser : baseUrl+'api/request/getRequestsForUser.php',
     // List
     getRequestsForList: baseUrl+'api/shared/getRequestsForList.php',
     getAllLists: baseUrl+'api/userList/getAllLists.php',
@@ -37,7 +39,16 @@ export default {
     getAllAnswersToFileInRequest: baseUrl+'api/answer/getAllAnswersToFileInRequest.php',
     addAnswerToFileInRequest: baseUrl+'api/answer/addAnswerToFileInRequest.php',
     updateAnswerToFileInRequest: baseUrl+'api/answer/updateAnswerToFileInRequest.php',
+    // User in list
+    addUserToList : baseUrl+'api/userInList/addUserToList.php',
+    removeUserFromList : baseUrl+'api/userInList/removeUserFromList.php',
 
     // Global variables
     globalUser: null,
+    roles: {
+        'admin': 'Administrateur',
+        'teacher': 'Enseignant',
+        'reprography': 'Reprographie',
+        'student': 'Étudiant',
+    }
 }

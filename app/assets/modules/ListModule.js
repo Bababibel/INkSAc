@@ -72,26 +72,26 @@ function ListModule({listProps}) {
     const platformHandle = () => {
         if(Platform.OS === 'web'){
             return(
-                    <View style={styles.row}>
-                        <TextField value={name} 
-                                    onChange={e => setName(e.target.value)}/>
-                        <Text style={styles.biggerText}>Nombre théorique: {list.theoricalCount}</Text>
-                        <FormControl>
-                            <Select
-                                value={location}
-                                onChange={e => setLocation(e.target.value)}>
-                                    <MenuItem value={"Bourges"}>Bourges</MenuItem>
-                                <MenuItem value={"Blois"}>Blois</MenuItem>
-                            </Select>
-                        </FormControl>
-                    </View>
+                <View style={styles.row}>
+                    <TextField value={name} 
+                                onChange={e => setName(e.target.value)}/>
+                    <Text style={styles.biggerText}>Nombre théorique: {list.theoricalCount}</Text>
+                    <FormControl>
+                        <Select
+                            value={location}
+                            onChange={e => setLocation(e.target.value)}>
+                                <MenuItem value={"Bourges"}>Bourges</MenuItem>
+                            <MenuItem value={"Blois"}>Blois</MenuItem>
+                        </Select>
+                    </FormControl>
+                </View>
             )
         } else {
             return (
                 <View style={styles.row}>
-                    <Text>Nom : {list.name}</Text>
+                    <Text>Nom : {name}</Text>
                     <Text>Nombre théorique: {list.theoricalCount}</Text>
-                    <Text>{list.location}</Text>
+                    <Text>{location}</Text>
                 </View>
             )
         }

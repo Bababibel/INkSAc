@@ -15,7 +15,7 @@ import AppLoading from "expo-app-loading";
 import File from "../assets/classes/File";
 import constants from "../assets/globals/constants";
 import GoBackModule from "../assets/modules/GoBackModule";
-import { CheckboxesList, Checkbox } from "../assets/modules/CheckboxesList";
+import { CheckboxesList, Checkbox } from "../assets/modules/CheckboxComponent";
 
 function SaveChoice(files, choice) {
   axios.post(constants.getFilesFromRequest , {params: {"request_id" : request_id}}, {
@@ -69,21 +69,17 @@ export default function AnswerRequestScreen({ route, navigation }) {
 
   if (dataLoaded && isData) {
     return(
-      <ScrollView>
+    <ScrollView>
       <GoBackModule navigation={navigation}/>
       <View style={globalStyles.container}>
-        <Button title='Sauvegarder' onPress={() => SaveChoice(files, choice)}/>
         <FlatList
           data={files}
           keyExtractor={(info, index) => info + index}
-          renderItem={({ item }) => (
-            <TouchableOpacity onPress={() => clickHandle() }>
-              <Checkbox item = {item}/>
-            </TouchableOpacity>
+          renderItem={({item}) => (
+            <Checkbox item={item}/>
           )}
         />
       </View>
-      
     </ScrollView>)
   } else {
     return (

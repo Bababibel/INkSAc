@@ -50,6 +50,83 @@ class User {
             }
         })
     }
+
+    removeFromList(list_id, list_name) {
+        return new Promise((resolve, reject) => {
+
+            if (!list_id || !list_name) {
+                resolve("Invalid arguments for removeFromList fonction in User class.");
+                return false;
+            }
+            this.lists = this.lists.filter(l => l !== list_name); // delete list_name in array
+            let formData = new FormData();
+            formData.append('list_id', list_id);
+            formData.append('user_id', this.id);
+            console.log([...formData]);
+            axios.post(constants.removeUserFromList, formData)
+            .then(response => {
+                if ('message' in response.data) { 
+                    resolve("From User class: "+response.data.message)
+                    return true;
+                }
+                else {
+                    resolve("From User class: ERROR NO ANSWER");
+                    return false;
+                }
+            })
+        })
+    }
+    
+    addToList(list_id, list_name) {
+        return new Promise((resolve, reject) => {
+            if (!list_id || !list_name) {
+                resolve("Invalid arguments for addToList fonction in User class.");
+            }
+            if (!this.lists.includes(list_name)) this.lists.push(list_name);
+            let formData = new FormData();
+            formData.append('list_id', list_id);
+            formData.append('user_id', this.id);
+            console.log([...formData]);
+            axios.post(constants.addUserToList, formData)
+            .then(response => {
+                if ('message' in response.data) { 
+                    resolve("From User class: "+response.data.message);
+                }
+                else {
+                    revolve("From User class: ERROR NO ANSWER");
+                }
+            })
+        })
+    }
+
+    // really dangerous
+    reloadFromDb() {
+        return new Promise((resolve, reject) => {
+            axios.get(constants.getUser, { params: { 'id': this.id }})
+            .then(response => {
+                if (response.data) { // server answered
+                    if ('data' in response.data) { // there is data to collect
+                        let u = response.data.data[0]; // first object in the data array
+                        this.id = u.id;
+                        this.email = u.email;
+                        this.first_name = u.first_name;
+                        this.last_name = u.last_name;
+                        this.role = u.role;
+                        this.creation_date = u.creation_date;
+                        this.last_login_date = u.last_login_date;
+                        this.location = u.location;
+                        this.list_names = u.list_names;
+                        resolve("Utilisateur rechargé.")
+                    }
+                    else if ('message' in response.data) { // no data but error message
+                        resolve("Erreur. Réponse du serveur: "+response.data.message);
+                    }
+                    else resolve("Le serveur a renvoyé une réponse inhabituelle");
+                }
+                else resolve("Le serveur distant ne répond pas");
+            })
+        })
+    }
 }
 
 export default User;
