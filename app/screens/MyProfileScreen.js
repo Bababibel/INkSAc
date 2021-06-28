@@ -24,8 +24,8 @@ function MyProfileScreen({ navigation, route }) {
       }, [null]);
 
     useEffect(() => {
-        if (!user.lists) setTextInput(lists[0]);
-        else setTextInput(user.lists[0]);
+        if (user.lists.length > 0) setTextInput(user.lists[0])
+        else setTextInput("")
     }, [lists]);
 
     const getLists = () => {
@@ -53,7 +53,7 @@ function MyProfileScreen({ navigation, route }) {
 
     const handleSubmit = () => {
         if (!textInput) return;
-        let founded = false;
+        //let founded = false;
         lists.map(list => {
             if (list.name === textInput) { // if textInput correspond to a "real" list
                 if (!user.lists.includes(textInput)) { // and is not contained in user's lists
@@ -63,7 +63,7 @@ function MyProfileScreen({ navigation, route }) {
                         console.log(msg);
                         getLists();
                         console.log("List "+list.name+" added!");
-                        founded = true;
+                        //founded = true;
                     })
                 }
                 else setErrorMsg("Vous êtes déjà dans cette liste.")
@@ -169,9 +169,10 @@ const styles = StyleSheet.create({
     },
     bigText: {
         textAlign: 'center',
-        fontSize: 24,
+        fontSize : Platform.OS === "web" ? 24 : 18,
     },
     container: {
+        margin: 10,
         position: 'relative',
         flex: 1,
         justifyContent: 'center',
@@ -197,7 +198,7 @@ const styles = StyleSheet.create({
         marginLeft: 5,
     },
     errorMsg: {
-        fontSize: 20,
+        fontSize : Platform.OS === "web" ? 20 : 14,
         color: 'red',
     },
     listButtonContainer: {
@@ -220,11 +221,11 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         paddingHorizontal: 20,
         alignItems: 'center',
-        fontSize: 18,
+        fontSize : Platform.OS === "web" ? 18 : 12,
     },
     text: {
         textAlign: 'center',
-        fontSize: 20,
+        fontSize : Platform.OS === "web" ? 20 : 14,
     },
     scrollView: {
         paddingTop : Platform.OS === "android" ? StatusBar.currentHeight : 0,

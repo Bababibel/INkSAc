@@ -4,12 +4,12 @@ import { View, StyleSheet, Text, TouchableOpacity, Platform, Alert } from 'react
 import Request from '../classes/Request';
 import { Select, FormControl, MenuItem } from '@material-ui/core';
 import AlertAskConfirmationOnUserDeleteModule from './AlertAskConfirmationOnUserDeleteModule';
+import constants from '../globals/constants';
 
 
 function RequestModule({requestProps, goBack, navigation}) {
     // Check if property is a valid array to load a User class
     //if (!Array.isArray(requestProps) || requestProps.length != 9) return (<Text>Given parameter is not a array or request's properties ({typeof(requestProps)}): {requestProps}</Text>);
-
     const request = new Request (requestProps.request_id, requestProps.author_id, requestProps.author_name, requestProps.deadline, requestProps.delivery_date, requestProps.expiration_date, requestProps.title, requestProps.comment, requestProps.hidden, requestProps.state, requestProps.list)
     request.attachFile(requestProps.files)
     const [role, setRole] = useState(request.role);
@@ -56,6 +56,18 @@ function RequestModule({requestProps, goBack, navigation}) {
             }
         }
     }
+
+    const roleHandle = () => {
+        if (constants.globalUser.role != 'student'){
+            return (
+                <TouchableOpacity
+                    onPress={() => {setIsConfirmOpen(true)}}
+                    style={styles.deleteButton}>
+                    <Text style={styles.X}>X</Text>
+                </TouchableOpacity>
+            )
+        }
+    }
     
     const pressHandle = () => {
         navigation.navigate("ShowFileDetails", { item: request, goBack : goBack })
@@ -67,19 +79,14 @@ function RequestModule({requestProps, goBack, navigation}) {
             <Text style={styles.X}>X</Text>
             <View style={[styles.container, {backgroundColor: (request.location=="Bourges" ? 'ghostwhite' : 'gainsboro')}]}>
                 {generateAlertConfirm()}
-                <TouchableOpacity
-                    onPress={() => {setIsConfirmOpen(true)}}
-                    style={styles.deleteButton}>
-                    <Text style={styles.X}>X</Text>
-                </TouchableOpacity>
+                {roleHandle()}
                 <View style={styles.row}>
                     <Text>{request.title}</Text>
                 </View>
+                <View style={styles.row}></View>
                 <View style={styles.row}>
-                </View>
-                <View style={styles.row}>
-                <Text>{request.state}</Text>
-                    <Text>{request.deadline}</Text>
+                    <Text style={{color: constants.states.color[request.state]}}>État: {constants.states.msg[request.state]}</Text>
+                    <Text>Deadline de vote: {request.deadline}</Text>
                 </View>
             </View>
         </TouchableOpacity>
@@ -95,6 +102,7 @@ const styles = StyleSheet.create({
         marginBottom: 5,
     },
     container: {
+        margin: 10,
         position: 'relative',
         flex: 1,
         justifyContent: 'center',

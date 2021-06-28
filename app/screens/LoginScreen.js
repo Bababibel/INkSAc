@@ -32,23 +32,25 @@ export default function LoginScreen({ navigation }){
     const [user, setUser] = useState(null);
 
     function submitted(email) {
-        axios.get(constants.getUserByEmail, { params: { 'email': email } })
+        fetch(constants.getUserByEmail+"?email="+email)
         .then(response => {
-            if (response.data) { // server answered
-                console.log(response.data);
-                if ('data' in response.data) { // there is data to collect
-                    let u = response.data.data[0]; // first object in the data array
-                    let tmpUser = new User(u.id, u.email, u.first_name, u.last_name, u.role, u.creation_date, u.last_login_date, u.location, u.list_names);
-                    constants.globalUser = tmpUser;
-                    setUser(tmpUser);
-                    axios.get(constants.loggedUser, { params: { 'id': u.id } })
+            response.json()
+            .then(response => {
+                if (response !== undefined) { // server answered
+                    if ('data' in response) { // there is data to collect
+                        let u = response.data[0]; // first object in the data array
+                        let tmpUser = new User(u.id, u.email, u.first_name, u.last_name, u.role, u.creation_date, u.last_login_date, u.location, u.list_names);
+                        constants.globalUser = tmpUser;
+                        setUser(tmpUser);
+                        axios.get(constants.loggedUser, { params: { 'id': u.id } })
+                    }
+                    else if ('message' in response) { // no data but error message
+                        setErrorMsg("Erreur. Réponse du serveur: "+response.message);
+                    }
+                    else setErrorMsg("Le serveur a renvoyé une réponse inhabituelle");
                 }
-                else if ('message' in response.data) { // no data but error message
-                    setErrorMsg("Erreur. Réponse du serveur: "+response.data.message);
-                }
-                else setErrorMsg("Le serveur a renvoyé une réponse inhabituelle");
-            }
-            else setErrorMsg("Le serveur distant ne répond pas");
+                else setErrorMsg("Le serveur distant ne répond pas");
+            })
         })
     }
 
@@ -68,7 +70,7 @@ export default function LoginScreen({ navigation }){
             <TouchableWithoutFeedback onPress={dismissKeyboard}>
                 <View style={globalStyles.container}>
                     <Formik
-                        initialValues={{ email : 'admin@insacvl.fr', password : 'e'}}
+                        initialValues={{ email : 'admin@insa-cvl.fr', password : 'e'}}
                         validationSchema={LoginSchema}
                         onSubmit={(values) => submitted(values.email)}>
                         {(props) => (

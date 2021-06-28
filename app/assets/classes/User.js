@@ -62,7 +62,6 @@ class User {
             let formData = new FormData();
             formData.append('list_id', list_id);
             formData.append('user_id', this.id);
-            console.log([...formData]);
             axios.post(constants.removeUserFromList, formData)
             .then(response => {
                 if ('message' in response.data) { 
