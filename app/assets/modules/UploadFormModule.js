@@ -37,7 +37,7 @@ function UploadForm({navigation}) {
     const [format, handleFormatChange] = useState("A4");
     const [nb_per_page, handleNbPerPageChange] = useState(1);
     // Request Form
-    const [userList, handleListChange] = useState("");
+    const [userList, handleListChange] = useState("pute");
     const [deadline_date, handleDeadlineDateChange] = useState(currDate);
     const [deadline_time, handleDeadlineTimeChange] = useState(currDate);
     const [delivery_date, handleDeliveryDateChange] = useState(futDate);
@@ -60,12 +60,13 @@ function UploadForm({navigation}) {
         .then(response => {
             if ('data' in response.data) {
                 let data = response.data.data;
-                let blankList = new List(0, 'Selectionnez une liste', 0, computeDateTimeForSql(currDate, currDate), "")
-                setUserLists(userList => [...userList, blankList])
+                handleListChange('Selectionnez une liste')
                 data.forEach(e => {
                     let tmpList = new List(e.id, e.name, e.theorical_count, e.creation_date, e.location);
-                    setUserLists(userList => [...userList, tmpList]);
+                    console.log(tmpList)
+                    setUserLists(userLists => [...userLists, tmpList]);
                 });
+
             }
             else {
                 Alert.alert("Oups!", "Le serveur ne répond pas, ou a rencontré une erreur.", [{text: 'Ok'}])
@@ -100,7 +101,9 @@ function UploadForm({navigation}) {
             setError("Vous n'avez pas sélectionné de liste à affilier à votre demande.")
             return;
         }
-        if (computeDateTimeForSql(new Date(), new Date()) >= deadline || deadline > delivery) {
+        if (computeDateTimeForSql(new Date(), new Date()) >= deadline || deadline >= delivery) {
+            console.log("deadline", deadline)
+            console.log("delivery", delivery)
             setError("L'ordre chronologique n'est pas respecté (maintenant -> deadline -> livraison).")
             return;
         }
@@ -277,10 +280,10 @@ function UploadForm({navigation}) {
                     <label>Deadline souhaitée (fin de vote pour les élèves)<br/>
                         <MuiPickersUtilsProvider utils={DateFnsUtils}>
                             <KeyboardDatePicker disableToolbar variant="inline" format="yyyy/MM/dd" style={{marginRight: 30}}
-                                margin="normal" id="date-picker-inline" label="Jour de livraison" value={deadline_date}
+                                margin="normal" id="date-picker-inline-" label="Jour de fin de vote" value={deadline_date}
                                 onChange={handleDeadlineDateChange} KeyboardButtonProps={{'aria-label': 'change date'}}/>
                             <KeyboardTimePicker
-                                margin="normal" id="time-picker" label="Heure de livraison" value={deadline_time} 
+                                margin="normal" id="time-picker-" label="Heure de fin de vote" value={deadline_time} 
                                 onChange={handleDeadlineTimeChange} KeyboardButtonProps={{'aria-label': 'change time'}}/>
                         </MuiPickersUtilsProvider>
                     </label>
@@ -291,6 +294,8 @@ function UploadForm({navigation}) {
     }
 
     const requestForm = () => {
+        console.log(userLists)
+        console.log(userList)
         if (selectedFile) {
             return (
                 <View style={styles.requestForm}>
@@ -300,18 +305,25 @@ function UploadForm({navigation}) {
                             <FormControl>
                                 <Select
                                     value={userList}
-                                    onChange={handleListChange}>
-                                    {userLists.map(l => <MenuItem key={l.id} value={l.name}>{l.name}</MenuItem>)}
+                                    onChange={e => handleListChange(e.target.value)}>
+                                    {userLists.map(l => {return <MenuItem key={l.id} value={l.name}>{l.name}</MenuItem>})}
                                 </Select>
                             </FormControl>
                         </label>
                         <label>Date de livraison attendue<br/>
                         <MuiPickersUtilsProvider utils={DateFnsUtils}>
                             <KeyboardDatePicker disableToolbar variant="inline" format="yyyy/MM/dd" style={{marginRight: 30}}
+<<<<<<< HEAD
                                 margin="normal" id="date-picker-inline" label="Jour de fin de vote" value={delivery_date}
                                 onChange={handleDeliveryDateChange} KeyboardButtonProps={{'aria-label': 'change date'}}/>
                             <KeyboardTimePicker
                                 margin="normal" id="time-picker" label="Heure de fin de vote" value={delivery_time} 
+=======
+                                margin="normal" id="date-picker-inline" label="Jour de livraison" value={delivery_date}
+                                onChange={handleDeliveryDateChange} KeyboardButtonProps={{'aria-label': 'change date'}}/>
+                            <KeyboardTimePicker
+                                margin="normal" id="time-picker" label="Heure de livraison" value={delivery_time} 
+>>>>>>> c21c301d7dd822d64d95300844270e203fadf9e2
                                 onChange={handleDeliveryTimeChange} KeyboardButtonProps={{'aria-label': 'change time'}}/>
                         </MuiPickersUtilsProvider>
                         </label>

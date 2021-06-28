@@ -131,7 +131,7 @@ export default function RequestScreen({ route, navigation }) {
                 )
               })
             }
-          <Text  style={styles.titleSecond}>Pret</Text>
+          <Text  style={styles.titleSecond}>Prêtes</Text>
           { readyRequests.map(request => {
               return (
                 <RequestModule clickHandle={clickHandle} key={request.request_id} goBack={'DisplayMyRequests'} requestProps={request} navigation={navigation}/>

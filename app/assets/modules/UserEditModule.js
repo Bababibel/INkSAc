@@ -4,6 +4,7 @@ import { View, StyleSheet, Text, TouchableOpacity, Platform, Alert } from 'react
 import User from '../classes/User';
 import { Select, FormControl, MenuItem } from '@material-ui/core';
 import AlertAskConfirmationOnUserDeleteModule from './AlertAskConfirmationOnUserDeleteModule';
+import { convertToString } from '../tools/dateConverter';
 
 
 
@@ -101,8 +102,8 @@ function UserEditModule({userProps}) {
                     <Text>{user.email}</Text>
                 </View>
                 <View style={styles.row}>
-                    <Text>{user.last_login_date}</Text>
-                    <Text>{user.creation_date}</Text>
+                    <Text>{convertToString(user.last_login_date)}</Text>
+                    <Text>{convertToString(user.creation_date)}</Text>
                 </View>
             </View>
         )
