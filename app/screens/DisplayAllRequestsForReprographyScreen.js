@@ -10,12 +10,18 @@ import constants from '../assets/globals/constants';
 import Request from '../assets/classes/Request';
 import File from '../assets/classes/File';
 import { globalStyles } from '../assets/globals/globalStyles';
+import {computeDateTimeForSql} from '../assets/tools/dateConverter';
 
 
 export default function DisplayAllRequestsForReprographyScreen({ navigation }){
+
+    let now = computeDateTimeForSql(new Date(), new Date())
+
     const [dataLoaded, setDataLoaded] = useState(false);
     const [isData, setIsData] = useState(false);
-    const [requests, setRequests] = useState([]);
+    const [pendingRequests, setPendingRequests] = useState([]);
+    const [toPrintRequests, setToPrintRequests] = useState([]);
+    const [readyRequests, setReadyRequests] = useState([]);
 
     const dataLoad = () => {
         axios.get(constants.getAllRequests)
@@ -28,13 +34,32 @@ export default function DisplayAllRequestsForReprographyScreen({ navigation }){
                     .then((file) => {
                         if ('data' in file.data){
                             file.data.data.map((item2) => {
-                                const newFile = new File(item2.id, item2.name, item2.path, item2.color, item2.stapple, item2.format, item2.recto_verso, item2.nb_per_page, item.id)
-                                const newRequete = new Request(item.id, item.author, item.author_name, item.deadline, item.delivery_date, item.expiration_date, item.title, item.comment, item.hidden, item.state, item.list_names)
-                                newRequete.attachFile(newFile)
-                                tmpRequete.push(newRequete)
-                                setRequests((prevItem) => {
-                                    return [newRequete ,...prevItem];
-                                })
+                                if (typeof item2.message == 'undefined') {
+                                    const newFile = new File(item2.id, item2.name, item2.path, item2.color, item2.stapple, item2.format, item2.recto_verso, item2.nb_per_page, item.id)
+                                    const newRequete = new Request(item.id, item.author, item.author_name, item.deadline, item.delivery_date, item.expiration_date, item.title, item.comment, item.hidden, item.state, item.list_names)
+                                    newRequete.attachFile(newFile)
+                                    tmpRequete.push(newRequete)
+                                    if (newRequete.deadline > now){ //Pending Requests
+                                      setIsData(true)
+                                      if (constants.globalUser.role != 'student' || newRequete.hidden == 0 ){ // If hidden, don't show for students
+                                        setPendingRequests((prevItem) => {
+                                            return [newRequete ,...prevItem];
+                                        })
+                                      }
+                                    } 
+                                    else if (newRequete.state != 'ready') { //To be printed requests
+                                      if (constants.globalUser.role != 'student') {setIsData(true), setIsDataPrinted(true)}
+                                      setToPrintRequests((prevItem) => {
+                                        return [newRequete ,...prevItem];
+                                      })
+                                    }
+                                    else { //Ready requests
+                                      if (constants.globalUser.role != 'student') {setIsData(true), setIsDataReady(true)}
+                                      setReadyRequests((prevItem) => {
+                                        return [newRequete ,...prevItem];
+                                      })
+                                    }
+                                  }
                             })
                         }
                         else{
@@ -59,15 +84,31 @@ export default function DisplayAllRequestsForReprographyScreen({ navigation }){
     if (dataLoaded && isData) {
         return (
             <ScrollView>
-                <View>
-                <GoBackModule navigation={navigation}/>
-                <Text style={styles.titleText} >Liste de toutes les requêtes</Text>
-                    {requests.map(request => {
-                    return (
-                    <RequestModule clickHandle={clickHandle} key={request.files.id} requestProps={request} navigation={navigation}/>
-                    )
-                })}
-                </View>
+            <View>
+            <GoBackModule navigation={navigation}/>
+            <Text style={styles.titleText} >Liste de toutes les requêtes</Text>
+            <Text >En cours</Text>
+              { pendingRequests.map(request => {
+                  return (
+                    <RequestModule clickHandle={clickHandle} key={request.request_id} goBack={'DisplayMyRequests'} requestProps={request} navigation={navigation}/>
+                  )
+                })
+              }
+          <Text >En Attente</Text>
+            { toPrintRequests.map(request => {
+                return (
+                  <RequestModule clickHandle={clickHandle} key={request.request_id} goBack={'DisplayMyRequests'} requestProps={request} navigation={navigation}/>
+                )
+              })
+            }
+          <Text >Pret</Text>
+          { readyRequests.map(request => {
+              return (
+                <RequestModule clickHandle={clickHandle} key={request.request_id} goBack={'DisplayMyRequests'} requestProps={request} navigation={navigation}/>
+              )
+            })
+          }
+            </View>
             </ScrollView>
         )
     } else {
