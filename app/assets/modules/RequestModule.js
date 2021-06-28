@@ -6,7 +6,7 @@ import { Select, FormControl, MenuItem } from '@material-ui/core';
 import AlertAskConfirmationOnUserDeleteModule from './AlertAskConfirmationOnUserDeleteModule';
 
 
-function RequestModule({requestProps, navigation}) {
+function RequestModule({requestProps, goBack, navigation}) {
     // Check if property is a valid array to load a User class
     //if (!Array.isArray(requestProps) || requestProps.length != 9) return (<Text>Given parameter is not a array or request's properties ({typeof(requestProps)}): {requestProps}</Text>);
 
@@ -58,7 +58,7 @@ function RequestModule({requestProps, navigation}) {
     }
     
     const pressHandle = () => {
-        navigation.navigate("ShowFileDetails", { item: request })
+        navigation.navigate("ShowFileDetails", { item: request, goBack : goBack })
     }
 
     if (isVisible) {

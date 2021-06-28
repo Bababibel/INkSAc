@@ -16,7 +16,6 @@ import AppLoading from "expo-app-loading";
 
 import Request from "../assets/classes/Request";
 import File from "../assets/classes/File";
-import MyModal from "../assets/modules/ModalModule";
 import RequestModule from "../assets/modules/RequestModule";
 import Card from "../assets/shared/RequestCard";
 import constants from "../assets/globals/constants";
@@ -33,36 +32,34 @@ export default function RequestScreen({ route, navigation }) {
   const [requests, setRequests] = useState([]);
 
   const dataLoad = () => {
-    console.log("id : "+constants.globalUser.id)
-    console.log("role : "+constants.globalUser.role)
-    console.log("url : "+loadRequestsApiUrl)
     axios.get(loadRequestsApiUrl , {params: {'id' : constants.globalUser.id}}, {
       headers: { "Content-Type" : "application/json" }
     })
     .then((request) => {
-      console.log("c'est passé")
       if ("data" in request.data){
         setIsData(true)
         let tmpRequete = []
         request.data.data.map((item) => {
-          axios.get(constants.getFilesFromRequest , {params: {'request_id' : item.id}}, {
-                      headers: { "Content-Type" : "application/json" }
+          if( constants.globalUser.role != 'student' || (constants.globalUser.role == 'student' && item.hidden != 1)){
+            axios.get(constants.getFilesFromRequest , {params: {'request_id' : item.id}}, {
+                        headers: { "Content-Type" : "application/json" }
+                      })
+            .then((files) => {
+              if (typeof files.data != 'undefined'){
+                files.data.data.map((item2) => {
+                  if (typeof item2.message == 'undefined') {
+                    const newFile = new File(item2.id, item2.name, item2.path, item2.color, item2.stapple, item2.format, item2.recto_verso, item2.nb_per_page, item.id)
+                    const newRequete = new Request(item.id, item.author, item.author_name, item.deadline, item.delivery_date, item.expiration_date, item.title, item.comment, item.hidden, item.state, item.list_names)
+                    newRequete.attachFile(newFile)
+                    tmpRequete.push(newRequete)
+                    setRequests((prevItem) => {
+                        return [newRequete ,...prevItem];
                     })
-          .then((files) => {
-            if (typeof files.data != 'undefined'){
-              files.data.data.map((item2) => {
-                if (typeof item2.message == 'undefined') {
-                  const newFile = new File(item2.id, item2.name, item2.path, item2.color, item2.stapple, item2.format, item2.recto_verso, item2.nb_per_page, item.id)
-                  const newRequete = new Request(item.id, item.author, item.author_name, item.deadline, item.delivery_date, item.expiration_date, item.title, item.comment, item.hidden, item.state, item.list_names)
-                  newRequete.attachFile(newFile)
-                  tmpRequete.push(newRequete)
-                  setRequests((prevItem) => {
-                      return [newRequete ,...prevItem];
-                  })
-                }
-              })
-            }
-          })
+                  }
+                })
+              }
+            })
+          }
         })}
     })
     .done()
@@ -108,7 +105,7 @@ export default function RequestScreen({ route, navigation }) {
           </View>
               {requests.map(request => {
                 return (
-                  <RequestModule clickHandle={clickHandle} key={request.request_id} requestProps={request} navigation={navigation}/>
+                  <RequestModule clickHandle={clickHandle} key={request.request_id} goBack={'DisplayMyRequests'} requestProps={request} navigation={navigation}/>
                 )
               })}
         </View>

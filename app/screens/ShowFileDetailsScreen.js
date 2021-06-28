@@ -7,6 +7,7 @@ import axios from 'axios';
 
 export default function ShowFileDetailsScreen({ route, navigation }){
     const item = route.params.item;
+    const goBack = route.params.goBack;
 
     const displayList = () => {
         item.list.map(liste => {
@@ -29,7 +30,7 @@ export default function ShowFileDetailsScreen({ route, navigation }){
             state = 'Supprimer'
         } 
         item.updateInDb(state)
-        navigation.push('DisplayAllRequestsForReprography')
+        navigation.push(goBack)
     }
 
     axios.get(constants.getFilesFromRequest, {params: {'request_id': item.id}})
