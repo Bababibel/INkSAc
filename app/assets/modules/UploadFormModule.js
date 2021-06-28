@@ -9,6 +9,7 @@ import React,{useState, useEffect} from 'react';
 import { View, Text, Alert, Button } from 'react-native';
 import AppLoading from 'expo-app-loading';
 import { MuiPickersUtilsProvider, KeyboardTimePicker, KeyboardDatePicker } from '@material-ui/pickers';
+import { MenuItem, Select, FormControl } from '@material-ui/core';
 import DateFnsUtils from '@date-io/date-fns';
 
 import { globalColors, globalStyles } from "../globals/globalStyles";
@@ -18,7 +19,7 @@ import constants from '../globals/constants';
 import GoBackModule from '../modules/GoBackModule';
 
 
-const currDate = new Date();
+const currDate = new Date(new Date().setDate(new Date().getMonth() - 1)); // months start at 0 index, need to correct it for pickers
 const futDate = new Date(currDate.setDate(currDate.getDate() + 7));
 
 function UploadForm({navigation}) {
@@ -52,8 +53,6 @@ function UploadForm({navigation}) {
     useEffect(() => {
         deadline = computeDateTimeForSql(deadline_date, deadline_time);
         delivery = computeDateTimeForSql(delivery_date, delivery_time);
-        console.log("deadline:",deadline)
-        console.log("delivery:",delivery)
     }, [deadline_date, deadline_time, delivery_date, delivery_time]);
 
     const getLists = () => {
@@ -61,7 +60,8 @@ function UploadForm({navigation}) {
         .then(response => {
             if ('data' in response.data) {
                 let data = response.data.data;
-                setUserLists(userList => [...userList, new List(0, 'Selectionnez une liste',0 , computeDateTimeForSql(currDate, currDate), "")])
+                let blankList = new List(0, 'Selectionnez une liste', 0, computeDateTimeForSql(currDate, currDate), "")
+                setUserLists(userList => [...userList, blankList])
                 data.forEach(e => {
                     let tmpList = new List(e.id, e.name, e.theorical_count, e.creation_date, e.location);
                     setUserLists(userList => [...userList, tmpList]);
@@ -80,7 +80,7 @@ function UploadForm({navigation}) {
             console.log(error)
             setError("Coucou Baptiste, tu as oublié ton cerveau entre deux lignes de Javascript. Si un utilisateur voit ça, vous avez le droit de l'insulter. Cordialement, Baptiste, le 25/06/2021.");
         }*/
-        /* No joke, cet easter egg que je m'étais laissé a faillit pop le jour de la soutenance...
+        /* No joke, cet easter egg que je m'étais laissé a failli pop le jour de la soutenance...
         Big up au courageux qui me relit, force à toi
         Ce code est tellement dégueux que j'ai plus envie d'y toucher
         Bisous
@@ -276,11 +276,11 @@ function UploadForm({navigation}) {
                 <div>
                     <label>Deadline souhaitée (fin de vote pour les élèves)<br/>
                         <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                            <KeyboardDatePicker disableToolbar variant="inline" format="yyyy/MM/dd"
-                                margin="normal" id="date-picker-inline" label="Date picker inline" value={delivery_date}
+                            <KeyboardDatePicker disableToolbar variant="inline" format="yyyy/MM/dd" style={{marginRight: 30}}
+                                margin="normal" id="date-picker-inline" label="Jour de livraison" value={delivery_date}
                                 onChange={handleDeadlineDateChange} KeyboardButtonProps={{'aria-label': 'change date'}}/>
                             <KeyboardTimePicker
-                                margin="normal" id="time-picker" label="Time picker" value={delivery_time} 
+                                margin="normal" id="time-picker" label="Heure de livraison" value={delivery_time} 
                                 onChange={handleDeadlineTimeChange} KeyboardButtonProps={{'aria-label': 'change time'}}/>
                         </MuiPickersUtilsProvider>
                     </label>
@@ -296,20 +296,22 @@ function UploadForm({navigation}) {
                 <View style={styles.requestForm}>
                     <Text style={[globalStyles.titleText, styles.title]}>Formulez votre demande</Text>
                     <form id="requestData" style={styles.fileForm}>
-                        
                         <label>Liste d'élèves concernée<br/>
-                            <select type="text" name="userList" style={styles.smallInput}  onChange={e => handleListChange(e.target.value)}>
-                                {userLists.map(l => <option key={l.id} value={l.name}>{l.name}</option>)}
-                            </select>
+                            <FormControl>
+                                <Select
+                                    value={userList}
+                                    onChange={handleListChange}>
+                                    {userLists.map(l => <MenuItem key={l.id} value={l.name}>{l.name}</MenuItem>)}
+                                </Select>
+                            </FormControl>
                         </label>
-                        
                         <label>Date de livraison attendue<br/>
                         <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                            <KeyboardDatePicker disableToolbar variant="inline" format="yyyy/MM/dd"
-                                margin="normal" id="date-picker-inline" label="Date picker inline" value={deadline_date}
+                            <KeyboardDatePicker disableToolbar variant="inline" format="yyyy/MM/dd" style={{marginRight: 30}}
+                                margin="normal" id="date-picker-inline" label="Jour de fin de vote" value={deadline_date}
                                 onChange={handleDeliveryDateChange} KeyboardButtonProps={{'aria-label': 'change date'}}/>
                             <KeyboardTimePicker
-                                margin="normal" id="time-picker" label="Time picker" value={deadline_time} 
+                                margin="normal" id="time-picker" label="Heure de fin de vote" value={deadline_time} 
                                 onChange={handleDeliveryTimeChange} KeyboardButtonProps={{'aria-label': 'change time'}}/>
                         </MuiPickersUtilsProvider>
                         </label>

@@ -5,6 +5,7 @@ import constants from '../assets/globals/constants'
 import GoBackModule from '../assets/modules/GoBackModule';
 import HyperLink from 'react-native-hyperlink';
 import axios from 'axios';
+import { convertToString } from '../assets/tools/dateConverter';
 
 export default function ShowFileDetailsScreen({ route, navigation }){
     const item = route.params.item;
@@ -58,12 +59,13 @@ export default function ShowFileDetailsScreen({ route, navigation }){
     const displayHandle = () => {
         if (constants.globalUser.role != 'student'){
             return(
+                console.log(item),
                 <View>
-                    <Text style={styles.row}>Pour le : {item.delivery_date}</Text>
+                    <Text style={styles.row}>Pour le : {convertToString(item.delivery_date)}</Text>
                     <Text style={styles.row}>Commentaire : {item.comment}</Text>
                     <Text style={styles.row}>Partiel : {item.hidden==1 ? 'Oui' : 'Non'}</Text>
                     <Text style={[styles.row, { color: constants.states.color[item.state]}]}>État : {constants.states.msg[item.state]}</Text>
-                    <Text style={styles.row}>Supprimé le : {item.expiration_date}</Text>
+                    <Text style={styles.row}>Sera supprimée le : {convertToString(item.expiration_date)}</Text>
                     {displayList()}
                     <Text style={styles.row}>Liste : {item.list}</Text>
                     <Text style={styles.titleContainer}>Fichier</Text>
@@ -89,7 +91,7 @@ export default function ShowFileDetailsScreen({ route, navigation }){
                     <Text style={styles.titleContainer}>Requête</Text>
                     <Text style={styles.row}>Auteur : {item.author_name}</Text>
                     <Text style={styles.row}>Titre : {item.title}</Text>
-                    <Text style={styles.row}>Deadline : {item.deadline}</Text>
+                    <Text style={styles.row}>Deadline : {convertToString(item.deadline)}</Text>
                     {displayHandle()}
                 </View>
                 {roleHandle()}

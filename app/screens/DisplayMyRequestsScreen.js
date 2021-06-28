@@ -89,7 +89,7 @@ export default function RequestScreen({ route, navigation }) {
       navigation.navigate("CreateOrUpdateRequest", { 
         modify: "no" });
     } else {
-      Alert.alert('Fonctionnalité indisponnible', 'Cette fonctionalité n\'est pas disponible pour cette platformne, utilisez un ordinateur afin de formuler une nouvelle demande')
+      Alert.alert('Fonctionnalité indisponible', 'Cette fonctionalité n\'est pas disponible pour cette platformne, utilisez un ordinateur afin de formuler une nouvelle demande')
     }
   }
 
