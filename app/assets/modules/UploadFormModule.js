@@ -277,10 +277,10 @@ function UploadForm({navigation}) {
                     <label>Deadline souhaitée (fin de vote pour les élèves)<br/>
                         <MuiPickersUtilsProvider utils={DateFnsUtils}>
                             <KeyboardDatePicker disableToolbar variant="inline" format="yyyy/MM/dd" style={{marginRight: 30}}
-                                margin="normal" id="date-picker-inline" label="Jour de livraison" value={delivery_date}
+                                margin="normal" id="date-picker-inline" label="Jour de livraison" value={deadline_date}
                                 onChange={handleDeadlineDateChange} KeyboardButtonProps={{'aria-label': 'change date'}}/>
                             <KeyboardTimePicker
-                                margin="normal" id="time-picker" label="Heure de livraison" value={delivery_time} 
+                                margin="normal" id="time-picker" label="Heure de livraison" value={deadline_time} 
                                 onChange={handleDeadlineTimeChange} KeyboardButtonProps={{'aria-label': 'change time'}}/>
                         </MuiPickersUtilsProvider>
                     </label>
@@ -308,10 +308,10 @@ function UploadForm({navigation}) {
                         <label>Date de livraison attendue<br/>
                         <MuiPickersUtilsProvider utils={DateFnsUtils}>
                             <KeyboardDatePicker disableToolbar variant="inline" format="yyyy/MM/dd" style={{marginRight: 30}}
-                                margin="normal" id="date-picker-inline" label="Jour de fin de vote" value={deadline_date}
+                                margin="normal" id="date-picker-inline" label="Jour de fin de vote" value={delivery_date}
                                 onChange={handleDeliveryDateChange} KeyboardButtonProps={{'aria-label': 'change date'}}/>
                             <KeyboardTimePicker
-                                margin="normal" id="time-picker" label="Heure de fin de vote" value={deadline_time} 
+                                margin="normal" id="time-picker" label="Heure de fin de vote" value={delivery_time} 
                                 onChange={handleDeliveryTimeChange} KeyboardButtonProps={{'aria-label': 'change time'}}/>
                         </MuiPickersUtilsProvider>
                         </label>
