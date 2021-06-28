@@ -21,9 +21,7 @@ export default function DisplayAllRequestsForReprographyScreen({ navigation }){
         axios.get(constants.getAllRequests)
         .then((request) => {
             if ('data' in request.data){
-                console.log(request.data.data)
                 setIsData(true)
-                console.log(request.data)
                 let tmpRequete = []
                 request.data.data.map((item) => {
                     axios.get(constants.getFilesFromRequest, {params: {'request_id': item.id}})
