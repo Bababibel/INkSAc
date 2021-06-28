@@ -169,9 +169,10 @@ const styles = StyleSheet.create({
     },
     bigText: {
         textAlign: 'center',
-        fontSize: 24,
+        fontSize : Platform.OS === "web" ? 24 : 18,
     },
     container: {
+        margin: 10,
         position: 'relative',
         flex: 1,
         justifyContent: 'center',
@@ -197,7 +198,7 @@ const styles = StyleSheet.create({
         marginLeft: 5,
     },
     errorMsg: {
-        fontSize: 20,
+        fontSize : Platform.OS === "web" ? 20 : 14,
         color: 'red',
     },
     listButtonContainer: {
@@ -220,11 +221,11 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         paddingHorizontal: 20,
         alignItems: 'center',
-        fontSize: 18,
+        fontSize : Platform.OS === "web" ? 18 : 12,
     },
     text: {
         textAlign: 'center',
-        fontSize: 20,
+        fontSize : Platform.OS === "web" ? 20 : 14,
     },
     scrollView: {
         paddingTop : Platform.OS === "android" ? StatusBar.currentHeight : 0,

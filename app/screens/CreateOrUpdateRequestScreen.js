@@ -1,9 +1,8 @@
 import React, {useState} from "react";
 import { View, Text, Button, ScrollView} from "react-native";
-import UpdateForm from "../assets/modules/UpdateFormModule";
+//import UpdateForm from "../assets/modules/UpdateFormModule";
 import UploadForm from "../assets/modules/UploadFormModule"
 import { globalStyles } from "../assets/globals/globalStyles";
-import RequestForm from "../assets/shared/RequestForm";
 
 export default function CreateOrUpdateRequestScreen({ route, navigation }) {  
 
@@ -18,7 +17,8 @@ export default function CreateOrUpdateRequestScreen({ route, navigation }) {
     if (route.params.modify == 'yes') { 
        return (
         <ScrollView>
-          <UpdateForm route={route} navigation={navigation}/>
+          {/*<UpdateForm route={route} navigation={navigation}/>*/}
+          <Text>Fonctionnalité encore en développement et/ou instable. Une mise à jour devrait corriger le problème d'ici peu.</Text>
         </ScrollView>
         );
     }

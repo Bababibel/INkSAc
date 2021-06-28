@@ -95,6 +95,7 @@ const styles = StyleSheet.create({
         marginBottom: 5,
     },
     container: {
+        margin: 10,
         position: 'relative',
         flex: 1,
         justifyContent: 'center',

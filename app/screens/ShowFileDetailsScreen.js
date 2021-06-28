@@ -3,6 +3,7 @@ import {View, Text, ScrollView, StatusBar, Button, Platform, StyleSheet} from 'r
 import { globalColors } from '../assets/globals/globalStyles';
 import constants from '../assets/globals/constants'
 import GoBackModule from '../assets/modules/GoBackModule';
+import HyperLink from 'react-native-hyperlink';
 import axios from 'axios';
 
 export default function ShowFileDetailsScreen({ route, navigation }){
@@ -55,8 +56,8 @@ export default function ShowFileDetailsScreen({ route, navigation }){
         else if (constants.globalUser.role == 'student'){
             return (
                 <View>
-                <Button onPress={() => stateHandle()} title={"Oui"}/>
-                <Button onPress={() => stateHandle()} title={"Non"}/>
+                    <Button color={globalColors.primary} onPress={() => stateHandle()} title={"Oui"}/>
+                    <Button color={globalColors.primary} onPress={() => stateHandle()} title={"Non"}/>
                 </View>
             )
         }
@@ -67,19 +68,22 @@ export default function ShowFileDetailsScreen({ route, navigation }){
             return(
                 <View>
                     <Text style={styles.row}>Pour le : {item.delivery_date}</Text>
-                    <Text style={styles.row}>Supprimé le : {item.expiration_date}</Text>
                     <Text style={styles.row}>Commentaire : {item.comment}</Text>
                     <Text style={styles.row}>Partiel : {item.hidden}</Text>
                     <Text style={styles.row}>Etat : {item.state}</Text>
+                    <Text style={styles.row}>Supprimé le : {item.expiration_date}</Text>
                     {displayList()}
                     <Text style={styles.row}>Liste(s) : {item.list}</Text>
                     <Text style={styles.titleContainer}>Fichier</Text>
                     <Text style={styles.row}>Nom : {item.files.name}</Text>
+                    <HyperLink linkDefault={true} linkStyle={ { color: '#2980b9'} }>
+                        <Text style={styles.row}>Lien : {item.files.getDownloadUrl()}</Text>
+                    </HyperLink>
                     <Text style={styles.row}>Couleur : {item.files.color}</Text>
-                    <Text style={styles.row}>Agraphres : {item.files.stapple}</Text>
+                    <Text style={styles.row}>Agrafes : {item.files.stapple}</Text>
                     <Text style={styles.row}>Format : {item.files.format}</Text>
-                    <Text style={styles.row}>Recto-Verso : {item.files.recto_verso}</Text>
-                    <Text style={styles.row}>Nombre de diapo par Page : {item.files.nb_per_page}</Text>
+                    <Text style={styles.row}>Recto-verso : {item.files.recto_verso}</Text>
+                    <Text style={styles.row}>Nombre d'élements par Page : {item.files.nb_per_page}</Text>
                 </View>
             )
         }
@@ -88,9 +92,9 @@ export default function ShowFileDetailsScreen({ route, navigation }){
     return(
         <ScrollView>
             <GoBackModule navigation={navigation}/>
-            <Text style={styles.titleContainer}> Détail de la requête</Text>
+            <Text style={styles.titleContainer}> Détails de la requête</Text>
                 <View style={styles.container}>
-                    <Text style={styles.titleContainer}>Requete</Text>
+                    <Text style={styles.titleContainer}>Requête</Text>
                     <Text style={styles.row}>Auteur : {item.author_name}</Text>
                     <Text style={styles.row}>Titre : {item.title}</Text>
                     <Text style={styles.row}>Deadline : {item.deadline}</Text>

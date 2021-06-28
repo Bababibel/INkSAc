@@ -1,6 +1,8 @@
+
 const baseUrl = 'https://bgauthier.fr/inksac/';
 
 export default {
+    baseUrl : baseUrl,
     // Tools
     uploadUrl: baseUrl+'api/upload.php',
     // File

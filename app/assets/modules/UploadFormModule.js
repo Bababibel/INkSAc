@@ -88,7 +88,7 @@ class UploadForm extends Component {
     }
 
     formSubmitted = () => {
-        if (this.state.error == "") this.props.params.navigation.goBack();
+        if (this.state.error == "") this.props.navigation.goBack();
         else this.setError("Coucou Baptiste, tu as oublié ton cerveau entre deux lignes de Javascript. Si un utilisateur voit ça, vous avez le droit de l'insulter. Cordialement, Baptiste, le 25/06/2021.");
     }
 

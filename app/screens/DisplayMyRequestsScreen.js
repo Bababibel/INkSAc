@@ -8,7 +8,8 @@ import {
   Platform,
   ScrollView,
   StatusBar,
-  Dimensions
+  Dimensions,
+  Button
 } from "react-native";
 import axios from "axios";
 import { globalStyles, globalColors } from "../assets/globals/globalStyles";
@@ -16,9 +17,7 @@ import AppLoading from "expo-app-loading";
 
 import Request from "../assets/classes/Request";
 import File from "../assets/classes/File";
-import MyModal from "../assets/modules/ModalModule";
 import RequestModule from "../assets/modules/RequestModule";
-import Card from "../assets/shared/RequestCard";
 import constants from "../assets/globals/constants";
 import GoBackModule from "../assets/modules/GoBackModule";
 
@@ -33,14 +32,10 @@ export default function RequestScreen({ route, navigation }) {
   const [requests, setRequests] = useState([]);
 
   const dataLoad = () => {
-    console.log("id : "+constants.globalUser.id)
-    console.log("role : "+constants.globalUser.role)
-    console.log("url : "+loadRequestsApiUrl)
     axios.get(loadRequestsApiUrl , {params: {'id' : constants.globalUser.id}}, {
       headers: { "Content-Type" : "application/json" }
     })
     .then((request) => {
-      console.log("c'est passé")
       if ("data" in request.data){
         setIsData(true)
         let tmpRequete = []
@@ -86,12 +81,10 @@ export default function RequestScreen({ route, navigation }) {
     else {
       return(
       <TouchableOpacity>
-        <Card>
-          <Text
-            onPress={() => pressHandle()}>
-            Formulez une nouvelle demande
-          </Text>
-        </Card>
+        <Button
+            onPress={() => pressHandle()}
+            title="Formulez une nouvelle demande"
+            color={globalColors.primary} />
       </TouchableOpacity>
       )
     }
@@ -144,6 +137,7 @@ const styles = StyleSheet.create({
       marginTop: 20,
   },
   container: {
+    margin: 10,
     flex: 1,
     flexGrow: 1,
     paddingTop : Platform.OS === "android" ? StatusBar.currentHeight : 0,

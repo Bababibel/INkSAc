@@ -28,7 +28,6 @@ export default function DisplayAllRequestsForReprographyScreen({ navigation }){
                     .then((file) => {
                         if ('data' in file.data){
                             file.data.data.map((item2) => {
-                                console.log(item.list_names)
                                 const newFile = new File(item2.id, item2.name, item2.path, item2.color, item2.stapple, item2.format, item2.recto_verso, item2.nb_per_page, item.id)
                                 const newRequete = new Request(item.id, item.author, item.author_name, item.deadline, item.delivery_date, item.expiration_date, item.title, item.comment, item.hidden, item.state, item.list_names)
                                 newRequete.attachFile(newFile)
@@ -60,27 +59,27 @@ export default function DisplayAllRequestsForReprographyScreen({ navigation }){
     if (dataLoaded && isData) {
         return (
             <ScrollView>
-            <View>
-            <GoBackModule navigation={navigation}/>
-            <Text style={styles.titleText} >Liste de toutes les requêtes</Text>
-                {requests.map(request => {
-                return (
-                  <RequestModule clickHandle={clickHandle} key={request.id} requestProps={request} navigation={navigation}/>
-                )
-              })}
-            </View>
+                <View>
+                <GoBackModule navigation={navigation}/>
+                <Text style={styles.titleText} >Liste de toutes les requêtes</Text>
+                    {requests.map(request => {
+                    return (
+                    <RequestModule clickHandle={clickHandle} key={request.files.id} requestProps={request} navigation={navigation}/>
+                    )
+                })}
+                </View>
             </ScrollView>
         )
     } else {
         return (
             <View style={globalStyles.container}>
-            <GoBackModule navigation={navigation}/>
-            <AppLoading
-            startAsync={dataLoad} 
-            onError={(text) => Alert.alert('Échec du chargement :(', String(text), [{text: 'Ok'}])}
-            onFinish={() => setDataLoaded(true)}
-            />
-            <Text style={globalStyles.modalText}>Il n'y a aucune requête pour le moment</Text>
+                <GoBackModule navigation={navigation}/>
+                <AppLoading
+                startAsync={dataLoad} 
+                onError={(text) => Alert.alert('Échec du chargement :(', String(text), [{text: 'Ok'}])}
+                onFinish={() => setDataLoaded(true)}
+                />
+                <Text style={globalStyles.modalText}>Il n'y a aucune requête pour le moment</Text>
             </View>
         ) 
     }
