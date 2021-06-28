@@ -20,16 +20,19 @@ import RequestModule from "../assets/modules/RequestModule";
 import Card from "../assets/shared/RequestCard";
 import constants from "../assets/globals/constants";
 import GoBackModule from "../assets/modules/GoBackModule";
-
+import {computeDateTimeForSql} from '../assets/tools/dateConverter';
 
 export default function RequestScreen({ route, navigation }) {
   const id = route
 
+  let now = computeDateTimeForSql(new Date(), new Date())
   let loadRequestsApiUrl = constants.globalUser.role == 'student' ? constants.getRequestsForUser : constants.getRequestsByAuthor;
 
   const [isData, setIsData] = useState(false);
   const [dataLoaded, setDataLoaded] = useState(false);
-  const [requests, setRequests] = useState([]);
+  const [pendingRequests, setPendingRequests] = useState([]);
+  const [toPrintRequests, setToPrintRequests] = useState([]);
+  const [readyRequests, setReadyRequests] = useState([]);
 
   const dataLoad = () => {
     axios.get(loadRequestsApiUrl , {params: {'id' : constants.globalUser.id}}, {
@@ -37,29 +40,41 @@ export default function RequestScreen({ route, navigation }) {
     })
     .then((request) => {
       if ("data" in request.data){
-        setIsData(true)
         let tmpRequete = []
         request.data.data.map((item) => {
-          if( constants.globalUser.role != 'student' || (constants.globalUser.role == 'student' && item.hidden != 1)){
-            axios.get(constants.getFilesFromRequest , {params: {'request_id' : item.id}}, {
-                        headers: { "Content-Type" : "application/json" }
-                      })
-            .then((files) => {
-              if (typeof files.data != 'undefined'){
-                files.data.data.map((item2) => {
-                  if (typeof item2.message == 'undefined') {
-                    const newFile = new File(item2.id, item2.name, item2.path, item2.color, item2.stapple, item2.format, item2.recto_verso, item2.nb_per_page, item.id)
-                    const newRequete = new Request(item.id, item.author, item.author_name, item.deadline, item.delivery_date, item.expiration_date, item.title, item.comment, item.hidden, item.state, item.list_names)
-                    newRequete.attachFile(newFile)
-                    tmpRequete.push(newRequete)
-                    setRequests((prevItem) => {
+          axios.get(constants.getFilesFromRequest , {params: {'request_id' : item.id}}, {
+                      headers: { "Content-Type" : "application/json" }
+                    })
+          .then((files) => {
+            if (typeof files.data != 'undefined'){
+              files.data.data.map((item2) => {
+                if (typeof item2.message == 'undefined') {
+                  const newFile = new File(item2.id, item2.name, item2.path, item2.color, item2.stapple, item2.format, item2.recto_verso, item2.nb_per_page, item.id)
+                  const newRequete = new Request(item.id, item.author, item.author_name, item.deadline, item.delivery_date, item.expiration_date, item.title, item.comment, item.hidden, item.state, item.list_names)
+                  newRequete.attachFile(newFile)
+                  tmpRequete.push(newRequete)
+                  if (newRequete.deadline > now){ //Pending Requests
+                    setIsData(true)
+                    setPendingRequests((prevItem) => {
                         return [newRequete ,...prevItem];
                     })
+                  } 
+                  else if (newRequete.state != 'ready') { //To be printed requests
+                    if (constants.globalUser.role != 'student') {setIsData(true), setIsDataPrinted(true)}
+                    setToPrintRequests((prevItem) => {
+                      return [newRequete ,...prevItem];
+                    })
                   }
-                })
-              }
-            })
-          }
+                  else { //Ready requests
+                    if (constants.globalUser.role != 'student') {setIsData(true), setIsDataReady(true)}
+                    setReadyRequests((prevItem) => {
+                      return [newRequete ,...prevItem];
+                    })
+                  }
+                }
+              })
+            }
+          })
         })}
     })
     .done()
@@ -94,20 +109,37 @@ export default function RequestScreen({ route, navigation }) {
     }
   }
 
+
   if (dataLoaded && isData) {
     return(
       <ScrollView>
         <View>
         <GoBackModule navigation={navigation}/>
-          <Text style={styles.titleText} >Liste de mes requêtes</Text>
+          <Text style={styles.titleText}>Demandes</Text>
           <View style={globalStyles.container}>
             {roleHandle()}
           </View>
-              {requests.map(request => {
+          <Text >En cours</Text>
+              { pendingRequests.map(request => {
+                  return (
+                    <RequestModule clickHandle={clickHandle} key={request.request_id} goBack={'DisplayMyRequests'} requestProps={request} navigation={navigation}/>
+                  )
+                })
+              }
+          <Text >En Attente</Text>
+            { toPrintRequests.map(request => {
                 return (
                   <RequestModule clickHandle={clickHandle} key={request.request_id} goBack={'DisplayMyRequests'} requestProps={request} navigation={navigation}/>
                 )
-              })}
+              })
+            }
+          <Text >Pret</Text>
+          { readyRequests.map(request => {
+              return (
+                <RequestModule clickHandle={clickHandle} key={request.request_id} goBack={'DisplayMyRequests'} requestProps={request} navigation={navigation}/>
+              )
+            })
+          }
         </View>
       </ScrollView>)
   } else {
@@ -129,16 +161,16 @@ export default function RequestScreen({ route, navigation }) {
 
 const styles = StyleSheet.create({
   inputContainer: {
-      textAlign:'center',
-      paddingTop : Platform.OS === "android" ? StatusBar.currentHeight : 0,
-      width: '100%',
-      flex: 1,
-      flexBasis: 100,
-      marginRight: 5,
-      marginLeft: 5,
-      flexDirection: 'row',
-      justifyContent:'center',
-      marginTop: 20,
+    textAlign:'center',
+    paddingTop : Platform.OS === "android" ? StatusBar.currentHeight : 0,
+    width: '100%',
+    flex: 1,
+    flexBasis: 100,
+    marginRight: 5,
+    marginLeft: 5,
+    flexDirection: 'row',
+    justifyContent:'center',
+    marginTop: 20,
   },
   container: {
     flex: 1,

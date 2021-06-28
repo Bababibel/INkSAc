@@ -7,7 +7,6 @@ import axios from 'axios';
 
 export default function ShowFileDetailsScreen({ route, navigation }){
     const item = route.params.item;
-    const goBack = route.params.goBack;
 
     const displayList = () => {
         item.list.map(liste => {
@@ -19,33 +18,25 @@ export default function ShowFileDetailsScreen({ route, navigation }){
 
     const stateHandle = () => {
         console.log(item)
-        let state = ''
+        let state = 'waitingForPrint'
         if (item.state == 'pending'){
-            state = 'Imprimer' 
-        } else if (item.state == 'Imprimer'){
-            state = 'Pret'
-        } else if (item.state == 'Pret') {
-            state = 'Archiver'
-        } else if (item.state == 'Archiver') {
-            state = 'Supprimer'
+            state = 'waitingForPrint' 
+        } else if (item.state == 'waitingForPrint'){
+            state = 'ready'
         } 
         item.updateInDb(state)
-        navigation.push(goBack)
+        navigation.goBack()
     }
 
     axios.get(constants.getFilesFromRequest, {params: {'request_id': item.id}})
 
-    const titleHandle = () => {
+    const titleHandle = () => { // A modifier
         let title = ''
         if (item.state == 'pending'){
             title = 'Imprimer' 
-        } else if (item.state == 'Imprimer'){
+        } else if (item.state == 'waitingForPrint'){
             title = 'Pret'
-        } else if (item.state == 'Pret') {
-            title = 'Archiver'
-        } else if (item.state == 'Archiver') {
-            title = 'Supprimer'
-        } 
+        }
         return (title)
     }
 
