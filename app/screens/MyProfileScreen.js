@@ -64,7 +64,8 @@ function MyProfileScreen({ navigation, route }) {
 
     const handleSubmit = () => {
         if (!textInput) return;
-        //let founded = false;
+        if (error !== "") setErrorMsg("");
+        let founded = false;
         lists.map(list => {
             if (list.name === textInput) { // if textInput correspond to a "real" list
                 if (!user.lists.includes(textInput)) { // and is not contained in user's lists
@@ -74,14 +75,14 @@ function MyProfileScreen({ navigation, route }) {
                         console.log(msg);
                         getLists();
                         console.log("List "+list.name+" added!");
-                        //founded = true;
+                        founded = true;
                     })
                 }
                 else setErrorMsg("Vous êtes déjà dans cette liste.")
             }
         })
         // async trouble : inscruction is executed BEFORE the psoting request, and will always show the error msg.
-        //if (!founded) setErrorMsg("Cette liste n'existe pas. Vous pouvez cependant contacter un membre du support pour la créer.")
+        //if (!founded && Platform.OS !== "web") setErrorMsg("Cette liste n'existe pas. Vous pouvez\ncependant contacter un membre\ndu support pour la créer.")
     }
 
     const handleDelete = (list_name) => {
@@ -121,7 +122,7 @@ function MyProfileScreen({ navigation, route }) {
             )
             else return (
                 <View style={{maxWidth: 200}}>
-                    <Text style={styles.text}>Ajouter une liste: </Text>
+                    <Text style={{flex:1, flexDirection:'row', justifyContent:'center'}}>Ajouter une liste: </Text>
                     <TextInput 
                         style={styles.textInput}
                         onChangeText={setTextInput}
