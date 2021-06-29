@@ -64,7 +64,7 @@ function MyProfileScreen({ navigation, route }) {
 
     const handleSubmit = () => {
         if (!textInput) return;
-        if (error !== "") setErrorMsg("");
+        if (errorMsg !== "") setErrorMsg("");
         let founded = false;
         lists.map(list => {
             if (list.name === textInput) { // if textInput correspond to a "real" list

@@ -313,17 +313,10 @@ function UploadForm({navigation}) {
                         <label>Date de livraison attendue<br/>
                         <MuiPickersUtilsProvider utils={DateFnsUtils}>
                             <KeyboardDatePicker disableToolbar variant="inline" format="yyyy/MM/dd" style={{marginRight: 30}}
-<<<<<<< HEAD
-                                margin="normal" id="date-picker-inline" label="Jour de fin de vote" value={delivery_date}
-                                onChange={handleDeliveryDateChange} KeyboardButtonProps={{'aria-label': 'change date'}}/>
-                            <KeyboardTimePicker
-                                margin="normal" id="time-picker" label="Heure de fin de vote" value={delivery_time} 
-=======
                                 margin="normal" id="date-picker-inline" label="Jour de livraison" value={delivery_date}
                                 onChange={handleDeliveryDateChange} KeyboardButtonProps={{'aria-label': 'change date'}}/>
                             <KeyboardTimePicker
                                 margin="normal" id="time-picker" label="Heure de livraison" value={delivery_time} 
->>>>>>> c21c301d7dd822d64d95300844270e203fadf9e2
                                 onChange={handleDeliveryTimeChange} KeyboardButtonProps={{'aria-label': 'change time'}}/>
                         </MuiPickersUtilsProvider>
                         </label>
