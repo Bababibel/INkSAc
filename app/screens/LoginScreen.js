@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { View, Text, Button, TextInput, Keyboard, TouchableWithoutFeedback, Platform } from 'react-native';
+import { View, Text, Button, TextInput, Keyboard, TouchableWithoutFeedback, Platform, Alert } from 'react-native';
 import { Formik } from 'formik';
 import * as yup from 'yup';
 import axios from 'axios';
@@ -43,6 +43,7 @@ export default function LoginScreen({ navigation }){
                         constants.globalUser = tmpUser;
                         setUser(tmpUser);
                         axios.get(constants.loggedUser, { params: { 'id': u.id } })
+                        .then(constants.globalUser.reloadFromDb());
                     }
                     else if ('message' in response) { // no data but error message
                         setErrorMsg("Erreur. Réponse du serveur: "+response.message);
@@ -52,13 +53,15 @@ export default function LoginScreen({ navigation }){
                 else setErrorMsg("Le serveur distant ne répond pas");
             })
         })
-    } 
+    }
 
     // REDIRECTION
     // wait for full-update of the variable "user" before evaluating it
     useEffect(() => { 
         if (user != null) {
-            navigation.navigate("Welcome");
+            navigation.navigate("Welcome", {
+                list: user.lists[0],
+            });
         }
     }, [user]);
 

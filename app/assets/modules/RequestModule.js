@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useRef} from 'react';
-import { View, StyleSheet, Text, TouchableOpacity, Platform, Alert } from 'react-native';
+import { View, StyleSheet, Text, TouchableOpacity, Platform, Alert, Image } from 'react-native';
 
 import Request from '../classes/Request';
 import { Select, FormControl, MenuItem } from '@material-ui/core';
@@ -35,6 +35,16 @@ function RequestModule({requestProps, goBack, navigation}) {
     let deleteFunction = () => {
         request.deleteInDb();
         setIsVisible(false);
+    }
+
+    const answerRelatedImage = () => {
+        if (constants.globalUser.role != 'student') return;
+        if (request.files.answer == 0) {
+            return (<Image source={require('../printer.png')} style={{width: 32, height: 32, resizeMode: 'stretch', margin: 4}}/>);
+        }
+        else {
+            return (<Image source={require('../files.png')} style={{width: 32, height: 32, resizeMode: 'stretch', margin: 15}}/>);
+        }
     }
 
     let generateAlertConfirm = () => {
@@ -78,14 +88,14 @@ function RequestModule({requestProps, goBack, navigation}) {
         return (
         <TouchableOpacity onPress={() => pressHandle()}>
             <Text style={styles.X}>X</Text>
-            <View style={[styles.container, {backgroundColor: (request.location=="Bourges" ? 'ghostwhite' : 'gainsboro')}]}>
+            <View style={[styles.container, {backgroundColor: (request.files.answer == 0 ? 'lightgrey' : 'lightblue')}]}>
                 {generateAlertConfirm()}
                 {roleHandle()}
-                <View style={styles.row}>
-                    <Text>{request.title}</Text>
+                <View style={{flexDirection: "row", alignItems: "center", justifyContent: "space-around", marginBottom: 8}}>
+                    {answerRelatedImage()}
+                    <Text style={{fontWeight: "bold", fontSize: 16}}>{request.title}</Text>
                 </View>
-                <View style={styles.row}></View>
-                <View style={styles.row}>
+                <View style={{flexDirection: "column", marginHorizontal: 16, marginBottom: 8}}>
                     <Text style={{color: constants.states.color[request.state]}}>État: {constants.states.msg[request.state]}</Text>
                     <Text>Deadline de vote: {convertToString(request.deadline)}</Text>
                 </View>
