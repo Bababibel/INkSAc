@@ -43,6 +43,7 @@ export default function LoginScreen({ navigation }){
                         constants.globalUser = tmpUser;
                         setUser(tmpUser);
                         axios.get(constants.loggedUser, { params: { 'id': u.id } })
+                        .then(constants.globalUser.reloadFromDb());
                     }
                     else if ('message' in response) { // no data but error message
                         setErrorMsg("Erreur. Réponse du serveur: "+response.message);

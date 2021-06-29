@@ -5,7 +5,6 @@ import { createStackNavigator } from '@react-navigation/stack';
 import WelcomeScreen from "../../screens/WelcomeScreen"
 import LoginScreen from "../../screens/LoginScreen"
 import ShowFileDetailsScreen from "../../screens/ShowFileDetailsScreen";
-import AnswerRequestScreen from "../../screens/AnswerRequestScreen";
 import DisplayMyRequestsScreen from "../../screens/DisplayMyRequestsScreen";
 import DisplayAllRequestsForReprographyScreen from "../../screens/DisplayAllRequestsForReprographyScreen";
 import CreateOrUpdateRequestScreen from "../../screens/CreateOrUpdateRequestScreen";
@@ -24,7 +23,6 @@ export const AppNavigator = () => (
       <Stack.Screen name="DisplayAllRequestsForReprography" component={DisplayAllRequestsForReprographyScreen} />
       <Stack.Screen name="ShowFileDetails" component={ShowFileDetailsScreen} />
       <Stack.Screen name="CreateOrUpdateRequest" component={CreateOrUpdateRequestScreen} />
-      <Stack.Screen name="AnswerRequestScreen" component={AnswerRequestScreen} />
 
       {/* Main buttons on welcome screen after authentification */}
       <Stack.Screen name="DisplayMyRequests" component={DisplayMyRequestsScreen} />

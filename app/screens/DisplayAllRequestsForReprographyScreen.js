@@ -30,12 +30,12 @@ export default function DisplayAllRequestsForReprographyScreen({ navigation }){
                 setIsData(true)
                 let tmpRequete = []
                 request.data.data.map((item) => {
-                    axios.get(constants.getFilesFromRequest, {params: {'request_id': item.id}})
+                    axios.get(constants.getFilesFromRequest, {params: {'request_id': item.id, 'user_id': constants.globalUser.id}})
                     .then((file) => {
                         if ('data' in file.data){
                             file.data.data.map((item2) => {
                                 if (typeof item2.message == 'undefined') {
-                                    const newFile = new File(item2.id, item2.name, item2.path, item2.color, item2.stapple, item2.format, item2.recto_verso, item2.nb_per_page, item.id)
+                                    const newFile = new File(item2.id, item2.name, item2.path, item2.color, item2.stapple, item2.format, item2.recto_verso, item2.nb_per_page, item.id, item2.file_in_request_id, item2.answer)
                                     const newRequete = new Request(item.id, item.author, item.author_name, item.deadline, item.delivery_date, item.expiration_date, item.title, item.comment, item.hidden, item.state, item.list_names)
                                     newRequete.attachFile(newFile)
                                     tmpRequete.push(newRequete)
@@ -63,7 +63,7 @@ export default function DisplayAllRequestsForReprographyScreen({ navigation }){
                             })
                         }
                         else{
-                            const newFile = new File('non défini', 'non défini', 'non défini', 'non défini', 'non défini', 'non défini', 'non défini', 'non défini', 'non défini')
+                            const newFile = new File('non défini', 'non défini', 'non défini', 'non défini', 'non défini', 'non défini', 'non défini', 'non défini', 'non défini', 'non défini')
                             const newRequete = new Request(item.id, item.author, item.author_name, item.deadline, item.delivery_date, item.expiration_date, 'Pas de fichier', item.comment, item.hidden, item.state)
                             newRequete.attachFile(newFile)
                             tmpRequete.push(newRequete)

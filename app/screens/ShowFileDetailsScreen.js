@@ -1,6 +1,6 @@
-import React from 'react';
-import {View, Text, ScrollView, StatusBar, Button, Platform, StyleSheet} from 'react-native';
-import { globalColors } from '../assets/globals/globalStyles';
+import React, { useState } from 'react';
+import { View, Text, ScrollView, StatusBar, Button, Platform, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { globalColors, globalStyles } from '../assets/globals/globalStyles';
 import constants from '../assets/globals/constants'
 import GoBackModule from '../assets/modules/GoBackModule';
 import HyperLink from 'react-native-hyperlink';
@@ -8,6 +8,7 @@ import axios from 'axios';
 
 export default function ShowFileDetailsScreen({ route, navigation }){
     const item = route.params.item;
+    const [errorMsg, setErrorMsg] = useState();
 
     const displayList = () => {
         item.list.map(liste => {
@@ -15,6 +16,23 @@ export default function ShowFileDetailsScreen({ route, navigation }){
                 <Text>Liste(s) : {liste} </Text>
             )
         })
+    }
+
+    const handleAnswer = (answer) => {
+        console.log("Old answer: " + item.files.answer);
+        let formData = new FormData();
+        formData.append('file_in_request_id', item.files.file_in_request_id);
+        formData.append('user_id', constants.globalUser.id);
+        formData.append('answer', answer);
+        axios.post(constants.updateAnswerToFileInRequest, formData)
+        .then(response => {
+            console.log(response.data.message);
+            item.files.answer = answer;
+        })
+        .catch(error => {
+            console.log('Request failed to synchronize answer with API');
+        })
+        navigation.goBack();
     }
 
     const stateHandle = () => {
@@ -28,8 +46,6 @@ export default function ShowFileDetailsScreen({ route, navigation }){
         item.updateInDb(state)
         navigation.goBack()
     }
-
-    axios.get(constants.getFilesFromRequest, {params: {'request_id': item.id}})
 
     const titleHandle = () => { // A modifier
         let title = ''
@@ -45,18 +61,26 @@ export default function ShowFileDetailsScreen({ route, navigation }){
         if (constants.globalUser.role == 'reprography'){
             return(<Button onPress={() => stateHandle()} title={titleHandle()}/>)
         }
-        else if (constants.globalUser.role == 'student'){
+        else if (constants.globalUser.role == 'student' || true){
             return (
-                <View>
-                    <Button color={globalColors.primary} onPress={() => stateHandle()} title={"Oui"}/>
-                    <Button color={globalColors.primary} onPress={() => stateHandle()} title={"Non"}/>
+                <View style={globalStyles.fileOptions}>
+                    <TouchableOpacity>
+                        <TouchableOpacity style={{flexDirection: "row", alignItems: "center", marginBottom: 12}}>
+                            <Image source={require('../assets/printer.png')} style={{width: 32, height: 32, resizeMode: 'stretch', marginHorizontal: 5}}/>
+                            <Button color={globalColors.primary} onPress={() => handleAnswer(0)} title={"Je souhaite la version papier !"}/>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={{flexDirection: "row", alignItems: "center"}}>
+                            <Image source={require('../assets/files.png')} style={{width: 32, height: 32, resizeMode: 'stretch', marginHorizontal: 5}}/>
+                            <Button color={globalColors.ready} onPress={() => handleAnswer(1)} title={"Le fichier me suffit !"}/>
+                        </TouchableOpacity>
+                    </TouchableOpacity>
                 </View>
             )
         }
     }
 
     const displayHandle = () => {
-        if (constants.globalUser.role == 'student'){
+        if (constants.globalUser.role != 'student'){
             return(
                 <View>
                     <Text style={styles.row}>Pour le : {item.delivery_date}</Text>
@@ -79,20 +103,37 @@ export default function ShowFileDetailsScreen({ route, navigation }){
                 </View>
             )
         }
+        else {
+            return(
+                <View>
+                    <Text style={styles.row}>Pour le : {item.delivery_date}</Text>
+                    <Text style={styles.row}>Commentaire : {item.comment}</Text>
+                    <Text style={[styles.row, { color: constants.states.color[item.state]}]}>État : {constants.states.msg[item.state]}</Text>
+                    <Text style={styles.row}>Supprimé le : {item.expiration_date}</Text>
+                    {displayList()}
+                    <Text style={styles.row}>Liste : {item.list}</Text>
+                    <Text style={styles.row}>Nom : {item.files.name}</Text>
+                    <HyperLink linkDefault={true} linkStyle={ { color: '#2980b9'} }>
+                        <Text style={styles.row}>Lien : {item.files.getDownloadUrl()}</Text>
+                    </HyperLink>
+                </View>
+            )
+        }
     }
 
     return(
         <ScrollView>
             <GoBackModule navigation={navigation}/>
             <Text style={styles.titleContainer}> Détails de la requête</Text>
-                <View style={styles.container}>
-                    <Text style={styles.titleContainer}>Requête</Text>
-                    <Text style={styles.row}>Auteur : {item.author_name}</Text>
-                    <Text style={styles.row}>Titre : {item.title}</Text>
-                    <Text style={styles.row}>Deadline : {item.deadline}</Text>
-                    {displayHandle()}
-                </View>
-                {roleHandle()}
+            {roleHandle()}
+            <View style={styles.container}>
+                <Text style={styles.titleContainer}>Requête</Text>
+                <Text style={styles.row}>Auteur : {item.author_name}</Text>
+                <Text style={styles.row}>Titre : {item.title}</Text>
+                <Text style={styles.row}>Deadline : {item.deadline}</Text>
+                {displayHandle()}
+            </View>
+            {roleHandle()}
         </ScrollView>
     )
 }
