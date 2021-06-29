@@ -68,10 +68,11 @@ export default function ShowFileDetailsScreen({ route, navigation }){
     }
 
     const roleHandle = () => {
+        let deadline_date = item.deadline.substring(5, 10).replace('-', '/') + '/' + item.deadline.substring(0, 4) + item.deadline.substring(10);
         if (constants.globalUser.role == 'reprography'){
             return(<Button onPress={() => stateHandle()} title={titleHandle()}/>)
         }
-        else if (constants.globalUser.role == 'student'){
+        else if (constants.globalUser.role == 'student' && Date.parse(deadline_date) > Date.now()) {
             return (
                 <View style={globalStyles.fileOptions}>
                     <TouchableOpacity>
@@ -85,7 +86,7 @@ export default function ShowFileDetailsScreen({ route, navigation }){
                         </TouchableOpacity>
                     </TouchableOpacity>
                 </View>
-            )
+            );
         }
     }
 
