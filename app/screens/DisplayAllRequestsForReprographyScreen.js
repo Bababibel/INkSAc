@@ -87,21 +87,21 @@ export default function DisplayAllRequestsForReprographyScreen({ navigation }){
             <View>
             <GoBackModule navigation={navigation}/>
             <Text style={styles.titleText} >Liste de toutes les requêtes</Text>
-            <Text >En cours</Text>
+            {(() => {if (pendingRequests.length > 0) return <Text style={styles.titleSecond}>En cours</Text>})()}
               { pendingRequests.map(request => {
                   return (
                     <RequestModule clickHandle={clickHandle} key={request.request_id} goBack={'DisplayMyRequests'} requestProps={request} navigation={navigation}/>
                   )
                 })
               }
-          <Text >En Attente</Text>
+          <Text style={styles.titleSecond}>En Attente</Text>
             { toPrintRequests.map(request => {
                 return (
                   <RequestModule clickHandle={clickHandle} key={request.request_id} goBack={'DisplayMyRequests'} requestProps={request} navigation={navigation}/>
                 )
               })
             }
-          <Text >Pret</Text>
+          {(() => {if (readyRequests.length > 0) return <Text style={styles.titleSecond}>Prêtes</Text>})()}
           { readyRequests.map(request => {
               return (
                 <RequestModule clickHandle={clickHandle} key={request.request_id} goBack={'DisplayMyRequests'} requestProps={request} navigation={navigation}/>
@@ -154,5 +154,10 @@ const styles = StyleSheet.create({
         fontSize: 30,
         textAlign: 'center',
         marginBottom: 20,
-  }
+    },
+    titleSecond : {
+      paddingTop : Platform.OS === "android" ? StatusBar.currentHeight : 0,
+      fontSize: 20,
+      textAlign: 'center',
+    }
   })

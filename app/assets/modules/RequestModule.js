@@ -5,6 +5,7 @@ import Request from '../classes/Request';
 import { Select, FormControl, MenuItem } from '@material-ui/core';
 import AlertAskConfirmationOnUserDeleteModule from './AlertAskConfirmationOnUserDeleteModule';
 import constants from '../globals/constants';
+import { convertToString } from '../tools/dateConverter';
 
 
 function RequestModule({requestProps, goBack, navigation}) {
@@ -77,7 +78,7 @@ function RequestModule({requestProps, goBack, navigation}) {
         return (
         <TouchableOpacity onPress={() => pressHandle()}>
             <Text style={styles.X}>X</Text>
-            <View style={[styles.container, {backgroundColor: (request.location=="Bourges" ? 'ghostwhite' : 'gainsboro')}]}>
+            <View style={[styles.container, {backgroundColor: (request.location == "Bourges" ? 'ghostwhite' : 'gainsboro')}]}>
                 {generateAlertConfirm()}
                 {roleHandle()}
                 <View style={styles.row}>
@@ -86,7 +87,7 @@ function RequestModule({requestProps, goBack, navigation}) {
                 <View style={styles.row}></View>
                 <View style={styles.row}>
                     <Text style={{color: constants.states.color[request.state]}}>État: {constants.states.msg[request.state]}</Text>
-                    <Text>Deadline de vote: {request.deadline}</Text>
+                    <Text>Deadline de vote: {convertToString(request.deadline)}</Text>
                 </View>
             </View>
         </TouchableOpacity>

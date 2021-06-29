@@ -7,6 +7,8 @@ import constants from '../assets/globals/constants';
 import { globalColors } from '../assets/globals/globalStyles';
 import List from '../assets/classes/List';
 import GoBackModule from '../assets/modules/GoBackModule';
+import {convertToString} from '../assets/tools/dateConverter';
+import { constant } from 'lodash';
 
 let allLists = [];
 
@@ -18,6 +20,15 @@ function MyProfileScreen({ navigation, route }) {
     const [lists, setLists] = useState([]);
     const [textInput, setTextInput] = useState("");
     const [errorMsg, setErrorMsg] = useState("");
+
+    // Refresh the page and grab globalUser to update the page
+    useEffect(() => {
+        const unsubscribe = navigation.addListener('focus', () => {
+          constants.globalUser.reloadFromDb()
+          .then(() => setUser(constants.globalUser))
+        });
+        return unsubscribe;
+    }, [navigation]);
 
     useEffect(() => {
         getLists();
@@ -91,7 +102,7 @@ function MyProfileScreen({ navigation, route }) {
         if (lists.length > 0) { // if they are new lists available
 
             if (Platform.OS === "web") return (
-                <View>
+                <View style={{flex:1, flexDirection:'row', justifyContent:'center'}}>
                     <FormControl>
                         <Select
                             value={textInput}
@@ -109,7 +120,7 @@ function MyProfileScreen({ navigation, route }) {
                 </View>
             )
             else return (
-                <View>
+                <View style={{maxWidth: 200}}>
                     <Text style={styles.text}>Ajouter une liste: </Text>
                     <TextInput 
                         style={styles.textInput}
@@ -149,11 +160,11 @@ function MyProfileScreen({ navigation, route }) {
                 {inputList()}
                 <Text style={styles.errorMsg}>{errorMsg}</Text>
                 <View style={styles.row}>
-                    <Text style={styles.text}>Statut: {user.role}</Text>
+                    <Text style={styles.text}>Statut: {constants.roles[user.role]}</Text>
                     <Text style={styles.text}>Campus: {user.location}</Text>
                 </View>
-                <Text style={styles.text}>Dernière connexion le: {user.last_login_date}</Text>
-                <Text style={styles.text}>Date d'inscription: {user.creation_date}</Text>
+                <Text style={styles.text}>Dernière connexion le: {convertToString(user.last_login_date)}</Text>
+                <Text style={styles.text}>Date d'inscription: {convertToString(user.creation_date)}</Text>
                 
             </View>
         </ScrollView>

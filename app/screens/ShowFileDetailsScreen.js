@@ -5,6 +5,7 @@ import constants from '../assets/globals/constants'
 import GoBackModule from '../assets/modules/GoBackModule';
 import HyperLink from 'react-native-hyperlink';
 import axios from 'axios';
+import { convertToString } from '../assets/tools/dateConverter';
 
 export default function ShowFileDetailsScreen({ route, navigation }){
     const item = route.params.item;
@@ -19,7 +20,6 @@ export default function ShowFileDetailsScreen({ route, navigation }){
     }
 
     const handleAnswer = (answer) => {
-        console.log("Old answer: " + item.files.answer);
         let formData = new FormData();
         formData.append('file_in_request_id', item.files.file_in_request_id);
         formData.append('user_id', constants.globalUser.id);
@@ -28,11 +28,21 @@ export default function ShowFileDetailsScreen({ route, navigation }){
         .then(response => {
             console.log(response.data.message);
             item.files.answer = answer;
+            navigation.goBack();
         })
         .catch(error => {
             console.log('Request failed to synchronize answer with API');
         })
-        navigation.goBack();
+    }
+
+    const answerRelatedImage = () => {
+        if (constants.globalUser.role != 'student') return;
+        if (item.files.answer == 0) {
+            return (<Image source={require('../assets/printer.png')} style={{width: 32, height: 32, resizeMode: 'stretch', margin: 15}}/>);
+        }
+        else {
+            return (<Image source={require('../assets/files.png')} style={{width: 32, height: 32, resizeMode: 'stretch', margin: 15}}/>);
+        }
     }
 
     const stateHandle = () => {
@@ -52,7 +62,7 @@ export default function ShowFileDetailsScreen({ route, navigation }){
         if (item.state == 'pending'){
             title = 'Imprimer' 
         } else if (item.state == 'waitingForPrint'){
-            title = 'Pret'
+            title = 'Prêt'
         }
         return (title)
     }
@@ -61,7 +71,7 @@ export default function ShowFileDetailsScreen({ route, navigation }){
         if (constants.globalUser.role == 'reprography'){
             return(<Button onPress={() => stateHandle()} title={titleHandle()}/>)
         }
-        else if (constants.globalUser.role == 'student' || true){
+        else if (constants.globalUser.role == 'student'){
             return (
                 <View style={globalStyles.fileOptions}>
                     <TouchableOpacity>
@@ -82,15 +92,16 @@ export default function ShowFileDetailsScreen({ route, navigation }){
     const displayHandle = () => {
         if (constants.globalUser.role != 'student'){
             return(
+                console.log(item),
                 <View>
-                    <Text style={styles.row}>Pour le : {item.delivery_date}</Text>
+                    <Text style={styles.row}>Pour le : {convertToString(item.delivery_date)}</Text>
                     <Text style={styles.row}>Commentaire : {item.comment}</Text>
                     <Text style={styles.row}>Partiel : {item.hidden==1 ? 'Oui' : 'Non'}</Text>
                     <Text style={[styles.row, { color: constants.states.color[item.state]}]}>État : {constants.states.msg[item.state]}</Text>
-                    <Text style={styles.row}>Supprimé le : {item.expiration_date}</Text>
+                    <Text style={styles.row}>Sera supprimée le : {convertToString(item.expiration_date)}</Text>
                     {displayList()}
                     <Text style={styles.row}>Liste : {item.list}</Text>
-                    <Text style={styles.titleContainer}>Fichier</Text>
+                    <Text style={styles.secondaryTitle}>Fichier</Text>
                     <Text style={styles.row}>Nom : {item.files.name}</Text>
                     <HyperLink linkDefault={true} linkStyle={ { color: '#2980b9'} }>
                         <Text style={styles.row}>Lien : {item.files.getDownloadUrl()}</Text>
@@ -112,6 +123,7 @@ export default function ShowFileDetailsScreen({ route, navigation }){
                     <Text style={styles.row}>Supprimé le : {item.expiration_date}</Text>
                     {displayList()}
                     <Text style={styles.row}>Liste : {item.list}</Text>
+                    <Text style={styles.secondaryTitle}>Fichier</Text>
                     <Text style={styles.row}>Nom : {item.files.name}</Text>
                     <HyperLink linkDefault={true} linkStyle={ { color: '#2980b9'} }>
                         <Text style={styles.row}>Lien : {item.files.getDownloadUrl()}</Text>
@@ -127,10 +139,12 @@ export default function ShowFileDetailsScreen({ route, navigation }){
             <Text style={styles.titleContainer}> Détails de la requête</Text>
             {roleHandle()}
             <View style={styles.container}>
-                <Text style={styles.titleContainer}>Requête</Text>
+                <View style={{flexDirection: "row", alignItems: "center", justifyContent: "center"}}>
+                    {answerRelatedImage()}
+                    <Text style={styles.secondaryTitle}>{item.title}</Text>
+                </View>
                 <Text style={styles.row}>Auteur : {item.author_name}</Text>
-                <Text style={styles.row}>Titre : {item.title}</Text>
-                <Text style={styles.row}>Deadline : {item.deadline}</Text>
+                <Text style={styles.row}>Deadline : {convertToString(item.deadline)}</Text>
                 {displayHandle()}
             </View>
             {roleHandle()}
@@ -144,7 +158,13 @@ const styles = StyleSheet.create({
         paddingTop : Platform.OS === "android" ? StatusBar.currentHeight +10 : 0,
         fontSize: 18,
         fontWeight: 'bold',
-        marginBottom: 20,
+        marginBottom: 8,
+    },
+    secondaryTitle: {
+        textAlign:'center',
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginVertical: 8,
     },
     row: {
         marginVertical: 10,
@@ -167,6 +187,5 @@ const styles = StyleSheet.create({
         borderColor: 'black',
         borderStyle: 'solid',
         backgroundColor: globalColors.secondary,
-        marginBottom: 20,
     }
 })

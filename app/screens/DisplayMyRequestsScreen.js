@@ -117,21 +117,21 @@ export default function RequestScreen({ route, navigation }) {
           <View style={globalStyles.container}>
             {roleHandle()}
           </View>
-          <Text >En cours</Text>
+          <Text  style={styles.titleSecond}>En cours</Text>
               { pendingRequests.map(request => {
                   return (
                     <RequestModule clickHandle={clickHandle} key={request.request_id} goBack={'DisplayMyRequests'} requestProps={request} navigation={navigation}/>
                   )
                 })
               }
-          <Text >En Attente</Text>
+          <Text style={styles.titleSecond} >En Attente</Text>
             { toPrintRequests.map(request => {
                 return (
                   <RequestModule clickHandle={clickHandle} key={request.request_id} goBack={'DisplayMyRequests'} requestProps={request} navigation={navigation}/>
                 )
               })
             }
-          <Text >Pret</Text>
+          <Text  style={styles.titleSecond}>Prêtes</Text>
           { readyRequests.map(request => {
               return (
                 <RequestModule clickHandle={clickHandle} key={request.request_id} goBack={'DisplayMyRequests'} requestProps={request} navigation={navigation}/>
@@ -186,5 +186,10 @@ const styles = StyleSheet.create({
     fontSize: 30,
     textAlign: 'center',
     marginBottom: 20,
+  },
+  titleSecond : {
+    paddingTop : Platform.OS === "android" ? StatusBar.currentHeight : 0,
+    fontSize: 20,
+    textAlign: 'center',
   }
 })
