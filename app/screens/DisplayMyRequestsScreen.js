@@ -53,7 +53,7 @@ export default function RequestScreen({ route, navigation }) {
                   const newRequete = new Request(item.id, item.author, item.author_name, item.deadline, item.delivery_date, item.expiration_date, item.title, item.comment, item.hidden, item.state, item.list_names)
                   newRequete.attachFile(newFile)
                   tmpRequete.push(newRequete)
-                  if (newRequete.deadline > now){ //Pending Requests
+                  if (newRequete.deadline > now && (constants.globalUser.role == 'student' || !item.hidden)){ //Pending Requests
                     setIsData(true)
                     setPendingRequests((prevItem) => {
                         return [newRequete ,...prevItem];
