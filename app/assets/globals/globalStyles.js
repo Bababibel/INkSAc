@@ -10,6 +10,8 @@ export const globalColors = {
     black: 'black', 
     darkGrey: 'indigo',
     red: 'red',
+    lightGray: 'lightgray',
+    darkGray: 'darkgray',
     ready: 'green',
     textLight: 'white', 
     textDark: 'black',
@@ -37,6 +39,17 @@ export const globalStyles = StyleSheet.create({
         justifyContent : "center",
         alignItems : "center",
         minWidth : Platform.OS === "web" ? Dimensions.get('window').width / 4 : Dimensions.get('window').width,
+    },
+    fileOptions: {
+        flex: 1,
+        flexGrow: 1,
+        paddingTop : Platform.OS === "android" ? StatusBar.currentHeight : 0,
+        paddingLeft: 30,
+        paddingRight : 30,
+        justifyContent : "center",
+        alignItems: "center",
+        minWidth: Platform.OS === "web" ? Dimensions.get('window').width / 4 : Dimensions.get('window').width,
+        marginBottom: 30,
     },
     modalText: {
         fontSize: 18,
@@ -113,4 +126,3 @@ export const globalStyles = StyleSheet.create({
         justifyContent : "center",
       },
 });
-

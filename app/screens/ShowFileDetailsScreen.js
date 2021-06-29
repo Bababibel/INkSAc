@@ -1,6 +1,6 @@
-import React from 'react';
-import {View, Text, ScrollView, StatusBar, Button, Platform, StyleSheet} from 'react-native';
-import { globalColors } from '../assets/globals/globalStyles';
+import React, { useState } from 'react';
+import { View, Text, ScrollView, StatusBar, Button, Platform, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { globalColors, globalStyles } from '../assets/globals/globalStyles';
 import constants from '../assets/globals/constants'
 import GoBackModule from '../assets/modules/GoBackModule';
 import HyperLink from 'react-native-hyperlink';
@@ -9,6 +9,7 @@ import { convertToString } from '../assets/tools/dateConverter';
 
 export default function ShowFileDetailsScreen({ route, navigation }){
     const item = route.params.item;
+    const [errorMsg, setErrorMsg] = useState();
 
     const displayList = () => {
         item.list.map(liste => {
@@ -16,6 +17,34 @@ export default function ShowFileDetailsScreen({ route, navigation }){
                 <Text>Liste(s) : {liste} </Text>
             )
         })
+    }
+
+    const handleAnswer = (answer) => {
+        let formData = new FormData();
+        formData.append('file_in_request_id', item.files.file_in_request_id);
+        formData.append('user_id', constants.globalUser.id);
+        formData.append('answer', answer);
+        axios.post(constants.updateAnswerToFileInRequest, formData)
+        .then(response => {
+            console.log(response.data.message);
+            item.files.answer = answer;
+            navigation.goBack();
+            navigation.goBack();
+            navigation.push("DisplayMyRequests");
+        })
+        .catch(error => {
+            console.log('Request failed to synchronize answer with API');
+        })
+    }
+
+    const answerRelatedImage = (answer) => {
+        if (constants.globalUser.role != 'student') return;
+        if (answer == 0) {
+            return (<Image source={require('../assets/printer.png')} style={{width: 32, height: 32, resizeMode: 'stretch', margin: 15}}/>);
+        }
+        else {
+            return (<Image source={require('../assets/files.png')} style={{width: 32, height: 32, resizeMode: 'stretch', margin: 15}}/>);
+        }
     }
 
     const stateHandle = () => {
@@ -30,8 +59,6 @@ export default function ShowFileDetailsScreen({ route, navigation }){
         navigation.goBack()
     }
 
-    axios.get(constants.getFilesFromRequest, {params: {'request_id': item.id}})
-
     const titleHandle = () => { // A modifier
         let title = ''
         if (item.state == 'pending'){
@@ -43,16 +70,25 @@ export default function ShowFileDetailsScreen({ route, navigation }){
     }
 
     const roleHandle = () => {
+        let deadline_date = item.deadline.substring(5, 10).replace('-', '/') + '/' + item.deadline.substring(0, 4) + item.deadline.substring(10);
         if (constants.globalUser.role == 'reprography'){
             return(<Button onPress={() => stateHandle()} title={titleHandle()}/>)
         }
-        else if (constants.globalUser.role == 'student'){
+        else if (constants.globalUser.role == 'student' && Date.parse(deadline_date) > Date.now()) {
             return (
-                <View>
-                    <Button color={globalColors.primary} onPress={() => stateHandle()} title={"Oui"}/>
-                    <Button color={globalColors.primary} onPress={() => stateHandle()} title={"Non"}/>
+                <View style={globalStyles.fileOptions}>
+                    <TouchableOpacity>
+                        <TouchableOpacity style={{flexDirection: "row", alignItems: "center", marginBottom: 12}}>
+                            <Image source={require('../assets/printer.png')} style={{width: 32, height: 32, resizeMode: 'stretch', marginHorizontal: 5}}/>
+                            <Button color={globalColors.primary} onPress={() => handleAnswer(0)} title={"Je souhaite la version papier !"}/>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={{flexDirection: "row", alignItems: "center"}}>
+                            <Image source={require('../assets/files.png')} style={{width: 32, height: 32, resizeMode: 'stretch', marginHorizontal: 5}}/>
+                            <Button color={globalColors.ready} onPress={() => handleAnswer(1)} title={"Le fichier me suffit !"}/>
+                        </TouchableOpacity>
+                    </TouchableOpacity>
                 </View>
-            )
+            );
         }
     }
 
@@ -68,7 +104,7 @@ export default function ShowFileDetailsScreen({ route, navigation }){
                     <Text style={styles.row}>Sera supprimée le : {convertToString(item.expiration_date)}</Text>
                     {displayList()}
                     <Text style={styles.row}>Liste : {item.list}</Text>
-                    <Text style={styles.titleContainer}>Fichier</Text>
+                    <Text style={styles.secondaryTitle}>Fichier</Text>
                     <Text style={styles.row}>Nom : {item.files.name}</Text>
                     <HyperLink linkDefault={true} linkStyle={ { color: '#2980b9'} }>
                         <Text style={styles.row}>Lien : {item.files.getDownloadUrl()}</Text>
@@ -81,20 +117,40 @@ export default function ShowFileDetailsScreen({ route, navigation }){
                 </View>
             )
         }
+        else {
+            return(
+                <View>
+                    <Text style={styles.row}>Pour le : {item.delivery_date}</Text>
+                    <Text style={styles.row}>Commentaire : {item.comment}</Text>
+                    <Text style={[styles.row, { color: constants.states.color[item.state]}]}>État : {constants.states.msg[item.state]}</Text>
+                    <Text style={styles.row}>Supprimé le : {item.expiration_date}</Text>
+                    {displayList()}
+                    <Text style={styles.row}>Liste : {item.list}</Text>
+                    <Text style={styles.secondaryTitle}>Fichier</Text>
+                    <Text style={styles.row}>Nom : {item.files.name}</Text>
+                    <HyperLink linkDefault={true} linkStyle={ { color: '#2980b9'} }>
+                        <Text style={styles.row}>Lien : {item.files.getDownloadUrl()}</Text>
+                    </HyperLink>
+                </View>
+            )
+        }
     }
 
     return(
         <ScrollView>
             <GoBackModule navigation={navigation}/>
             <Text style={styles.titleContainer}> Détails de la requête</Text>
-                <View style={styles.container}>
-                    <Text style={styles.titleContainer}>Requête</Text>
-                    <Text style={styles.row}>Auteur : {item.author_name}</Text>
-                    <Text style={styles.row}>Titre : {item.title}</Text>
-                    <Text style={styles.row}>Deadline : {convertToString(item.deadline)}</Text>
-                    {displayHandle()}
+            {roleHandle()}
+            <View style={styles.container}>
+                <View style={{flexDirection: "row", alignItems: "center", justifyContent: "center"}}>
+                    {answerRelatedImage(item.files.answer)}
+                    <Text style={styles.secondaryTitle}>{item.title}</Text>
                 </View>
-                {roleHandle()}
+                <Text style={styles.row}>Auteur : {item.author_name}</Text>
+                <Text style={styles.row}>Deadline : {convertToString(item.deadline)}</Text>
+                {displayHandle()}
+            </View>
+            {roleHandle()}
         </ScrollView>
     )
 }
@@ -105,7 +161,13 @@ const styles = StyleSheet.create({
         paddingTop : Platform.OS === "android" ? StatusBar.currentHeight +10 : 0,
         fontSize: 18,
         fontWeight: 'bold',
-        marginBottom: 20,
+        marginBottom: 8,
+    },
+    secondaryTitle: {
+        textAlign:'center',
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginVertical: 8,
     },
     row: {
         marginVertical: 10,
@@ -128,6 +190,5 @@ const styles = StyleSheet.create({
         borderColor: 'black',
         borderStyle: 'solid',
         backgroundColor: globalColors.secondary,
-        marginBottom: 20,
     }
 })

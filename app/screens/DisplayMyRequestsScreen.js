@@ -28,7 +28,7 @@ export default function RequestScreen({ route, navigation }) {
   let now = computeDateTimeForSql(new Date(), new Date())
   let loadRequestsApiUrl = constants.globalUser.role == 'student' ? constants.getRequestsForUser : constants.getRequestsByAuthor;
 
-  const [isData, setIsData] = useState(false);
+  let [isData, setIsData] = useState(false);
   const [dataLoaded, setDataLoaded] = useState(false);
   const [pendingRequests, setPendingRequests] = useState([]);
   const [toPrintRequests, setToPrintRequests] = useState([]);
@@ -42,14 +42,14 @@ export default function RequestScreen({ route, navigation }) {
       if ("data" in request.data){
         let tmpRequete = []
         request.data.data.map((item) => {
-          axios.get(constants.getFilesFromRequest , {params: {'request_id' : item.id}}, {
+          axios.get(constants.getFilesFromRequest , {params: {'request_id' : item.id, 'user_id': constants.globalUser.id}}, {
                       headers: { "Content-Type" : "application/json" }
                     })
           .then((files) => {
             if (typeof files.data != 'undefined'){
               files.data.data.map((item2) => {
                 if (typeof item2.message == 'undefined') {
-                  const newFile = new File(item2.id, item2.name, item2.path, item2.color, item2.stapple, item2.format, item2.recto_verso, item2.nb_per_page, item.id)
+                  const newFile = new File(item2.id, item2.name, item2.path, item2.color, item2.stapple, item2.format, item2.recto_verso, item2.nb_per_page, item.id, item2.file_in_request_id, item2.answer)
                   const newRequete = new Request(item.id, item.author, item.author_name, item.deadline, item.delivery_date, item.expiration_date, item.title, item.comment, item.hidden, item.state, item.list_names)
                   newRequete.attachFile(newFile)
                   tmpRequete.push(newRequete)
@@ -89,7 +89,7 @@ export default function RequestScreen({ route, navigation }) {
       navigation.navigate("CreateOrUpdateRequest", { 
         modify: "no" });
     } else {
-      Alert.alert('Fonctionnalité indisponible', 'Cette fonctionalité n\'est pas disponible pour cette platformne, utilisez un ordinateur afin de formuler une nouvelle demande')
+      Alert.alert('Fonctionnalité indisponible', 'Cette fonctionalité n\'est pas disponible pour cette plateforme, utilisez un ordinateur afin de formuler une nouvelle demande')
     }
   }
 
