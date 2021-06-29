@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from 'react'
-import { ScrollView, View, Text, Platform, StyleSheet, TextInput, TouchableOpacity, Button, StatusBar } from 'react-native';
+import { ScrollView, View, Text, Platform, StyleSheet, TextInput, TouchableOpacity, Button, StatusBar, Dimensions } from 'react-native';
 import { FormControl, Select, MenuItem } from '@material-ui/core';
 import axios from 'axios';
 
 import constants from '../assets/globals/constants';
-import { globalColors } from '../assets/globals/globalStyles';
+import { globalColors, globalStyles } from '../assets/globals/globalStyles';
 import List from '../assets/classes/List';
 import GoBackModule from '../assets/modules/GoBackModule';
 import {convertToString} from '../assets/tools/dateConverter';
@@ -123,15 +123,20 @@ function MyProfileScreen({ navigation, route }) {
             else return (
                 <View style={{maxWidth: 200}}>
                     <Text style={{flex:1, flexDirection:'row', justifyContent:'center'}}>Ajouter une liste: </Text>
-                    <TextInput 
-                        style={styles.textInput}
-                        onChangeText={setTextInput}
-                        value={textInput}
-                    />
-                    <Button
-                        title="S'abonner"
-                        color={globalColors.primary}
-                        onPress={handleSubmit} />
+                    <View style={{flexDirection: "row", justifyContent: "flex-start", marginTop: 8}}>
+                        <TextInput 
+                            style={styles.textInput}
+                            backgroundColor={"white"}
+                            onChangeText={setTextInput}
+                            value={textInput}
+                            width={Dimensions.get('window').width - 150}
+                            padding={4}
+                        />
+                        <Button
+                            title="S'abonner"
+                            color={globalColors.primary}
+                            onPress={handleSubmit} />
+                    </View>
                 </View>
             )
         }
