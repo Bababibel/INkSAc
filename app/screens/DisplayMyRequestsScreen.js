@@ -28,7 +28,7 @@ export default function RequestScreen({ route, navigation }) {
   let now = computeDateTimeForSql(new Date(), new Date())
   let loadRequestsApiUrl = constants.globalUser.role == 'student' ? constants.getRequestsForUser : constants.getRequestsByAuthor;
 
-  const [isData, setIsData] = useState(false);
+  let [isData, setIsData] = useState(false);
   const [dataLoaded, setDataLoaded] = useState(false);
   const [pendingRequests, setPendingRequests] = useState([]);
   const [toPrintRequests, setToPrintRequests] = useState([]);

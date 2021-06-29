@@ -28,6 +28,8 @@ export default function ShowFileDetailsScreen({ route, navigation }){
         .then(response => {
             console.log(response.data.message);
             item.files.answer = answer;
+            navigation.goBack();
+            navigation.goBack();
             navigation.push("DisplayMyRequests");
         })
         .catch(error => {
@@ -35,9 +37,9 @@ export default function ShowFileDetailsScreen({ route, navigation }){
         })
     }
 
-    const answerRelatedImage = () => {
+    const answerRelatedImage = (answer) => {
         if (constants.globalUser.role != 'student') return;
-        if (item.files.answer == 0) {
+        if (answer == 0) {
             return (<Image source={require('../assets/printer.png')} style={{width: 32, height: 32, resizeMode: 'stretch', margin: 15}}/>);
         }
         else {
@@ -141,7 +143,7 @@ export default function ShowFileDetailsScreen({ route, navigation }){
             {roleHandle()}
             <View style={styles.container}>
                 <View style={{flexDirection: "row", alignItems: "center", justifyContent: "center"}}>
-                    {answerRelatedImage()}
+                    {answerRelatedImage(item.files.answer)}
                     <Text style={styles.secondaryTitle}>{item.title}</Text>
                 </View>
                 <Text style={styles.row}>Auteur : {item.author_name}</Text>

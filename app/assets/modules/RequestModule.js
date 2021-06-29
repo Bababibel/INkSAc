@@ -40,7 +40,7 @@ function RequestModule({requestProps, goBack, navigation}) {
     const answerRelatedImage = () => {
         if (constants.globalUser.role != 'student') return;
         if (request.files.answer == 0) {
-            return (<Image source={require('../printer.png')} style={{width: 32, height: 32, resizeMode: 'stretch', margin: 15}}/>);
+            return (<Image source={require('../printer.png')} style={{width: 32, height: 32, resizeMode: 'stretch', margin: 4}}/>);
         }
         else {
             return (<Image source={require('../files.png')} style={{width: 32, height: 32, resizeMode: 'stretch', margin: 15}}/>);
@@ -88,15 +88,14 @@ function RequestModule({requestProps, goBack, navigation}) {
         return (
         <TouchableOpacity onPress={() => pressHandle()}>
             <Text style={styles.X}>X</Text>
-            <View style={[styles.container, {backgroundColor: (request.location == "Bourges" ? 'ghostwhite' : 'gainsboro')}]}>
+            <View style={[styles.container, {backgroundColor: (request.files.answer == 0 ? 'lightgrey' : 'lightblue')}]}>
                 {generateAlertConfirm()}
                 {roleHandle()}
-                <View style={styles.row}>
+                <View style={{flexDirection: "row", alignItems: "center", justifyContent: "space-around", marginBottom: 8}}>
                     {answerRelatedImage()}
-                    <Text>{request.title}</Text>
+                    <Text style={{fontWeight: "bold", fontSize: 16}}>{request.title}</Text>
                 </View>
-                <View style={styles.row}></View>
-                <View style={styles.row}>
+                <View style={{flexDirection: "column", marginHorizontal: 16, marginBottom: 8}}>
                     <Text style={{color: constants.states.color[request.state]}}>État: {constants.states.msg[request.state]}</Text>
                     <Text>Deadline de vote: {convertToString(request.deadline)}</Text>
                 </View>
