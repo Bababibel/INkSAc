@@ -28,7 +28,7 @@ export default function ShowFileDetailsScreen({ route, navigation }){
         .then(response => {
             console.log(response.data.message);
             item.files.answer = answer;
-            navigation.goBack();
+            navigation.push("DisplayMyRequests");
         })
         .catch(error => {
             console.log('Request failed to synchronize answer with API');

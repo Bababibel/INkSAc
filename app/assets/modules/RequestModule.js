@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useRef} from 'react';
-import { View, StyleSheet, Text, TouchableOpacity, Platform, Alert } from 'react-native';
+import { View, StyleSheet, Text, TouchableOpacity, Platform, Alert, Image } from 'react-native';
 
 import Request from '../classes/Request';
 import { Select, FormControl, MenuItem } from '@material-ui/core';
@@ -35,6 +35,16 @@ function RequestModule({requestProps, goBack, navigation}) {
     let deleteFunction = () => {
         request.deleteInDb();
         setIsVisible(false);
+    }
+
+    const answerRelatedImage = () => {
+        if (constants.globalUser.role != 'student') return;
+        if (request.files.answer == 0) {
+            return (<Image source={require('../printer.png')} style={{width: 32, height: 32, resizeMode: 'stretch', margin: 15}}/>);
+        }
+        else {
+            return (<Image source={require('../files.png')} style={{width: 32, height: 32, resizeMode: 'stretch', margin: 15}}/>);
+        }
     }
 
     let generateAlertConfirm = () => {
@@ -82,6 +92,7 @@ function RequestModule({requestProps, goBack, navigation}) {
                 {generateAlertConfirm()}
                 {roleHandle()}
                 <View style={styles.row}>
+                    {answerRelatedImage()}
                     <Text>{request.title}</Text>
                 </View>
                 <View style={styles.row}></View>
