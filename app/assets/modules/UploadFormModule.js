@@ -37,7 +37,7 @@ function UploadForm({navigation}) {
     const [format, handleFormatChange] = useState("A4");
     const [nb_per_page, handleNbPerPageChange] = useState(1);
     // Request Form
-    const [userList, handleListChange] = useState("pute");
+    const [userList, handleListChange] = useState("");
     const [deadline_date, handleDeadlineDateChange] = useState(currDate);
     const [deadline_time, handleDeadlineTimeChange] = useState(currDate);
     const [delivery_date, handleDeliveryDateChange] = useState(futDate);
@@ -53,6 +53,8 @@ function UploadForm({navigation}) {
     useEffect(() => {
         deadline = computeDateTimeForSql(deadline_date, deadline_time);
         delivery = computeDateTimeForSql(delivery_date, delivery_time);
+        console.log(deadline)
+        console.log(delivery)
     }, [deadline_date, deadline_time, delivery_date, delivery_time]);
 
     const getLists = () => {
@@ -63,7 +65,6 @@ function UploadForm({navigation}) {
                 handleListChange('Selectionnez une liste')
                 data.forEach(e => {
                     let tmpList = new List(e.id, e.name, e.theorical_count, e.creation_date, e.location);
-                    console.log(tmpList)
                     setUserLists(userLists => [...userLists, tmpList]);
                 });
 
@@ -101,12 +102,12 @@ function UploadForm({navigation}) {
             setError("Vous n'avez pas sélectionné de liste à affilier à votre demande.")
             return;
         }
-        if (computeDateTimeForSql(new Date(), new Date()) >= deadline || deadline >= delivery) {
+        /*if (computeDateTimeForSql(new Date(), new Date()) > deadline || deadline > delivery) {
             console.log("deadline", deadline)
             console.log("delivery", delivery)
             setError("L'ordre chronologique n'est pas respecté (maintenant -> deadline -> livraison).")
             return;
-        }
+        }*/
         const fileFormData = new FormData();
         // Create the post request to grab data from $_POST['file] in the php server
         fileFormData.append("file",
@@ -161,7 +162,6 @@ function UploadForm({navigation}) {
         createRequestFormData.append('title', title);
         createRequestFormData.append('comment', comment);
         createRequestFormData.append('hidden', hidden);
-        console.log([...createRequestFormData])
         // POSTING REQUEST
         axios.post(constants.postRequest, createRequestFormData, {
             headers: {'Content-Type': 'multipart/form-data'},
@@ -294,8 +294,6 @@ function UploadForm({navigation}) {
     }
 
     const requestForm = () => {
-        console.log(userLists)
-        console.log(userList)
         if (selectedFile) {
             return (
                 <View style={styles.requestForm}>
